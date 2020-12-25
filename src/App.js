@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Home from "./components/Home";
+import Login from "./components/Login";
+import SignupApple from "./components/Signups/Signup_Apple";
+import SignupEmail from "./components/Signups/Signup_Email";
+import SignupPhone from "./components/Signups/Signup_Phone";
+import Protected from "./components/Protected";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Switch>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route path="/signup_apple">
+          <SignupApple />
+        </Route>
+        <Route path="/signup_email">
+          <SignupEmail />
+        </Route>
+        <Route path="/signup_phone">
+          <SignupPhone />
+        </Route>
+        <Route path="/protected">
+          <Protected />
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
+    </Router>
+  )
 }
 
 export default App;
