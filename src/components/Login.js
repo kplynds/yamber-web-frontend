@@ -8,7 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import theme from "../theme";
 
@@ -36,8 +36,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   progress: {
-    
-  }
+    color: "white",
+    position: "absolute",
+  },
 }));
 
 function Login() {
