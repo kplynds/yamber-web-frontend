@@ -11,13 +11,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import theme from "../theme";
 import DesktopNav from "./nav/DesktopNav";
 import MobileNav from "./nav/MobileNav";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
-
-import Profile from "./protected/Profile"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,11 +26,6 @@ function Protected() {
 
   return (
     <div className={classes.root}>
-      <Router>
-        <Route path="/profile">
-          <Profile />
-        </Route>
-      </Router>
       <CssBaseline />
       <AppBar position="static">
         <Toolbar>

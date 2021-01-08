@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import SearchIcon from "@material-ui/icons/Search";
+import { NavLink } from "react-router-dom";
 
 import theme from "../../theme";
 
@@ -16,9 +17,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-evenly",
   },
-  icon: {
+  item: {
     fontSize: "large",
+    color: "black",
   },
+  active: {
+    color: "blue",
+  }
 }));
 
 function MobileNav() {
@@ -26,9 +31,15 @@ function MobileNav() {
 
   return (
     <div className={classes.root}>
-      <PersonIcon fontSize="large" />
-      <WhatshotIcon fontSize="large" />
-      <SearchIcon fontSize="large" />
+      <NavLink to="/profile" className={classes.item} activeClassName={classes.active}>
+        <PersonIcon fontSize="large" />
+      </NavLink>
+      <NavLink to="/featured" className={classes.item} activeClassName={classes.active}>
+        <WhatshotIcon fontSize="large" />
+      </NavLink>
+      <NavLink to="/search" className={classes.item} activeClassName={classes.active}>
+        <SearchIcon fontSize="large" />
+      </NavLink>
     </div>
   );
 }
