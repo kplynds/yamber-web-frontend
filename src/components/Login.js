@@ -10,6 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
+import { connect } from "react-redux";
+import { loginUser } from "../redux/actions/userActions";
+
 import theme from "../theme";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,7 +48,6 @@ function Login() {
   const history = useHistory();
   const [formValues, setFormValues] = useState({ email: "", password: "" });
   const [renderedErrors, setRenderedErrors] = useState({ error: "" });
-  const [loading, setLoading] = useState(false);
 
   const classes = useStyles(theme);
 
@@ -58,21 +60,11 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    axios
-      .post(
-        "https://us-central1-flumes-company.cloudfunctions.net/api/login",
-        formValues
-      )
-      .then((res) => {
-        setLoading(false);
-        history.push("/protected");
-      })
-      .catch((err) => {
-        console.log(err.response.data.general);
-        setRenderedErrors({ error: `${err.response.data.general}` });
-        setLoading(false);
-      });
+    const userData = {
+      email: formValues.email,
+      password: formValues.password
+    }
+    loginUser(userData)
   };
 
   return (
@@ -124,4 +116,13 @@ function Login() {
   );
 }
 
-export default Login;
+const mapActionsToProps = (state) => ({
+  user: state.user,
+  ui: state.ui
+});
+
+const mapActionsToProps = {
+  loginUser
+}
+
+export default connect(mapStateToProps, mapActionsToProps);
