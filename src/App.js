@@ -10,6 +10,9 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
+import Featured from "./components/protected/Featured";
+import Search from "./components/protected/Search";
+import Profile from "./components/protected/Profile";
 
 function App() {
   return (
@@ -27,10 +30,20 @@ function App() {
         <Route path="/signup_phone">
           <SignupPhone />
         </Route>
+        {/* Might need to protect these routes */}
         <Route path="/protected">
           <Protected />
         </Route>
-        <Route path="/">
+        <Route path="/featured">
+          <Featured />
+        </Route>
+        <Route path="/search">
+          <Search />
+        </Route>
+        <Route path="/profile" >
+          <Profile />
+        </Route>
+        <Route path="/" exact>
           <Home />
         </Route>
       </Switch>

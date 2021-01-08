@@ -1,7 +1,19 @@
 import React from "react";
 
-export default function Search () {
-    return (
-        <div>Search</div>
-    )
+import Hidden from "@material-ui/core/Hidden";
+
+import DesktopNav from "../nav/DesktopNav";
+import MobileNav from "../nav/MobileNav";
+
+export default function Search() {
+  return (
+    <div>
+      <Hidden xsDown>
+        <DesktopNav />
+      </Hidden>
+      <Hidden smUp>
+        <MobileNav />
+      </Hidden>
+    </div>
+  );
 }

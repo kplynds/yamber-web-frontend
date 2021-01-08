@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
@@ -27,9 +27,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     border: "1px solid grey",
     borderRadius: "10px",
+    textDecoration: "none",
+    color: "black",
+    "&:visited": {
+        textDecoration: "none",
+        color: "black",
+    },
     "&:hover": {
       backgroundColor: "red",
     },
+  },
+  active: {
+      backgroundColor: "blue",
   },
 }));
 
@@ -38,18 +47,18 @@ function DeskTopNav() {
 
   return (
     <div className={classes.sidebar}>
-      <div to="/profile" className={classes.item}>
+      <NavLink to="/profile" className={classes.item} activeClassName={classes.active}>
         <PersonIcon style={{ paddingRight: 5, fontSize: 40 }} />
         <Typography>My taste</Typography>
-      </div>
-      <div className={classes.item}>
+      </NavLink>
+      <NavLink to="/featured" className={classes.item} activeClassName={classes.active}>
         <WhatshotIcon style={{ paddingRight: 5, fontSize: 40 }} />
         <Typography>Featured</Typography>
-      </div>
-      <div className={classes.item}>
+      </NavLink>
+      <NavLink to="/search" className={classes.item} activeClassName={classes.active} >
         <SearchIcon style={{ paddingRight: 5, fontSize: 40 }} />
         <Typography>Search</Typography>
-      </div>
+      </NavLink>
     </div>
   );
 }
