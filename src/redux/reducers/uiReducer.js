@@ -1,6 +1,6 @@
 const initialState = {
   loading: false,
-  errors: null,
+  errors: "",
 };
 
 export default function uiReducer (state = initialState, action) {
@@ -15,7 +15,7 @@ export default function uiReducer (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        errors: null,
+        errors: "",
       };
     case "LOADING_UI":
       return {

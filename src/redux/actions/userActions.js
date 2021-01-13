@@ -12,6 +12,7 @@ export const loginUser = (userData, history) => (dispatch) => {
       const token = res.data.token;
       localStorage.setItem("token", token);
       axios.defaults.headers.common["Authorization"] = token;
+      dispatch({ type: "CLEAR_ERRORS" })
       history.push("/protected");
     })
     .catch((err) => {

@@ -72,7 +72,7 @@ function Login(props) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <div className={classes.error}>{props.errors}</div>
+        <div className={classes.error}>{props.errors.general}</div>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
             variant="outlined"
