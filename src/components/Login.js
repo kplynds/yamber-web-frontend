@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import Container from "@material-ui/core/Container";
@@ -11,6 +11,7 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import theme from "../theme";
+import { loginUser } from "../redux/actions/userActions";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -41,11 +42,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Login() {
+function Login(props) {
   const history = useHistory();
   const [formValues, setFormValues] = useState({ email: "", password: "" });
-  const [renderedErrors, setRenderedErrors] = useState({ error: "" });
-  const [loading, setLoading] = useState(false);
 
   const classes = useStyles(theme);
 
@@ -57,22 +56,13 @@ function Login() {
   };
 
   const handleSubmit = (e) => {
+    console.log("connected to handler")
     e.preventDefault();
-    setLoading(true);
-    axios
-      .post(
-        "https://us-central1-flumes-company.cloudfunctions.net/api/login",
-        formValues
-      )
-      .then((res) => {
-        setLoading(false);
-        history.push("/protected");
-      })
-      .catch((err) => {
-        console.log(err.response.data.general);
-        setRenderedErrors({ error: `${err.response.data.general}` });
-        setLoading(false);
-      });
+    const userData = {
+      email: formValues.email,
+      password: formValues.password
+    }
+    props.loginUser(userData, history)
   };
 
   return (
@@ -82,7 +72,7 @@ function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <div className={classes.error}>{renderedErrors.error}</div>
+        <div className={classes.error}>{props.errors}</div>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
             variant="outlined"
@@ -114,7 +104,7 @@ function Login() {
             className={classes.submit}
           >
             Sign in
-            {loading && (
+            {props.loading && (
               <CircularProgress size={30} className={classes.progress} />
             )}
           </Button>
@@ -124,4 +114,15 @@ function Login() {
   );
 }
 
-export default Login;
+const mapState = (state) => {
+  return { 
+    loading: state.ui.loading,
+    errors: state.ui.errors
+  }
+}
+
+const mapDispatch = {
+  loginUser,
+}
+
+export default connect(mapState, mapDispatch) (Login);
