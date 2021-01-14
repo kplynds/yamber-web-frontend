@@ -5,6 +5,11 @@ const initialState = {
 
 export default function uiReducer (state = initialState, action) {
   switch (action.type) {
+    case "AUTHROUTE_REACHED":
+      return {
+        ...state,
+        errors: action.payload,
+      }
     case "SET_ERRORS":
       return {
         ...state,

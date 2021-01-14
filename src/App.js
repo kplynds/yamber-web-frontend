@@ -13,6 +13,7 @@ import {
 import Featured from "./components/protected/Featured";
 import Search from "./components/protected/Search";
 import Profile from "./components/protected/Profile";
+import AuthRoute from "./utils/AuthRoute";
 
 function App() {
   return (
@@ -31,18 +32,10 @@ function App() {
           <SignupPhone />
         </Route>
         {/* Might need to protect these routes */}
-        <Route path="/protected">
-          <Protected />
-        </Route>
-        <Route path="/featured">
-          <Featured />
-        </Route>
-        <Route path="/search">
-          <Search />
-        </Route>
-        <Route path="/profile" >
-          <Profile />
-        </Route>
+        <AuthRoute path="/protected" component={Protected} />
+        <AuthRoute path="/featured" component={Featured} />
+        <AuthRoute path="/search" component={Search} />
+        <AuthRoute path="/profile" component={Profile} />
         <Route path="/" exact>
           <Home />
         </Route>

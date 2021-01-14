@@ -1,4 +1,6 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
+import { connect } from "react-redux";
 
 // mui imports
 import { makeStyles } from "@material-ui/core/styles";
@@ -12,6 +14,8 @@ import theme from "../theme";
 import DesktopNav from "./nav/DesktopNav";
 import MobileNav from "./nav/MobileNav";
 
+import { logout } from "../redux/actions/userActions"
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -21,7 +25,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Protected() {
+function Protected(props) {
+  const history = useHistory();
+  const logoutUser = (e) => {
+    e.preventDefault()
+    props.logout()
+    history.push("/")
+  }
   const classes = useStyles(theme);
 
   return (
@@ -34,6 +44,7 @@ function Protected() {
           </Typography>
         </Toolbar>
       </AppBar>
+      <button onClick={logoutUser}>sign out</button>
       <Hidden xsDown>
         <DesktopNav />
       </Hidden>
@@ -44,4 +55,12 @@ function Protected() {
   );
 }
 
-export default Protected;
+const mapState = (state) => {
+  return state
+}
+
+const mapDispatch = {
+  logout,
+}
+
+export default connect(mapState, mapDispatch) (Protected);

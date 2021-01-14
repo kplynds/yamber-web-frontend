@@ -122,7 +122,7 @@ const mapState = (state) => {
 }
 
 const mapDispatch = {
-  loginUser,
+  loginUser
 }
 
 export default connect(mapState, mapDispatch) (Login);
