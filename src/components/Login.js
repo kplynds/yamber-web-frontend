@@ -56,7 +56,6 @@ function Login(props) {
   };
 
   const handleSubmit = (e) => {
-    console.log("connected to handler")
     e.preventDefault();
     const userData = {
       email: formValues.email,

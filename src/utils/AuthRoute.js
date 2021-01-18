@@ -7,6 +7,7 @@ const AuthRoute = ({
   component: Component,
   authenticated,
   authRouteReached,
+  justLoggedOut,
   ...rest
 }) => {
   return (
@@ -15,7 +16,10 @@ const AuthRoute = ({
       render={() => {
         if (authenticated) {
           return <Component />;
-        } else {
+        } else if (justLoggedOut) {
+          return <Redirect to="/login" />;
+        } 
+        else {
           authRouteReached();
           return <Redirect to="/login" />;
         }
@@ -27,6 +31,7 @@ const AuthRoute = ({
 const mapState = (state) => {
   return {
     authenticated: state.user.authenticated,
+    justLoggedOut: state.user.justLoggedOut,
   };
 };
 

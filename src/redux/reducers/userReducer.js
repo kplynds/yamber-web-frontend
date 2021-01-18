@@ -1,10 +1,11 @@
 const initialState = {
   authenticated: false,
   loading: false,
+  justLoggedOut: false,
   credentials: {},
   notifications: [],
   playlists: [],
-  testCounter: 0,
+  spotify: {},
 };
 
 export default function userReducer (state = initialState, action) {
@@ -16,17 +17,28 @@ export default function userReducer (state = initialState, action) {
       };
     case "SET_UNAUTHENTICATED":
       return initialState;
+    case "LOADING_USER":
+      return {
+        ...state,
+        loading: true,
+      }
     case "SET_USER":
       return {
+        ...state,
         authenticated: true,
         loading: false,
         ...action.payload,
       };
-    case "INCREMENT": 
+    case "JUST_LOGGED_OUT":
       return {
         ...state,
-        testCounter: state.testCounter + 1,
+      justLoggedOut: true,
       };
+    case "SET_SPOTIFY":
+      return {
+        ...state,
+        ...action.payload,
+      }
     default:
       return state;
   }
