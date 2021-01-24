@@ -45,7 +45,7 @@ export const getUserData = () => (dispatch) => {
     });
 };
 
-export const hashParams = (querystring) => (dispatch) => {
+export const setSpotify = (querystring) => (dispatch) => {
   console.log("trying to save stuff!");
   const urlParams = new URLSearchParams(querystring);
   const payload = {

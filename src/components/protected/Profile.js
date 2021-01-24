@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import Hidden from "@material-ui/core/Hidden";
-import { logout, hashParams } from "../../redux/actions/userActions";
+import { logout, setSpotify } from "../../redux/actions/userActions";
 import DesktopNav from "../nav/DesktopNav";
 import MobileNav from "../nav/MobileNav";
 import theme from "../../theme";
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   content: {},
 }));
 
-const Profile = ({ user, logout, hashParams }) => {
+const Profile = ({ user, logout, hashParams, user_loading }) => {
   const classes = useStyles(theme);
   const history = useHistory();
   const logoutUser = (e) => {
@@ -24,12 +24,9 @@ const Profile = ({ user, logout, hashParams }) => {
 
   useEffect(() => {
     if (window.location.search) {
-      console.log("hashed")
-      hashParams(window.location.search)
-    } else {
-      console.log("not found")
+      setSpotify(window.location.search);
     }
-  }, [hashParams])
+  }, []);
   return (
     <div className={classes.root}>
       <Hidden xsDown>
@@ -39,9 +36,11 @@ const Profile = ({ user, logout, hashParams }) => {
         <MobileNav />
       </Hidden>
       <div className={classes.content}>
-        <div>Welcome {user.handle}!</div>
+        { user_loading ? <div> loading... </div> : <div> Welcome {user.handle}! </div> }
         <button onClick={logoutUser}>Log out</button>
-        <a href="http://localhost:5000/flumes-company/us-central1/api/spotifylogin">Sync with Spotify</a>
+        <a href="http://localhost:5000/flumes-company/us-central1/api/spotifylogin">
+          Sync with Spotify
+        </a>
       </div>
     </div>
   );
@@ -50,11 +49,13 @@ const Profile = ({ user, logout, hashParams }) => {
 const mapState = (state) => {
   return {
     user: state.user.credentials,
+    user_loading: state.user.loading
   };
 };
 
 const mapDispatch = {
-    logout, hashParams,
-}
+  logout,
+  setSpotify,
+};
 
 export default connect(mapState, mapDispatch)(Profile);
