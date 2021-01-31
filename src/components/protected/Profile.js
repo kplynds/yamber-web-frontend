@@ -8,6 +8,7 @@ import { logout, setSpotify } from "../../redux/actions/userActions";
 import DesktopNav from "../nav/DesktopNav";
 import MobileNav from "../nav/MobileNav";
 import theme from "../../theme";
+// import jwt_decode from "jwt-decode";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -48,7 +49,7 @@ const Profile = ({ user, logout, hashParams, user_loading }) => {
 
 const mapState = (state) => {
   return {
-    user: state.user.credentials,
+    user: state.user.data,
     user_loading: state.user.loading
   };
 };

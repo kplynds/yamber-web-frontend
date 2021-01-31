@@ -9,8 +9,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Phone from "@material-ui/icons/Phone";
-import AppleIcon from "@material-ui/icons/Apple";
-import EmailIcon from "@material-ui/icons/Email";
 
 // import theme
 import theme from "../theme";
@@ -68,7 +66,7 @@ function Home() {
             </Typography>
           </div>
           <Typography component="h1" variant="h6">
-            The Social Network for Music
+            The Social Network for Music!
           </Typography>
           <Link to="/login">
             <Button variant="contained" className={classes.login}>
@@ -78,19 +76,9 @@ function Home() {
           <Typography component="p" className={classes.divider}>
             --------------- or ---------------
           </Typography>
-          <Link to="/signup_phone">
+          <Link to="/signup">
             <Button variant="outlined" startIcon={<Phone />}>
-              sign up with phone
-            </Button>
-          </Link>
-          <Link to="/signup_apple">
-            <Button variant="outlined" startIcon={<AppleIcon />}>
-              sign up with apple
-            </Button>
-          </Link>
-          <Link to="/signup_email">
-            <Button variant="outlined" startIcon={<EmailIcon />}>
-              sign up with email
+              sign up 
             </Button>
           </Link>
         </div>

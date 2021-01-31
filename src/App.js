@@ -1,24 +1,27 @@
 import React from "react";
 import Home from "./components/Home";
 import Login from "./components/Login";
-import SignupApple from "./components/Signups/Signup_Apple";
-import SignupEmail from "./components/Signups/Signup_Email";
-import SignupPhone from "./components/Signups/Signup_Phone";
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import Signup from "./components/Signup";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import Featured from "./components/protected/Featured";
 import Search from "./components/protected/Search";
 import Profile from "./components/protected/Profile";
 import AuthRoute from "./utils/AuthRoute";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import { logout, getUserData } from "./redux/actions/userActions";
+import { logout, getAuthenticatedUserData } from "./redux/actions/userActions";
 
 import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./redux/reducers";
 import { Provider } from "react-redux";
+import SpotifyUtil from "./components/SpotifyUtil";
 
-axios.defaults.baseURL =
-  "https://us-central1-flumes-company.cloudfunctions.net/api";
+axios.defaults.baseURL = "http://localhost:5000/flumes-company/us-central1/api";
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -33,12 +36,12 @@ if (token) {
   } else {
     store.dispatch({ type: "SET_AUTHENTICATED" });
     axios.defaults.headers.common["Authorization"] = token;
-    store.dispatch(getUserData());
+    store.dispatch(getAuthenticatedUserData());
   }
 }
 
 function App() {
-  const state = store.getState()
+  const state = store.getState();
   return (
     <Provider store={store}>
       <Router>
@@ -46,22 +49,18 @@ function App() {
           <Route path="/login">
             <Login />
           </Route>
-          <Route path="/signup_apple">
-            <SignupApple />
+          <Route path="/signup">
+            <Signup />
           </Route>
-          <Route path="/signup_email">
-            <SignupEmail />
-          </Route>
-          <Route path="/signup_phone">
-            <SignupPhone />
+          <Route path="/spotifyauth">
+            <SpotifyUtil />
           </Route>
           {/* Might need to protect these routes */}
           <AuthRoute path="/featured" component={Featured} />
           <AuthRoute path="/search" component={Search} />
           <AuthRoute path="/profile" component={Profile} />
           <Route path="/" exact>
-            {state.user.authenticated ? <Redirect to="/profile" /> :
-            <Home />}
+            {state.user.authenticated ? <Redirect to="/profile" /> : <Home />}
           </Route>
         </Switch>
       </Router>

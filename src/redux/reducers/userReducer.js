@@ -2,7 +2,8 @@ const initialState = {
   authenticated: false,
   loading: false,
   justLoggedOut: false,
-  credentials: {},
+  justSignedUp: false,
+  data: {},
   notifications: [],
   playlists: [],
   spotify: {},
@@ -27,7 +28,7 @@ export default function userReducer (state = initialState, action) {
         ...state,
         authenticated: true,
         loading: false,
-        ...action.payload,
+        data: action.payload,
       };
     case "JUST_LOGGED_OUT":
       return {
@@ -38,6 +39,11 @@ export default function userReducer (state = initialState, action) {
       return {
         ...state,
         ...action.payload,
+      };
+    case "JUST_SIGNED_UP":
+      return {
+        ...state,
+        justSignedUp: true,
       }
     default:
       return state;

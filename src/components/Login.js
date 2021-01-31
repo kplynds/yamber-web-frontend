@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Login(props) {
   const history = useHistory();
-  const [formValues, setFormValues] = useState({ email: "", password: "" });
+  const [formValues, setFormValues] = useState({ loginValue: "", password: "" });
 
   const classes = useStyles(theme);
 
@@ -58,7 +58,7 @@ function Login(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const userData = {
-      email: formValues.email,
+      loginValue: formValues.loginValue,
       password: formValues.password
     }
     props.loginUser(userData, history)
@@ -71,17 +71,17 @@ function Login(props) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <div className={classes.error}>{props.errors.general}</div>
+        <div className={classes.error}>{props.errors}</div>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
             fullWidth
-            id="email"
-            name="email"
-            type="email"
-            label="Email"
-            value={formValues.email || ""}
+            id="loginValue"
+            name="loginValue"
+            type="loginValue"
+            label="username, phone, or email"
+            value={formValues.loginValue || ""}
             onChange={handleChange}
           />
           <TextField
@@ -108,6 +108,9 @@ function Login(props) {
             )}
           </Button>
         </form>
+        <Link to="/signup">
+          Don't have an account? Click here to register
+        </Link>
       </div>
     </Container>
   );
