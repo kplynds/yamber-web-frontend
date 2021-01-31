@@ -116,12 +116,12 @@ export const signupUserWithSpotify = (registerData) => (dispatch) => {
       dispatch({ type: "JUST_SIGNED_UP" });
       dispatch({ type: "SET_AUTHENTICATED" });
       dispatch({ type: "CLEAR_ERRORS" });
+      window.location.href = `${axios.defaults.baseURL}/spotifylogin`
     })
     .catch((err) => {
       console.log(err.response);
     });
   console.log(localStorage)
-  window.location.href = "http://localhost:5000/flumes-company/us-central1/api/spotifylogin"
 }
 
 // Right now we can get the user to sign up but when they are redirected back from spotify we have no way of figuring out which user it is so we can save the params to the database.
