@@ -116,7 +116,7 @@ export const signupUserWithSpotify = (registerData) => (dispatch) => {
       dispatch({ type: "JUST_SIGNED_UP" });
       dispatch({ type: "SET_AUTHENTICATED" });
       dispatch({ type: "CLEAR_ERRORS" });
-      dispatch(redirectToSpotify)
+      dispatch(redirectToSpotify());
     })
     .catch((err) => {
       console.log(err.response);
