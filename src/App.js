@@ -21,7 +21,7 @@ import rootReducer from "./redux/reducers";
 import { Provider } from "react-redux";
 import SpotifyUtil from "./components/SpotifyUtil";
 
-axios.defaults.baseURL = "https://us-central1-flumes-company.cloudfunctions.net/api";
+axios.defaults.baseURL = "http://localhost:5000/flumes-company/us-central1/api";
 
 export const store = configureStore({
   reducer: rootReducer,
