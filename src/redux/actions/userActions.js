@@ -57,19 +57,23 @@ export const getUserData = (userHandle) => (dispatch) => {
     });
 };
 
-export const setSpotify = (querystring) => (dispatch) => {
-  console.log("trying to save stuff!");
+export const setSpotify = (user, querystring, history) => (dispatch) => {
   const urlParams = new URLSearchParams(querystring);
   const payload = {
+    user: user,
     spotify: {
       access_token: urlParams.get("access_token"),
       refresh_token: urlParams.get("refresh_token"),
     },
   };
-  dispatch({
-    type: "SET_SPOTIFY",
-    payload: payload,
-  });
+  axios.post("/setspotify", payload) 
+    .then((res) => {
+      console.log(res)
+      history.push("/profile")
+    })
+    .catch((err) => {
+      console.log(err.response)
+    })
 };
 
 // Spotify register flow:
@@ -94,7 +98,8 @@ export const signupUser = (registerData, history) => (dispatch) => {
       history.push("/profile");
     })
     .catch((err) => {
-      console.log(err.response.data.message);
+      console.log(err.response);
+      console.log("test")
     });
 };
 

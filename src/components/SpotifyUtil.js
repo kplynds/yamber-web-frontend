@@ -1,14 +1,17 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import {setSpotify} from "../redux/actions/userActions";
+import { useHistory } from "react-router-dom";
 
 const SpotifyUtil = ({ setSpotify, user }) => {
+    const history = useHistory()
     useEffect(() => {
         // check params
-        if (window.location.search) {
-            console.log(user)
+        const querystring = window.location.search
+        if (querystring) {
+            setSpotify(user, querystring, history)
         }
-    }, [user])
+    }, [user, setSpotify, history])
     return (
         <div>loading...</div>
     )
