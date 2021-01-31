@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import Hidden from "@material-ui/core/Hidden";
-import { logout, setSpotify } from "../../redux/actions/userActions";
+import { logout, getAuthenticatedUserData } from "../../redux/actions/userActions";
 import DesktopNav from "../nav/DesktopNav";
 import MobileNav from "../nav/MobileNav";
 import theme from "../../theme";
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   content: {},
 }));
 
-const Profile = ({ user, logout, hashParams, user_loading }) => {
+const Profile = ({ user, logout, getAuthenticatedUserData, user_loading }) => {
   const classes = useStyles(theme);
   const history = useHistory();
   const logoutUser = (e) => {
@@ -24,10 +24,8 @@ const Profile = ({ user, logout, hashParams, user_loading }) => {
   };
 
   useEffect(() => {
-    if (window.location.search) {
-      setSpotify(window.location.search);
-    }
-  }, []);
+    getAuthenticatedUserData()
+  }, [getAuthenticatedUserData]);
   return (
     <div className={classes.root}>
       <Hidden xsDown>
@@ -56,7 +54,7 @@ const mapState = (state) => {
 
 const mapDispatch = {
   logout,
-  setSpotify,
+  getAuthenticatedUserData,
 };
 
 export default connect(mapState, mapDispatch)(Profile);

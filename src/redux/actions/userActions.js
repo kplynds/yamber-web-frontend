@@ -8,7 +8,6 @@ export const loginUser = (userData, history) => (dispatch) => {
       const token = res.data.token;
       localStorage.setItem("token", token);
       axios.defaults.headers.common["Authorization"] = token;
-      dispatch(getAuthenticatedUserData());
       dispatch({ type: "SET_AUTHENTICATED" });
       dispatch({ type: "CLEAR_ERRORS" });
       history.push("/profile");
@@ -66,12 +65,14 @@ export const setSpotify = (user, querystring, history) => (dispatch) => {
       refresh_token: urlParams.get("refresh_token"),
     },
   };
-  axios.post("/setspotify", payload) 
+  console.log("posting to spotify from useractions") 
+  axios.post("/setspotify", payload)
     .then((res) => {
       console.log(res)
       history.push("/profile")
     })
     .catch((err) => {
+      console.log("error posting to spotify from useractions")
       console.log(err.response)
     })
 };
@@ -121,11 +122,9 @@ export const signupUserWithSpotify = (registerData) => (dispatch) => {
     .catch((err) => {
       console.log(err.response);
     });
-  console.log(localStorage)
 }
 
 export const redirectToSpotify = () => (dispatch) => {
-  console.log(localStorage)
   window.location.href = `${axios.defaults.baseURL}/spotifylogin`;
 }
 // Right now we can get the user to sign up but when they are redirected back from spotify we have no way of figuring out which user it is so we can save the params to the database.
