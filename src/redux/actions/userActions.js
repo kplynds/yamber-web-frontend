@@ -116,7 +116,7 @@ export const signupUserWithSpotify = (registerData) => (dispatch) => {
       dispatch({ type: "JUST_SIGNED_UP" });
       dispatch({ type: "SET_AUTHENTICATED" });
       dispatch({ type: "CLEAR_ERRORS" });
-      window.location.href = `${axios.defaults.baseURL}/spotifylogin`
+      dispatch(redirectToSpotify)
     })
     .catch((err) => {
       console.log(err.response);
@@ -124,6 +124,10 @@ export const signupUserWithSpotify = (registerData) => (dispatch) => {
   console.log(localStorage)
 }
 
+export const redirectToSpotify = () => (dispatch) => {
+  console.log(localStorage)
+  window.location.href = `${axios.defaults.baseURL}/spotifylogin`;
+}
 // Right now we can get the user to sign up but when they are redirected back from spotify we have no way of figuring out which user it is so we can save the params to the database.
 // On tap + possible solution:
 // First, push everything I've done to the main branches so it can be deployed. 
