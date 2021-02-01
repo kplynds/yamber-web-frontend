@@ -100,7 +100,6 @@ export const signupUser = (registerData, history) => (dispatch) => {
     })
     .catch((err) => {
       console.log(err.response);
-      console.log("test")
     });
 };
 
