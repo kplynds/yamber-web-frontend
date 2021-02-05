@@ -4,25 +4,47 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import Hidden from "@material-ui/core/Hidden";
-import { logout, getAuthenticatedUserData } from "../../redux/actions/userActions";
+import { logout, getAuthenticatedUserData, redirectToSpotify, makePlaylistWithSpotifyData } from "../../redux/actions/userActions";
 import DesktopNav from "../nav/DesktopNav";
 import MobileNav from "../nav/MobileNav";
 import theme from "../../theme";
-// import jwt_decode from "jwt-decode";
+import Spotify from "spotify-web-api-js";
+import axios from "axios";
+
+const spotify = new Spotify();
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   content: {},
 }));
 
-const Profile = ({ user, logout, getAuthenticatedUserData, user_loading }) => {
+const Profile = ({ user, logout, getAuthenticatedUserData, user_loading, redirectToSpotify, makePlaylistWithSpotifyData }) => {
   const classes = useStyles(theme);
   const history = useHistory();
   const logoutUser = (e) => {
     e.preventDefault();
     logout(history);
   };
-
+  const syncWithSpotify = () => {
+    redirectToSpotify()
+  }
+  const getSpotifyData = () => {
+    // spotify.setAccessToken
+    const now = Date.now()
+    if (user.data.spotify.expireTime > now) {
+      spotify.setAccessToken(user.data.spotify.access_token) 
+    } else {
+      const payload = {refresh_token: user.data.spotify.refresh_token}
+      axios.post("/spotifyrefreshtoken", payload)
+        .then((res) => {
+          spotify.setAccessToken(res.data.access_token)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+    makePlaylistWithSpotifyData(spotify);
+  }
   useEffect(() => {
     getAuthenticatedUserData()
   }, [getAuthenticatedUserData]);
@@ -35,11 +57,10 @@ const Profile = ({ user, logout, getAuthenticatedUserData, user_loading }) => {
         <MobileNav />
       </Hidden>
       <div className={classes.content}>
-        { user_loading ? <div> loading... </div> : <div> Welcome {user.handle}! </div> }
+        { user_loading ? <div> loading... </div> : <div> Welcome {user.data.handle}! </div> }
         <button onClick={logoutUser}>Log out</button>
-        <a href="http://localhost:5000/flumes-company/us-central1/api/spotifylogin">
-          Sync with Spotify
-        </a>
+        <button onClick={getSpotifyData}>spotify</button>
+        <button onClick={syncWithSpotify}>sync with spotify</button>
       </div>
     </div>
   );
@@ -47,7 +68,7 @@ const Profile = ({ user, logout, getAuthenticatedUserData, user_loading }) => {
 
 const mapState = (state) => {
   return {
-    user: state.user.data,
+    user: state.user,
     user_loading: state.user.loading
   };
 };
@@ -55,6 +76,8 @@ const mapState = (state) => {
 const mapDispatch = {
   logout,
   getAuthenticatedUserData,
+  redirectToSpotify,
+  makePlaylistWithSpotifyData
 };
 
 export default connect(mapState, mapDispatch)(Profile);

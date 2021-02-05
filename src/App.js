@@ -21,10 +21,10 @@ import rootReducer from "./redux/reducers";
 import { Provider } from "react-redux";
 import SpotifyUtil from "./components/SpotifyUtil";
 
-const deployed_api = "https://us-central1-flumes-company.cloudfunctions.net/api"
-// const local_api = "http://localhost:5000/flumes-company/us-central1/api";
+// const deployed_api = "https://us-central1-flumes-company.cloudfunctions.net/api";
+const local_api = "http://localhost:5000/flumes-company/us-central1/api";
 
-axios.defaults.baseURL = deployed_api;
+axios.defaults.baseURL = local_api;
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -35,7 +35,7 @@ if (token) {
   const decodedToken = jwtDecode(token);
   if (decodedToken.exp * 1000 < Date.now()) {
     store.dispatch(logout());
-    window.location.href = "/login";
+    window.location.href = "/";
   } else {
     store.dispatch({ type: "SET_AUTHENTICATED" });
     axios.defaults.headers.common["Authorization"] = token;

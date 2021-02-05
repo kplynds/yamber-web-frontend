@@ -126,7 +126,20 @@ export const signupUserWithSpotify = (registerData) => (dispatch) => {
 export const redirectToSpotify = () => (dispatch) => {
   window.location.href = `${axios.defaults.baseURL}/spotifylogin`;
 }
-// Right now we can get the user to sign up but when they are redirected back from spotify we have no way of figuring out which user it is so we can save the params to the database.
-// On tap + possible solution:
-// First, push everything I've done to the main branches so it can be deployed. 
-// Once its deployed, see if localstorage persists on live sites. If it does, extract the handle from the token in local storage. 
+
+export const makePlaylistWithSpotifyData = (spotify) => (dispatch) => {
+  spotify.getMyTopTracks()
+      .then((res) => {
+        const body = {
+          tracks: res.items,
+          title: "Top 20 Tracks"
+        }
+        axios.post("/playlist", body)
+          .then((res) => {
+            console.log(res)
+          })
+      })
+      .catch((err) => {
+        console.log(err.response)
+      })
+}
