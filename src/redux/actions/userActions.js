@@ -10,9 +10,11 @@ export const loginUser = (userData, history) => (dispatch) => {
       axios.defaults.headers.common["Authorization"] = token;
       dispatch({ type: "SET_AUTHENTICATED" });
       dispatch({ type: "CLEAR_ERRORS" });
-      history.push("/profile");
+      dispatch(getAuthenticatedUserData());
+      history.push(`${res.data.user.handle}`);
     })
     .catch((err) => {
+      console.log(err)
       dispatch({
         type: "SET_ERRORS",
         payload: err.response.data.message,
@@ -20,11 +22,12 @@ export const loginUser = (userData, history) => (dispatch) => {
     });
 };
 
-export const logout = () => (dispatch) => {
+export const logout = (history) => (dispatch) => {
   localStorage.clear();
   delete axios.defaults.headers.common["Authorization"];
   dispatch({ type: "SET_UNAUTHENTICATED" });
   dispatch({ type: "JUST_LOGGED_OUT" });
+  history.push("/login")
 };
 
 export const getAuthenticatedUserData = () => (dispatch) => {
@@ -51,7 +54,7 @@ export const getUserData = (userHandle) => (dispatch) => {
       });
     })
     .catch((err) => {
-      console.log(err.response.data);
+      console.log(err.response);
       dispatch({ type: "CLEAR_ERRORS" });
     });
 };

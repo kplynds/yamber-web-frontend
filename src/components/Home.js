@@ -9,9 +9,12 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Phone from "@material-ui/icons/Phone";
+import { useHistory } from "react-router-dom";
 
 // import theme
 import theme from "../theme";
+import { connect } from "react-redux";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -48,9 +51,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Home() {
+function Home({ user }) {
   const classes = useStyles(theme);
-
+  const history = useHistory();
+  useEffect(() => {
+    if (user.authenticated && user.data.handle !== undefined) {
+      console.log("test")
+      history.push(`${user.data.handle}`)
+    }
+  }, [user, history]);
   return (
     <Grid container spacing={0} className={classes.grid}>
       <CssBaseline />
@@ -78,7 +87,7 @@ function Home() {
           </Typography>
           <Link to="/signup">
             <Button variant="outlined" startIcon={<Phone />}>
-              sign up 
+              sign up
             </Button>
           </Link>
         </div>
@@ -87,4 +96,10 @@ function Home() {
   );
 }
 
-export default Home;
+const mapState = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapState)(Home);

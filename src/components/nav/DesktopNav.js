@@ -7,29 +7,23 @@ import Typography from "@material-ui/core/Typography";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import SearchIcon from "@material-ui/icons/Search";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
+import { connect } from "react-redux";
 
 import theme from "../../theme";
 
 const useStyles = makeStyles((theme) => ({
-  sidebar: {
-    height: "50%",
-    position: "fixed",
-    width: "15%",
-    top: "20%",
-    bottom: "30%",
-    left: "3%",
+  root: {
+    height: "5rem",
+    background: "grey",
     display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
   },
   item: {
     display: "flex",
     justifyContent: "center",
+    margin: "0 10%",
+    padding: "10%",
     alignItems: "center",
-    border: "1px solid grey",
-    borderRadius: "10px",
     textDecoration: "none",
     color: "black",
     "&:visited": {
@@ -41,24 +35,88 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   active: {
-    backgroundColor: "blue",
+    borderBottom: "5px solid red"
   },
+  navItems: {
+    display: "flex",
+    justifyContent: "space-evenly",
+  },
+  logo: {
+    display: "flex",
+    alignItems: "center"
+  },
+  iconText: {
+    fontWeight: "bold",
+  }
 }));
 
-function DeskTopNav() {
+function DeskTopNav({ user }) {
   const classes = useStyles(theme);
 
   return (
-    <div className="root">
+    <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            yamber
-          </Typography>
+      <div className={classes.logo}>
+        <Typography variant="h6">
+          yamber!
+        </Typography>
+      </div>
+      <div className={classes.navItems}>
+        <NavLink
+          to={`${user.data.handle}`}
+          className={classes.item}
+          activeClassName={classes.active}
+        >
+          <PersonIcon fontSize="large" />
+          <Typography variant="h6" className={classes.iconText}>Profile</Typography>
+        </NavLink>
+        <NavLink
+          to="/featured"
+          className={classes.item}
+          activeClassName={classes.active}
+        >
+          <WhatshotIcon fontSize="large" />
+          <Typography variant="h6" className={classes.iconText}>Featured</Typography>
+        </NavLink>
+        <NavLink
+          to="/search"
+          className={classes.item}
+          activeClassName={classes.active}
+        >
+          <SearchIcon fontSize="large" />
+          <Typography variant="h6" className={classes.iconText}>Search</Typography>
+        </NavLink>
+      </div>
+      <div></div>
+      {/* <AppBar position="static">
+        <Typography variant="h6" className={classes.title}>
+          yamber
+        </Typography>
+        <Toolbar className={classes.navItems}>
+          <NavLink
+            to="/profile"
+            className={classes.item}
+            activeClassName={classes.active}
+          >
+            <PersonIcon fontSize="large" />
+          </NavLink>
+          <NavLink
+            to="/featured"
+            className={classes.item}
+            activeClassName={classes.active}
+          >
+            <WhatshotIcon fontSize="large" />
+          </NavLink>
+          <NavLink
+            to="/search"
+            className={classes.item}
+            activeClassName={classes.active}
+          >
+            <SearchIcon fontSize="large" />
+          </NavLink>
         </Toolbar>
-      </AppBar>
-      <div className={classes.sidebar}>
+      </AppBar> */}
+      {/* <div className={classes.sidebar}>
         <NavLink
           to="/profile"
           className={classes.item}
@@ -83,9 +141,15 @@ function DeskTopNav() {
           <SearchIcon style={{ paddingRight: 5, fontSize: 40 }} />
           <Typography>Search</Typography>
         </NavLink>
-      </div>
+      </div> */}
     </div>
   );
 }
 
-export default DeskTopNav;
+const mapState = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapState)(DeskTopNav);

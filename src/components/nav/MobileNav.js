@@ -6,9 +6,7 @@ import WhatshotIcon from "@material-ui/icons/Whatshot";
 import SearchIcon from "@material-ui/icons/Search";
 import { NavLink } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import { connect } from "react-redux";
 
 import theme from "../../theme";
 
@@ -30,23 +28,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MobileNav() {
+function MobileNav({ user }) {
   const classes = useStyles(theme);
 
   return (
     <div className="root">
       <CssBaseline />
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            yamber
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
       <div className={classes.nav}>
         <NavLink
-          to="/profile"
+          to={`${user.data.handle}`}
           className={classes.item}
           activeClassName={classes.active}
         >
@@ -71,4 +61,11 @@ function MobileNav() {
   );
 }
 
-export default MobileNav;
+const mapState = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapState)(MobileNav);
+

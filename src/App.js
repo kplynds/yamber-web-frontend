@@ -6,11 +6,9 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
 } from "react-router-dom";
-import Featured from "./components/protected/Featured";
-import Search from "./components/protected/Search";
-import Profile from "./components/protected/Profile";
+import Featured from "./components/pages/Featured";
+import Search from "./components/pages/Search";
 import AuthRoute from "./utils/AuthRoute";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -20,11 +18,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./redux/reducers";
 import { Provider } from "react-redux";
 import SpotifyUtil from "./components/SpotifyUtil";
+import User from "./components/pages/User";
 
-// const deployed_api = "https://us-central1-flumes-company.cloudfunctions.net/api";
-const local_api = "http://localhost:5000/flumes-company/us-central1/api";
+// const jwtSecret = process.env.JWT_SECRET || 'foofdytdyd';
 
-axios.defaults.baseURL = local_api;
+const deployed_api = "https://us-central1-flumes-company.cloudfunctions.net/api";
+// const local_api = "http://localhost:5000/flumes-company/us-central1/api";
+
+axios.defaults.baseURL = deployed_api;
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -40,11 +41,13 @@ if (token) {
     store.dispatch({ type: "SET_AUTHENTICATED" });
     axios.defaults.headers.common["Authorization"] = token;
     store.dispatch(getAuthenticatedUserData());
+    store.dispatch({ type: "TEST" });
   }
 }
 
 function App() {
-  const state = store.getState();
+  // console.log(state);
+  // const handle = state.user.test;
   return (
     <Provider store={store}>
       <Router>
@@ -61,10 +64,16 @@ function App() {
           {/* Might need to protect these routes */}
           <AuthRoute path="/featured" component={Featured} />
           <AuthRoute path="/search" component={Search} />
-          <AuthRoute path="/profile" component={Profile} />
-          <Route path="/" exact>
-            {state.user.authenticated ? <Redirect to="/profile" /> : <Home />}
-          </Route>
+          <AuthRoute path="/profile" component={User} />
+          <Route path="/:handle" component={User} />
+          <Route exact path = "/" component={Home} />
+          {/* <Route path="/" exact>
+            {store.getState().user.authenticated ? (
+              <Redirect to={`${store.getState().user.data.handle}`} />
+            ) : (
+              <Home />
+            )}
+          </Route> */}
         </Switch>
       </Router>
     </Provider>
