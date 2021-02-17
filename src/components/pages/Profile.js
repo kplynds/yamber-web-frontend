@@ -43,18 +43,19 @@ const Profile = ({
     const now = Date.now();
     if (user.data.spotify.expireTime > now) {
       spotify.setAccessToken(user.data.spotify.access_token);
+      makePlaylistWithSpotifyData(spotify);
     } else {
       const payload = { refresh_token: user.data.spotify.refresh_token };
       axios
         .post("/spotifyrefreshtoken", payload)
         .then((res) => {
           spotify.setAccessToken(res.data.access_token);
+          makePlaylistWithSpotifyData(spotify);
         })
         .catch((err) => {
           console.log(err);
         });
     }
-    makePlaylistWithSpotifyData(spotify);
   };
 
   return (
@@ -75,6 +76,19 @@ const Profile = ({
         <button onClick={getSpotifyData}>spotify</button>
         <button onClick={syncWithSpotify}>sync with spotify</button>
       </div>
+      {/* <div>
+        {Object.entries(user.data.playlists).map((playlist) => {
+          return (
+            <div key={playlist[0]}>
+              <h1>{playlist[1].title}</h1>
+              <p>{playlist[0]}</p>
+              {playlist[1].Songs.map((song) => {
+                return <p key={song}>{song}</p>
+              })}
+            </div>
+          );
+        })}
+      </div> */}
     </div>
   );
 };

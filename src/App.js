@@ -22,10 +22,10 @@ import User from "./components/pages/User";
 
 // const jwtSecret = process.env.JWT_SECRET || 'foofdytdyd';
 
-const deployed_api = "https://us-central1-flumes-company.cloudfunctions.net/api";
-// const local_api = "http://localhost:5000/flumes-company/us-central1/api";
+// const deployed_api = "https://us-central1-flumes-company.cloudfunctions.net/api";
+const local_api = "http://localhost:5000/flumes-company/us-central1/api";
 
-axios.defaults.baseURL = deployed_api;
+axios.defaults.baseURL = local_api;
 
 export const store = configureStore({
   reducer: rootReducer,

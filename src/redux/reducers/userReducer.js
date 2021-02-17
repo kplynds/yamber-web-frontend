@@ -4,10 +4,10 @@ const initialState = {
   justLoggedOut: false,
   justSignedUp: false,
   data: {},
-  test: false,
+  playlists: {},
 };
 
-export default function userReducer (state = initialState, action) {
+export default function userReducer(state = initialState, action) {
   switch (action.type) {
     case "SET_AUTHENTICATED":
       return {
@@ -20,7 +20,7 @@ export default function userReducer (state = initialState, action) {
       return {
         ...state,
         loading: true,
-      }
+      };
     case "SET_USER":
       return {
         ...state,
@@ -28,10 +28,15 @@ export default function userReducer (state = initialState, action) {
         loading: false,
         data: action.payload,
       };
+    case "SET_USER_PROFILE_PLAYLISTS":
+      return {
+        ...state,
+        playlists: action.payload,
+      };
     case "JUST_LOGGED_OUT":
       return {
         ...state,
-      justLoggedOut: true,
+        justLoggedOut: true,
       };
     case "SET_SPOTIFY":
       return {
@@ -43,11 +48,6 @@ export default function userReducer (state = initialState, action) {
         ...state,
         justSignedUp: true,
       };
-    case "TEST":
-      return {
-        ...state,
-        test: true
-      }
     default:
       return state;
   }
