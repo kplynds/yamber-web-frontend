@@ -9,33 +9,37 @@ import SearchIcon from "@material-ui/icons/Search";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { connect } from "react-redux";
 
+import {colors} from "../../utils/colors";
 import theme from "../../theme";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "5rem",
-    background: "grey",
+    background: colors.dark,
     display: "flex",
     justifyContent: "space-between",
+    borderBottom: "1px solid white"
   },
   item: {
     display: "flex",
     justifyContent: "center",
     margin: "0 10%",
     padding: "10%",
+    borderRadius: "15px",
     alignItems: "center",
     textDecoration: "none",
-    color: "black",
+    color: colors.text,
     "&:visited": {
       textDecoration: "none",
-      color: "black",
     },
     "&:hover": {
       backgroundColor: "red",
     },
   },
   active: {
-    borderBottom: "5px solid red"
+    borderBottom: `5px solid ${colors.third}`,
+    borderRadius: "0px",
+    color: colors.third
   },
   navItems: {
     display: "flex",
@@ -43,7 +47,8 @@ const useStyles = makeStyles((theme) => ({
   },
   logo: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
+    color: colors.text
   },
   iconText: {
     fontWeight: "bold",
@@ -57,7 +62,7 @@ function DeskTopNav({ user }) {
     <div className={classes.root}>
       <CssBaseline />
       <div className={classes.logo}>
-        <Typography variant="h6">
+        <Typography variant="h6" className={classes.logo}>
           yamber!
         </Typography>
       </div>

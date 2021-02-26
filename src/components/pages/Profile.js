@@ -13,12 +13,13 @@ import {
 import { useHistory } from "react-router-dom";
 import Spotify from "spotify-web-api-js";
 import axios from "axios";
+import DesktopProfile from "../DesktopProfile";
 
 const spotify = new Spotify();
 
 const useStyles = makeStyles((theme) => ({
   root: {},
-  content: {},
+  profileContainer: {},
 }));
 
 const Profile = ({
@@ -66,7 +67,7 @@ const Profile = ({
       <Hidden smUp>
         <MobileNav />
       </Hidden>
-      <div className={classes.content}>
+      {/* <div className={classes.content}>
         {user_loading ? (
           <div> loading... </div>
         ) : (
@@ -75,20 +76,10 @@ const Profile = ({
         <button onClick={logoutUser}>Log out</button>
         <button onClick={getSpotifyData}>spotify</button>
         <button onClick={syncWithSpotify}>sync with spotify</button>
-      </div>
-      {/* <div>
-        {Object.entries(user.data.playlists).map((playlist) => {
-          return (
-            <div key={playlist[0]}>
-              <h1>{playlist[1].title}</h1>
-              <p>{playlist[0]}</p>
-              {playlist[1].Songs.map((song) => {
-                return <p key={song}>{song}</p>
-              })}
-            </div>
-          );
-        })}
       </div> */}
+      <div className={classes.profileContainer}>
+        <DesktopProfile />
+      </div>
     </div>
   );
 };
