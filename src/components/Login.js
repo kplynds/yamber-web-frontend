@@ -14,7 +14,8 @@ import theme from "../theme";
 import { loginUser } from "../redux/actions/userActions";
 
 const useStyles = makeStyles((theme) => ({
-  grid: {
+  root: {
+    background: theme.palette.primary.dark,
     height: "100vh",
   },
   form: {
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   paper: {
-    marginTop: theme.spacing(8),
+    paddingTop: theme.spacing(15),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -44,7 +45,10 @@ const useStyles = makeStyles((theme) => ({
 
 function Login(props) {
   const history = useHistory();
-  const [formValues, setFormValues] = useState({ loginValue: "", password: "" });
+  const [formValues, setFormValues] = useState({
+    loginValue: "",
+    password: "",
+  });
 
   const classes = useStyles(theme);
 
@@ -59,72 +63,74 @@ function Login(props) {
     e.preventDefault();
     const userData = {
       loginValue: formValues.loginValue,
-      password: formValues.password
-    }
-    props.loginUser(userData, history)
+      password: formValues.password,
+    };
+    props.loginUser(userData, history);
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <div className={classes.error}>{props.errors}</div>
-        <form onSubmit={handleSubmit} className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            id="loginValue"
-            name="loginValue"
-            type="loginValue"
-            label="username, phone, or email"
-            value={formValues.loginValue || ""}
-            onChange={handleChange}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            id="password"
-            name="password"
-            type="password"
-            label="Password"
-            className={classes.textField}
-            value={formValues.password || ""}
-            onChange={handleChange}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+    <div className={classes.root}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Typography component="h1" variant="h5" color="textPrimary">
             Sign in
-            {props.loading && (
-              <CircularProgress size={30} className={classes.progress} />
-            )}
-          </Button>
-        </form>
-        <Link to="/signup">
-          Don't have an account? Click here to register
-        </Link>
-      </div>
-    </Container>
+          </Typography>
+          <div className={classes.error}>{props.errors}</div>
+          <form onSubmit={handleSubmit} className={classes.form} noValidate>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="loginValue"
+              name="loginValue"
+              type="loginValue"
+              label="username, phone, or email"
+              value={formValues.loginValue || ""}
+              onChange={handleChange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="password"
+              name="password"
+              type="password"
+              label="password"
+              className={classes.textField}
+              value={formValues.password || ""}
+              onChange={handleChange}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign in
+              {props.loading && (
+                <CircularProgress size={30} className={classes.progress} />
+              )}
+            </Button>
+          </form>
+          <Link to="/signup">
+            Don't have an account? Click here to register
+          </Link>
+        </div>
+      </Container>
+    </div>
   );
 }
 
 const mapState = (state) => {
-  return { 
+  return {
     loading: state.ui.loading,
-    errors: state.ui.errors
-  }
-}
+    errors: state.ui.errors,
+  };
+};
 
 const mapDispatch = {
-  loginUser
-}
+  loginUser,
+};
 
-export default connect(mapState, mapDispatch) (Login);
+export default connect(mapState, mapDispatch)(Login);

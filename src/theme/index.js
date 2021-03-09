@@ -3,13 +3,20 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#4e43cc",
-      contrastText: "#fff",
+      dark: "#181818",
+      main: "#212121",
+      light: "#3D3D3D"
     },
     secondary: {
-      main: "#cc8c43",
-      contrastText: "#fff",
+      main: "#4e43cc",
     },
+    text: {
+      primary: "#FFFFFF",
+      secondary: "#AAAAAA"
+    }
+  },
+  typography: {
+    fontFamily: ['"Ubuntu"', "sans-serif"].join(","),
   },
 });
 

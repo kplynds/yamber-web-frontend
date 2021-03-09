@@ -15,10 +15,9 @@ import theme from "../../theme";
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "5rem",
-    background: colors.dark,
+    background: theme.palette.primary.main,
     display: "flex",
     justifyContent: "space-between",
-    borderBottom: "1px solid white"
   },
   item: {
     display: "flex",
@@ -33,22 +32,25 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: "none",
     },
     "&:hover": {
-      backgroundColor: "red",
+      backgroundColor: theme.palette.primary.light,
     },
   },
   active: {
-    borderBottom: `5px solid ${colors.third}`,
-    borderRadius: "0px",
-    color: colors.third
+    borderBottom: `5px solid ${theme.palette.secondary.light}`,
+    borderBottomRightRadius: "0px",
+    borderBottomLeftRadius: "0px",
+    color: theme.palette.secondary.light,
   },
   navItems: {
     display: "flex",
     justifyContent: "space-evenly",
+    paddingRight: "5%"
   },
   logo: {
     display: "flex",
     alignItems: "center",
-    color: colors.text
+    color: theme.palette.text.primary,
+    paddingLeft: "5%"
   },
   iconText: {
     fontWeight: "bold",
@@ -93,60 +95,6 @@ function DeskTopNav({ user }) {
         </NavLink>
       </div>
       <div></div>
-      {/* <AppBar position="static">
-        <Typography variant="h6" className={classes.title}>
-          yamber
-        </Typography>
-        <Toolbar className={classes.navItems}>
-          <NavLink
-            to="/profile"
-            className={classes.item}
-            activeClassName={classes.active}
-          >
-            <PersonIcon fontSize="large" />
-          </NavLink>
-          <NavLink
-            to="/featured"
-            className={classes.item}
-            activeClassName={classes.active}
-          >
-            <WhatshotIcon fontSize="large" />
-          </NavLink>
-          <NavLink
-            to="/search"
-            className={classes.item}
-            activeClassName={classes.active}
-          >
-            <SearchIcon fontSize="large" />
-          </NavLink>
-        </Toolbar>
-      </AppBar> */}
-      {/* <div className={classes.sidebar}>
-        <NavLink
-          to="/profile"
-          className={classes.item}
-          activeClassName={classes.active}
-        >
-          <PersonIcon style={{ paddingRight: 5, fontSize: 40 }} />
-          <Typography>My taste</Typography>
-        </NavLink>
-        <NavLink
-          to="/featured"
-          className={classes.item}
-          activeClassName={classes.active}
-        >
-          <WhatshotIcon style={{ paddingRight: 5, fontSize: 40 }} />
-          <Typography>Featured</Typography>
-        </NavLink>
-        <NavLink
-          to="/search"
-          className={classes.item}
-          activeClassName={classes.active}
-        >
-          <SearchIcon style={{ paddingRight: 5, fontSize: 40 }} />
-          <Typography>Search</Typography>
-        </NavLink>
-      </div> */}
     </div>
   );
 }

@@ -2,11 +2,7 @@ import React from "react";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Featured from "./components/pages/Featured";
 import Search from "./components/pages/Search";
 import AuthRoute from "./utils/AuthRoute";
@@ -19,6 +15,8 @@ import rootReducer from "./redux/reducers";
 import { Provider } from "react-redux";
 import SpotifyUtil from "./components/SpotifyUtil";
 import User from "./components/pages/User";
+import theme from "./theme";
+import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
 
 // const jwtSecret = process.env.JWT_SECRET || 'foofdytdyd';
 
@@ -50,32 +48,27 @@ function App() {
   // const handle = state.user.test;
   return (
     <Provider store={store}>
-      <Router>
-        <Switch>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/signup">
-            <Signup />
-          </Route>
-          <Route path="/spotifyauth">
-            <SpotifyUtil />
-          </Route>
-          {/* Might need to protect these routes */}
-          <AuthRoute path="/featured" component={Featured} />
-          <AuthRoute path="/search" component={Search} />
-          <AuthRoute path="/profile" component={User} />
-          <Route path="/:handle" component={User} />
-          <Route exact path = "/" component={Home} />
-          {/* <Route path="/" exact>
-            {store.getState().user.authenticated ? (
-              <Redirect to={`${store.getState().user.data.handle}`} />
-            ) : (
-              <Home />
-            )}
-          </Route> */}
-        </Switch>
-      </Router>
+      <MuiThemeProvider theme={theme}>
+        <Router>
+          <Switch>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/signup">
+              <Signup />
+            </Route>
+            <Route path="/spotifyauth">
+              <SpotifyUtil />
+            </Route>
+            {/* Might need to protect these routes */}
+            <AuthRoute path="/featured" component={Featured} />
+            <AuthRoute path="/search" component={Search} />
+            <AuthRoute path="/profile" component={User} />
+            <Route path="/:handle" component={User} />
+            <Route exact path="/" component={Home} />
+          </Switch>
+        </Router>
+      </MuiThemeProvider>
     </Provider>
   );
 }

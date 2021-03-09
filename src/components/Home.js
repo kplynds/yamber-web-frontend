@@ -28,13 +28,14 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     height: "100vh",
+    background: theme.palette.primary.dark,
     display: "flex",
     justifyContent: "center",
     flexDirection: "column",
     alignItems: "center",
   },
   avatar: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.secondary.main,
     margin: theme.spacing(1),
   },
   logo_and_name: {
@@ -42,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   login: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.secondary.contrastText,
     margin: "1rem",
   },
   divider: {
@@ -70,11 +71,11 @@ function Home({ user }) {
             <Avatar className={classes.avatar}>
               <MusicNoteIcon />
             </Avatar>
-            <Typography component="h1" variant="h6">
+            <Typography component="h1" variant="h6" color="textPrimary">
               Yamber
             </Typography>
           </div>
-          <Typography component="h1" variant="h6">
+          <Typography component="h1" variant="h6" color="textPrimary">
             The Social Network for Music!
           </Typography>
           <Link to="/login">

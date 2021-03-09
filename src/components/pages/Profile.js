@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 import Spotify from "spotify-web-api-js";
 import axios from "axios";
 import DesktopProfile from "../DesktopProfile";
+import ProfileContent from "../ProfileContent";
 
 const spotify = new Spotify();
 
@@ -63,6 +64,7 @@ const Profile = ({
     <div className={classes.root}>
       <Hidden xsDown>
         <DesktopNav />
+        <DesktopProfile />
       </Hidden>
       <Hidden smUp>
         <MobileNav />
@@ -77,9 +79,7 @@ const Profile = ({
         <button onClick={getSpotifyData}>spotify</button>
         <button onClick={syncWithSpotify}>sync with spotify</button>
       </div> */}
-      <div className={classes.profileContainer}>
-        <DesktopProfile />
-      </div>
+      <ProfileContent />
     </div>
   );
 };

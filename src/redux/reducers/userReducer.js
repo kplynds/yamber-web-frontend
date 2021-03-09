@@ -4,7 +4,7 @@ const initialState = {
   justLoggedOut: false,
   justSignedUp: false,
   data: {},
-  playlists: {},
+  playlists: [],
 };
 
 export default function userReducer(state = initialState, action) {
