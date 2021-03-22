@@ -5,6 +5,7 @@ const initialState = {
   justSignedUp: false,
   data: {},
   playlists: [],
+  recentListening: [],
 };
 
 export default function userReducer(state = initialState, action) {
@@ -28,10 +29,15 @@ export default function userReducer(state = initialState, action) {
         loading: false,
         data: action.payload,
       };
-    case "SET_USER_PROFILE_PLAYLISTS":
+    case "SET_USER_PLAYLISTS":
       return {
         ...state,
         playlists: action.payload,
+      };
+    case "SET_RECENT_WITH_SPOTIFY":
+      return {
+        ...state,
+        recentListening: action.payload,
       };
     case "JUST_LOGGED_OUT":
       return {

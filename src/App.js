@@ -17,6 +17,7 @@ import SpotifyUtil from "./components/SpotifyUtil";
 import User from "./components/pages/User";
 import theme from "./theme";
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
+import Playlist from "./components/pages/Playlist";
 
 // const jwtSecret = process.env.JWT_SECRET || 'foofdytdyd';
 
@@ -61,6 +62,7 @@ function App() {
               <SpotifyUtil />
             </Route>
             {/* Might need to protect these routes */}
+            <Route path="/:handle/:playlistId" component={Playlist} />
             <AuthRoute path="/featured" component={Featured} />
             <AuthRoute path="/search" component={Search} />
             <AuthRoute path="/profile" component={User} />

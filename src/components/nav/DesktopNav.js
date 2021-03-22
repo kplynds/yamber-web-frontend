@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
@@ -8,6 +8,7 @@ import WhatshotIcon from "@material-ui/icons/Whatshot";
 import SearchIcon from "@material-ui/icons/Search";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { connect } from "react-redux";
+import { logout, seedWithSpotify } from "../../redux/actions/userActions";
 
 import {colors} from "../../utils/colors";
 import theme from "../../theme";
@@ -57,9 +58,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function DeskTopNav({ user }) {
+function DeskTopNav({ user, logout, seedWithSpotify }) {
   const classes = useStyles(theme);
-
+  const history = useHistory();
+  const logoutUser = (e) => {
+    e.preventDefault();
+    logout(history);
+  };
+  const spotifyRefresh = (e) => {
+    e.preventDefault()
+    seedWithSpotify(user.data, { type: "refresh" })
+  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -70,7 +79,7 @@ function DeskTopNav({ user }) {
       </div>
       <div className={classes.navItems}>
         <NavLink
-          to={`${user.data.handle}`}
+          to={`/${user.data.handle}`}
           className={classes.item}
           activeClassName={classes.active}
         >
@@ -94,7 +103,10 @@ function DeskTopNav({ user }) {
           <Typography variant="h6" className={classes.iconText}>Search</Typography>
         </NavLink>
       </div>
-      <div></div>
+      <div style={{display: "flex", flexDirection: "column"}}>
+        <button onClick={logoutUser}>logout</button>
+        <button onClick={spotifyRefresh}>Refresh Spotify Data</button>
+      </div>
     </div>
   );
 }
@@ -105,4 +117,9 @@ const mapState = (state) => {
   };
 };
 
-export default connect(mapState)(DeskTopNav);
+const mapDispatch = {
+  logout,
+  seedWithSpotify
+}
+
+export default connect(mapState, mapDispatch)(DeskTopNav);

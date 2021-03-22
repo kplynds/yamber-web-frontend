@@ -10,13 +10,13 @@ import {
   redirectToSpotify,
   makePlaylistWithSpotifyData,
 } from "../../redux/actions/userActions";
-import { useHistory } from "react-router-dom";
-import Spotify from "spotify-web-api-js";
-import axios from "axios";
+// import { useHistory } from "react-router-dom";
+// import Spotify from "spotify-web-api-js";
+// import axios from "axios";
 import DesktopProfile from "../DesktopProfile";
 import ProfileContent from "../ProfileContent";
 
-const spotify = new Spotify();
+// const spotify = new Spotify();
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -32,33 +32,33 @@ const Profile = ({
   makePlaylistWithSpotifyData,
 }) => {
   const classes = useStyles(theme);
-  const history = useHistory();
-  const logoutUser = (e) => {
-    e.preventDefault();
-    logout(history);
-  };
-  const syncWithSpotify = () => {
-    redirectToSpotify();
-  };
-  const getSpotifyData = () => {
-    // spotify.setAccessToken
-    const now = Date.now();
-    if (user.data.spotify.expireTime > now) {
-      spotify.setAccessToken(user.data.spotify.access_token);
-      makePlaylistWithSpotifyData(spotify);
-    } else {
-      const payload = { refresh_token: user.data.spotify.refresh_token };
-      axios
-        .post("/spotifyrefreshtoken", payload)
-        .then((res) => {
-          spotify.setAccessToken(res.data.access_token);
-          makePlaylistWithSpotifyData(spotify);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
+  // const history = useHistory();
+  // const logoutUser = (e) => {
+  //   e.preventDefault();
+  //   logout(history);
+  // };
+  // const syncWithSpotify = () => {
+  //   redirectToSpotify();
+  // };
+  // const getSpotifyData = () => {
+  //   // spotify.setAccessToken
+  //   const now = Date.now();
+  //   if (user.data.spotify.expireTime > now) {
+  //     spotify.setAccessToken(user.data.spotify.access_token);
+  //     makePlaylistWithSpotifyData(spotify);
+  //   } else {
+  //     const payload = { refresh_token: user.data.spotify.refresh_token };
+  //     axios
+  //       .post("/spotifyrefreshtoken", payload)
+  //       .then((res) => {
+  //         spotify.setAccessToken(res.data.access_token);
+  //         makePlaylistWithSpotifyData(spotify);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+  // };
 
   return (
     <div className={classes.root}>

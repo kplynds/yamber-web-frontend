@@ -1,75 +1,143 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import Spotify from "spotify-web-api-js";
+import Hidden from "@material-ui/core/Hidden";
+import DesktopNav from "../nav/DesktopNav";
+import MobileNav from "../nav/MobileNav";
+import theme from "../../theme";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
+import { FaSpotify } from "react-icons/fa";
+import Button from "@material-ui/core/Button";
+import axios from "axios";
+import Grid from "@material-ui/core/Grid";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import { Link, useHistory } from "react-router-dom";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import { useHistory } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
-import theme from "../theme";
-import { setSpotifyRecentData } from "../redux/actions/userActions";
-import Grid from "@material-ui/core/Grid";
-import { Typography } from "@material-ui/core";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import { Link } from "react-router-dom";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
+import { getPlaylistCover } from "../ProfileContent";
 
-export const getArtistNames = (arr) => {
-  const ret = [];
-  arr.forEach((artist) => {
-    ret.push(artist.name);
-  });
-  return ret;
-};
-
-export const getPlaylistCover = (playlist) => {
-  if (playlist.songs.length < 4) {
-    return (
-      <img
-        src={playlist.songs[0].images[0].url}
-        alt={playlist.title}
-        style={{
-          width: "6rem",
-          height: "6rem",
-        }}
-      />
-    );
+export const getSpotifyRecentData = (
+  user,
+  setRecentListening,
+  fromPlaylist
+) => {
+  const spotify = new Spotify();
+  const now = Date.now();
+  if (user.spotify.expireTime > now) {
+    spotify.setAccessToken(user.spotify.access_token);
+    spotify
+      .getMyTopTracks({
+        time_range: "short_term",
+        limit: 15,
+      })
+      .then((res) => {
+        const finished = [];
+        res.items.forEach((item) => {
+          const song = {
+            name: item.name,
+            artists: item.artists,
+            preview: item.preview_url,
+            href: item.href,
+            images: item.album.images,
+          };
+          finished.push(song);
+        });
+        if (fromPlaylist) {
+          setRecentListening({
+            songs: finished,
+            title: "Recent Listening",
+            user: user.handle,
+          });
+        } else {
+          setRecentListening(finished);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("error here");
+      });
   } else {
-    return (
-      <GridList
-        cols={2}
-        spacing={0}
-        cellHeight={96}
-        style={{
-          width: "12rem",
-          height: "12rem",
-        }}
-      >
-        {playlist.songs.map((song, index) => {
-          if (index < 4) {
-            return (
-              <GridListTile key={index}>
-                <img
-                  src={song.images[0].url}
-                  alt={playlist.title}
-                  style={{
-                    width: "6rem",
-                    height: "6rem",
-                  }}
-                />
-              </GridListTile>
-            );
-          } else {
-            return null;
-          }
-        })}
-      </GridList>
-    );
+    const payload = { refresh_token: user.spotify.refresh_token };
+    axios
+      .post("/spotifyrefreshtoken", payload)
+      .then((res) => {
+        const body = { token: res.data.access_token };
+        axios
+          .post("/setnewspotifytoken", body)
+          .then((res) => {
+            spotify.setAccessToken(res.data);
+            spotify
+              .getMyTopTracks({
+                time_range: "short_term",
+                limit: 15,
+              })
+              .then((res) => {
+                const finished = [];
+                res.items.forEach((item) => {
+                  const song = {
+                    name: item.name,
+                    artists: item.artists,
+                    preview: item.preview_url,
+                    href: item.href,
+                    images: item.album.images,
+                    id: item.id,
+                  };
+                  finished.push(song);
+                });
+                if (fromPlaylist) {
+                  setRecentListening({
+                    songs: finished,
+                    title: "Recent Listening",
+                    user: user.handle,
+                  });
+                } else {
+                  setRecentListening(finished);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log("error posting to refresh token endpoint?");
+        console.log(err);
+      });
   }
 };
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    display: "flex",
+    borderBottom: "1px solid grey",
     background: theme.palette.primary.dark,
+    paddingTop: "2%",
+    paddingBottom: "2%",
+  },
+  content: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    background: theme.palette.primary.main,
+    borderRadius: "15px",
+    width: "25%",
+  },
+  basic: {
+    width: "50%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  name: {
+    display: "flex",
+    alignItems: "center",
+    paddingTop: theme.spacing(1),
   },
   tabs: {
     display: "flex",
@@ -135,10 +203,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
 }));
-//1615322891210
-const ProfileContent = ({ user }) => {
+
+const UserProfile = ({ profile }) => {
   const classes = useStyles(theme);
   const history = useHistory();
+  const [playlists, setPlaylists] = useState([]);
+  const [recentListening, setRecentListening] = useState([]);
   const [tabValue, setTabValue] = useState(0);
   const getTopArtists = (arr) => {
     const all = [];
@@ -176,11 +246,16 @@ const ProfileContent = ({ user }) => {
     });
     return ret;
   };
-
+  const getArtistNames = (arr) => {
+    const ret = [];
+    arr.forEach((artist) => {
+      ret.push(artist.name);
+    });
+    return ret;
+  };
   const Playlists = () => {
     return <div className={classes.playlistsRoot}>playlists</div>;
   };
-
   const Overview = () => {
     return (
       <div>
@@ -193,11 +268,10 @@ const ProfileContent = ({ user }) => {
               <div className={classes.recentsContent}>
                 <div className={classes.centerText}>
                   <Typography variant="body1" mx="auto">
-                    {getTopArtists(user.recentListening).join(", ")} &amp;
-                    more...
+                    {getTopArtists(recentListening).join(", ")} &amp; more...
                   </Typography>
                   <Link
-                    to={`/${user.data.handle}/recent`}
+                    to={`/${profile.handle}/recent`}
                     className={classes.link}
                   >
                     <Typography
@@ -209,7 +283,7 @@ const ProfileContent = ({ user }) => {
                     </Typography>
                   </Link>
                 </div>
-                {user.recentListening.map((song, index) => {
+                {recentListening.map((song, index) => {
                   if (index < 6) {
                     return (
                       <div className={classes.recentsSong} key={index}>
@@ -268,7 +342,7 @@ const ProfileContent = ({ user }) => {
                 </Typography>
               </div>
               <div className={classes.recentsContent}>
-                {user.data.topArtists.map((artist, index) => {
+                {profile.topArtists.map((artist, index) => {
                   return (
                     <div className={classes.artist} key={index}>
                       <Typography
@@ -314,13 +388,15 @@ const ProfileContent = ({ user }) => {
           </Grid>
         </Grid>
         <div className={classes.playlistContainer}>
-          {user.playlists.map((playlist, index) => {
+          {playlists.map((playlist, index) => {
             if (playlist.data.showOnOverview) {
               return (
                 <div
                   className={classes.playlist}
                   key={index}
-                  onClick={() => history.push(`/${playlist.data.user}/${playlist.id}`)}
+                  onClick={() =>
+                    history.push(`/${playlist.data.user}/${playlist.id}`)
+                  }
                 >
                   {playlist.data.image.trim() !== "" ? (
                     <img
@@ -335,11 +411,7 @@ const ProfileContent = ({ user }) => {
                   ) : (
                     getPlaylistCover(playlist.data)
                   )}
-                  <Typography
-                    variant="body1"
-                    color="textPrimary"
-                    style={{ marginTop: ".6rem" }}
-                  >
+                  <Typography variant="body1" style={{ marginTop: ".6rem" }}>
                     {playlist.data.title}
                   </Typography>
                 </div>
@@ -353,8 +425,56 @@ const ProfileContent = ({ user }) => {
     );
   };
 
+  useEffect(() => {
+    axios
+      .get(`/playlists/${profile.handle}`)
+      .then((res) => {
+        setPlaylists(res.data);
+        if (profile.recentListening === "spotify") {
+          getSpotifyRecentData(profile, setRecentListening, false);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response);
+        console.log("error when getting playlist or recent data");
+      });
+  }, [profile]);
   return (
-    <div className={classes.root}>
+    <div className={classes.base}>
+      <Hidden xsDown>
+        <DesktopNav />
+      </Hidden>
+      <Hidden smUp>
+        <MobileNav />
+      </Hidden>
+      <div className={classes.root}>
+        <div className={classes.basic}>
+          <Avatar
+            alt={profile.info.displayName}
+            src={profile.info.imageUrl}
+            style={{ width: theme.spacing(15), height: theme.spacing(15) }}
+          />
+          <Typography variant="h4" color="textPrimary">
+            @{profile.handle}
+          </Typography>
+        </div>
+        <div className={classes.content}>
+          <div className={classes.name}>
+            <Typography
+              variant="h4"
+              style={{ marginRight: theme.spacing(1) }}
+              color="textPrimary"
+            >
+              {profile.info.displayName}
+            </Typography>
+            <FaSpotify size={30} color={theme.palette.text.primary} />
+          </div>
+          <Button>Make a Playlist</Button>
+          <Typography variant="body1" color="textPrimary">
+            {profile.info.bio}
+          </Typography>
+        </div>
+      </div>
       <div className={classes.tabs}>
         <Tabs
           value={tabValue}
@@ -366,7 +486,7 @@ const ProfileContent = ({ user }) => {
           <Tab label="playlists" />
         </Tabs>
       </div>
-      <div className={classes.content}>
+      <div className={classes.stuff}>
         {tabValue === 0 && <Overview />}
         {tabValue === 1 && <Playlists />}
       </div>
@@ -380,8 +500,6 @@ const mapState = (state) => {
   };
 };
 
-const mapDispatch = {
-  setSpotifyRecentData,
-};
+const mapDispatch = {};
 
-export default connect(mapState, mapDispatch)(ProfileContent);
+export default connect(mapState, mapDispatch)(UserProfile);

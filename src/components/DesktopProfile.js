@@ -39,16 +39,17 @@ const useStyles = makeStyles((theme) => ({
 
 const DesktopProfile = ({ user }) => {
   const classes = useStyles(theme);
+  const profile = user.data
   return (
     <div className={classes.root}>
       <div className={classes.basic}>
         <Avatar
-          alt={user.data.info.displayName}
-          src={user.data.info.imageUrl}
+          alt={profile.info.displayName}
+          src={profile.info.imageUrl}
           style={{ width: theme.spacing(15), height: theme.spacing(15) }}
         />
         <Typography variant="h4" color="textPrimary">
-          @{user.data.handle}
+          @{profile.handle}
         </Typography>
       </div>
       <div className={classes.content}>
@@ -58,13 +59,13 @@ const DesktopProfile = ({ user }) => {
             style={{ marginRight: theme.spacing(1) }}
             color="textPrimary"
           >
-            {user.data.info.displayName}
+            {profile.info.displayName}
           </Typography>
           <FaSpotify size={30} color={theme.palette.text.primary} />
         </div>
         <Button>Make a Playlist</Button>
         <Typography variant="body1" color="textPrimary">
-          {user.data.info.bio}
+          {profile.info.bio}
         </Typography>
       </div>
     </div>

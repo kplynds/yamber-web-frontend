@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import UserProfile from "./UserProfile";
 import { getUserData, getAuthenticatedUserData } from "../../redux/actions/userActions";
 import { useEffect } from "react";
 import PropTypes from 'prop-types';
@@ -21,17 +22,17 @@ const User = ({match, user, getAuthenticatedUserData}) => {
                     setLoading(false)
                 })
                 .catch((err) => {
-                    console.log(err)
+                    console.log(err.response)
                     setLoading(false)
                 })
         }
-    }, [handle, user, getAuthenticatedUserData])
+    }, [handle])
     if (!loading) {
         if (profile) {
             if (profile.handle === user.data.handle) {
                 return <Profile /> //render the profile component here. 
             } else {
-                return <div>{profile.handle} data</div>
+                return <UserProfile profile={profile} />
             }
         } else {
             return <div>user not found</div>

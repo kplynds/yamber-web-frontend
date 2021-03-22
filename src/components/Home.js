@@ -57,7 +57,6 @@ function Home({ user }) {
   const history = useHistory();
   useEffect(() => {
     if (user.authenticated && user.data.handle !== undefined) {
-      console.log("test")
       history.push(`${user.data.handle}`)
     }
   }, [user, history]);

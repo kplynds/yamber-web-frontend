@@ -26,10 +26,13 @@ import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    paddingTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    background: theme.palette.primary.dark,
+    width: "100%",
+    height: "100vh"
   },
   form: {
     width: "100%",
@@ -98,7 +101,7 @@ const Signup = (props) => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" style={{background: theme.palette.primary.dark}}>
       <CssBaseline />
       {signupState === "spotify" && (
         <div className={classes.paper}>
@@ -203,7 +206,6 @@ const Signup = (props) => {
               {loginValue === "phone" && (
                 <Grid item xs={12}>
                   <Button
-                    color="primary"
                     onClick={() => {
                       setLoginValue("email");
                     }}
@@ -230,7 +232,6 @@ const Signup = (props) => {
               {loginValue === "email" && (
                 <Grid item xs={12}>
                   <Button
-                    color="primary"
                     onClick={() => {
                       setLoginValue("phone");
                     }}
