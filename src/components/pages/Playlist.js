@@ -6,15 +6,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import theme from "../../theme";
 import { connect } from "react-redux";
 import axios from "axios";
-import { Typography } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
-import { getPlaylistCover, getArtistNames } from "../ProfileContent";
+import { getPlaylistCover } from "../ProfileContent";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import { getSpotifyRecentData } from "./UserProfile";
+import { playButtonClick } from "../../redux/actions/dataActions";
+import StopIcon from "@material-ui/icons/Stop";
+import NotFound from "../NotFound";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
-  playlist: {},
   playlistTop: {
     display: "flex",
     justifyContent: "center",
@@ -29,20 +30,38 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
     },
   },
-  song: {
+  songsContainer: {
+    width: "70%",
+    margin: "0 auto",
+    padding: "1rem 0",
+    [theme.breakpoints.down("md")]: {
+      width: "80%"
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "90%"
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%"
+    },
+  },
+  recentsSong: {
     display: "flex",
     alignItems: "center",
-    padding: ".15rem 0",
+    justifyContent: "space-between",
+    padding: ".15rem 1rem",
     "&:hover": {
       background: theme.palette.primary.light,
       cursor: "pointer",
     },
-    width: "30rem",
-    margin: "0 auto",
+  },
+  albumImages: {
+    height: "3.75rem",
+    width: "3.75rem",
+    margin: "0 1rem",
   },
 }));
 
-const Playlist = ({ user, match }) => {
+const Playlist = ({ user, match, ui, playButtonClick }) => {
   const classes = useStyles(theme);
   const history = useHistory();
   const id = match.params.playlistId;
@@ -59,11 +78,15 @@ const Playlist = ({ user, match }) => {
       error: false,
       recentPlaylist: false,
     });
-    if (id === "recent") {
+    if (id === "recentlistening") {
       axios
         .get(`/userbase/${handle}`)
         .then((res) => {
-          getSpotifyRecentData(res.data.user, setPlaylist, true);
+          setPlaylist({
+            songs: res.data.user.recentListening.data,
+            title: "Recent Listening",
+            user: res.data.user.handle,
+          });
           setState({
             loading: false,
             error: false,
@@ -101,13 +124,13 @@ const Playlist = ({ user, match }) => {
   }, [id, handle]);
   const Content = () => {
     if (state.error) {
-      return <div>playlist does not exist</div>;
+      return <NotFound />;
     } else if (playlist) {
-      console.log(playlist);
       return (
-        <div className={classes.playlist}>
+        <div>
+          {" "}
           <div className={classes.playlistTop}>
-            <div style={{ marginRight: "1rem" }}>
+            <div style={{ margin: "0 .1rem" }}>
               {getPlaylistCover(playlist)}
             </div>
             <div style={{ marginLeft: "1rem" }}>
@@ -125,52 +148,54 @@ const Playlist = ({ user, match }) => {
               </Typography>
             </div>
           </div>
-          {playlist.songs.map((song, index) => {
-            return (
-              <div className={classes.song} key={index}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginRight: "1rem",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    style={{ paddingLeft: "1rem" }}
-                  >
-                    {index + 1}
-                  </Typography>
-                  <img
-                    src={song.images[0].url}
-                    alt={song.name}
+          <div className={classes.songsContainer}>
+            {playlist.songs.map((song, index) => {
+              return (
+                <div className={classes.recentsSong} key={index}>
+                  <div
                     style={{
-                      marginLeft: "1rem",
-                      height: "3.75rem",
-                      width: "3.75rem",
+                      display: "flex",
+                      alignItems: "center",
                     }}
-                  />
+                  >
+                    <Typography variant="body2" color="textSecondary">
+                      {index + 1}
+                    </Typography>
+                    <img
+                      src={song.images[0].url}
+                      alt={song.name}
+                      className={classes.albumImages}
+                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Typography variant="body2">{song.name}</Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {song.artists.join(", ")}
+                      </Typography>
+                    </div>
+                  </div>
+
+                  {ui.audio.active && ui.audio.src === song.preview ? (
+                    <StopIcon
+                      onClick={() => {
+                        playButtonClick(song.preview, ui.audio);
+                      }}
+                    />
+                  ) : (
+                    <PlayArrowIcon
+                      onClick={() => {
+                        playButtonClick(song.preview, ui.audio);
+                      }}
+                    />
+                  )}
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    width: "72%",
-                  }}
-                >
-                  <Typography variant="body2">{song.name}</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {state.recentPlaylist
-                      ? getArtistNames(song.artists).join(", ")
-                      : song.artists.join(", ")}
-                  </Typography>
-                </div>
-                <PlayArrowIcon style={{ marginRight: ".7rem" }} />
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       );
     } else {
@@ -179,10 +204,10 @@ const Playlist = ({ user, match }) => {
   };
   return (
     <div className={classes.root}>
-      <Hidden xsDown>
+      <Hidden smDown>
         <DesktopNav />
       </Hidden>
-      <Hidden smUp>
+      <Hidden mdUp>
         <MobileNav />
       </Hidden>
       <div>{state.loading ? <div>loading...</div> : <Content />}</div>
@@ -193,7 +218,12 @@ const Playlist = ({ user, match }) => {
 const mapState = (state) => {
   return {
     user: state.user,
+    ui: state.ui,
   };
 };
 
-export default connect(mapState)(Playlist);
+const mapDispatch = {
+  playButtonClick,
+};
+
+export default connect(mapState, mapDispatch)(Playlist);

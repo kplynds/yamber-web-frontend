@@ -13,10 +13,12 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import { getPlaylistCover } from "../ProfileContent";
+import MobileProfile from "../MobileProfile";
+import StopIcon from "@material-ui/icons/Stop";
+import { playButtonClick } from "../../redux/actions/dataActions";
 
 export const getSpotifyRecentData = (
   user,
@@ -63,7 +65,7 @@ export const getSpotifyRecentData = (
     axios
       .post("/spotifyrefreshtoken", payload)
       .then((res) => {
-        const body = { token: res.data.access_token };
+        const body = { token: res.data.access_token, handle: user.handle };
         axios
           .post("/setnewspotifytoken", body)
           .then((res) => {
@@ -142,6 +144,9 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     display: "flex",
     justifyContent: "center",
+    [theme.breakpoints.down("sm")]: {
+      marginBottom: "1rem",
+    },
   },
   playlistsRoot: {
     background: theme.palette.primary.dark,
@@ -158,6 +163,9 @@ const useStyles = makeStyles((theme) => ({
     margin: "1rem 4rem",
     paddingTop: "1rem",
     paddingBottom: "1rem",
+    [theme.breakpoints.down("sm")]: {
+      margin: "1rem",
+    },
   },
   recentsSong: {
     display: "flex",
@@ -201,12 +209,14 @@ const useStyles = makeStyles((theme) => ({
     // going to need to add some css here so it wraps ever 3 playlists
     display: "flex",
     justifyContent: "center",
+    [theme.breakpoints.down("sm")]: {
+      paddingBottom: "18%",
+    },
   },
 }));
 
-const UserProfile = ({ profile }) => {
+const UserProfile = ({ profile, playButtonClick, ui }) => {
   const classes = useStyles(theme);
-  const history = useHistory();
   const [playlists, setPlaylists] = useState([]);
   const [recentListening, setRecentListening] = useState([]);
   const [tabValue, setTabValue] = useState(0);
@@ -324,7 +334,21 @@ const UserProfile = ({ profile }) => {
                             {getArtistNames(song.artists).join(", ")}
                           </Typography>
                         </div>
-                        <PlayArrowIcon style={{ marginRight: ".7rem" }} />
+                        {ui.audio.active && ui.audio.src === song.preview ? (
+                          <StopIcon
+                            style={{ marginRight: ".7rem" }}
+                            onClick={() => {
+                              playButtonClick(song.preview, ui.audio);
+                            }}
+                          />
+                        ) : (
+                          <PlayArrowIcon
+                            style={{ marginRight: ".7rem" }}
+                            onClick={() => {
+                              playButtonClick(song.preview, ui.audio);
+                            }}
+                          />
+                        )}
                       </div>
                     );
                   } else {
@@ -353,7 +377,7 @@ const UserProfile = ({ profile }) => {
                         {index + 1}
                       </Typography>
                       <img
-                        src={artist.images[2].url}
+                        src={artist.image}
                         alt={artist.name}
                         style={{
                           height: "4rem",
@@ -364,15 +388,17 @@ const UserProfile = ({ profile }) => {
                       />
                       <div>
                         <Typography variant="body2">{artist.name}</Typography>
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          style={{
-                            marginRight: ".2rem",
-                          }}
-                        >
-                          {artist.genres.join(", ")}
-                        </Typography>
+                        {artist.genres && (
+                          <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            style={{
+                              marginRight: ".2rem",
+                            }}
+                          >
+                            {artist.genres.join(", ")}
+                          </Typography>
+                        )}
                       </div>
                     </div>
                   );
@@ -380,73 +406,12 @@ const UserProfile = ({ profile }) => {
               </div>
             </div>
           </Grid>
-          {/* later this will be: if (user has other playlists they want to show) */}
-          <Grid item xs={12}>
-            <div className={classes.centerText}>
-              <Typography variant="h4">Featured Playlists</Typography>
-            </div>
-          </Grid>
         </Grid>
-        <div className={classes.playlistContainer}>
-          {playlists.map((playlist, index) => {
-            if (playlist.data.showOnOverview) {
-              return (
-                <div
-                  className={classes.playlist}
-                  key={index}
-                  onClick={() =>
-                    history.push(`/${playlist.data.user}/${playlist.id}`)
-                  }
-                >
-                  {playlist.data.image.trim() !== "" ? (
-                    <img
-                      src={playlist.data.image}
-                      alt={playlist.data.title}
-                      style={{
-                        width: "6rem",
-                        height: "6rem",
-                        marginBottom: "",
-                      }}
-                    />
-                  ) : (
-                    getPlaylistCover(playlist.data)
-                  )}
-                  <Typography variant="body1" style={{ marginTop: ".6rem" }}>
-                    {playlist.data.title}
-                  </Typography>
-                </div>
-              );
-            } else {
-              return null;
-            }
-          })}
-        </div>
       </div>
     );
   };
-
-  useEffect(() => {
-    axios
-      .get(`/playlists/${profile.handle}`)
-      .then((res) => {
-        setPlaylists(res.data);
-        if (profile.recentListening === "spotify") {
-          getSpotifyRecentData(profile, setRecentListening, false);
-        }
-      })
-      .catch((err) => {
-        console.log(err.response);
-        console.log("error when getting playlist or recent data");
-      });
-  }, [profile]);
-  return (
-    <div className={classes.base}>
-      <Hidden xsDown>
-        <DesktopNav />
-      </Hidden>
-      <Hidden smUp>
-        <MobileNav />
-      </Hidden>
+  const DesktopProfile = () => {
+    return (
       <div className={classes.root}>
         <div className={classes.basic}>
           <Avatar
@@ -475,6 +440,33 @@ const UserProfile = ({ profile }) => {
           </Typography>
         </div>
       </div>
+    );
+  };
+
+  useEffect(() => {
+    axios
+      .get(`/playlists/${profile.handle}`)
+      .then((res) => {
+        setPlaylists(res.data);
+        if (profile.recentListeningPreference === "spotify") {
+          getSpotifyRecentData(profile, setRecentListening, false);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response);
+        console.log("error when getting playlist or recent data");
+      });
+  }, [profile]);
+  return (
+    <div className={classes.base}>
+      <Hidden smDown>
+        <DesktopNav />
+        <DesktopProfile />
+      </Hidden>
+      <Hidden mdUp>
+        <MobileNav />
+        <MobileProfile user={profile} playlistsLength={playlists.length} />
+      </Hidden>
       <div className={classes.tabs}>
         <Tabs
           value={tabValue}
@@ -497,9 +489,12 @@ const UserProfile = ({ profile }) => {
 const mapState = (state) => {
   return {
     user: state.user,
+    ui: state.ui,
   };
 };
 
-const mapDispatch = {};
+const mapDispatch = {
+  playButtonClick,
+};
 
 export default connect(mapState, mapDispatch)(UserProfile);

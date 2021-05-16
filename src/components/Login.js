@@ -4,7 +4,6 @@ import { useHistory, Link } from "react-router-dom";
 
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -12,6 +11,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import theme from "../theme";
 import { loginUser } from "../redux/actions/userActions";
+import { CustomTextField } from "./pages/Edit";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,28 +78,26 @@ function Login(props) {
           </Typography>
           <div className={classes.error}>{props.errors}</div>
           <form onSubmit={handleSubmit} className={classes.form} noValidate>
-            <TextField
+            <CustomTextField
               variant="outlined"
-              margin="normal"
-              fullWidth
-              id="loginValue"
-              name="loginValue"
-              type="loginValue"
               label="username, phone, or email"
+              className={classes.textField}
               value={formValues.loginValue || ""}
               onChange={handleChange}
-            />
-            <TextField
-              variant="outlined"
+              name="loginValue"
               margin="normal"
               fullWidth
-              id="password"
-              name="password"
-              type="password"
+            />
+            <CustomTextField
+              variant="outlined"
               label="password"
+              margin="normal"
               className={classes.textField}
               value={formValues.password || ""}
               onChange={handleChange}
+              name="password"
+              fullWidth
+              type="password"
             />
             <Button
               type="submit"

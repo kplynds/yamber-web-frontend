@@ -29,7 +29,7 @@ export const logout = (history) => (dispatch) => {
   delete axios.defaults.headers.common["Authorization"];
   dispatch({ type: "SET_UNAUTHENTICATED" });
   dispatch({ type: "JUST_LOGGED_OUT" });
-  history.push("/login");
+  window.location.href="/login";
 };
 
 export const getAuthenticatedUserData = () => (dispatch) => {
@@ -174,9 +174,9 @@ export const setSpotify = (user, querystring, history) => (dispatch) => {
   axios
     .post("/setspotify", payload)
     .then((res) => {
-      dispatch(seedWithSpotify(access_token, { type: "seed" }));
-      // dispatch(getAuthenticatedUserData());
-      history.push(`${user.handle}`);
+      // dispatch(seedWithSpotify(access_token, { type: "seed" }));
+      dispatch(getAuthenticatedUserData());
+      history.push('/welcome/customize');
     })
     .catch((err) => {
       console.log("error posting to spotify from useractions");
@@ -196,7 +196,7 @@ export const signupUser = (registerData, history) => (dispatch) => {
       dispatch({ type: "JUST_SIGNED_UP" });
       dispatch({ type: "SET_AUTHENTICATED" });
       dispatch({ type: "CLEAR_ERRORS" });
-      history.push(`${res.data.handle}`);
+      history.push("/welcome/streamingProvider");
     })
     .catch((err) => {
       console.log(err.response);
@@ -226,22 +226,17 @@ export const redirectToSpotify = () => (dispatch) => {
   window.location.href = `${axios.defaults.baseURL}/spotifylogin`;
 };
 
-export const makePlaylistWithSpotifyData = (spotify) => (dispatch) => {
-  spotify
-    .getMyTopTracks()
+export const updateProfileInfo = (values) => (dispatch) => {
+  dispatch({ type: "LOADING_UI" });
+  axios
+    .post("/update", values)
     .then((res) => {
-      console.log(res);
-      // const body = {
-      //   tracks: res.items,
-      //   title: "Top 20 Tracks"
-      // }
-      // axios.post("/playlist", body)
-      //   .then((res) => {
-      //     console.log(res)
-      //   })
+      dispatch(getAuthenticatedUserData());
+      dispatch({ type: "STOP_LOADING_UI" });
+      document.location.reload(true);
     })
     .catch((err) => {
-      console.log(err.response);
+      console.log("error!!!");
     });
 };
 

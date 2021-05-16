@@ -5,15 +5,19 @@ const theme = createMuiTheme({
     primary: {
       dark: "#181818",
       main: "#212121",
-      light: "#3D3D3D"
+      light: "#3D3D3D",
     },
     secondary: {
       main: "#4e43cc",
     },
     text: {
       primary: "#FFFFFF",
-      secondary: "#AAAAAA"
-    }
+      secondary: "#AAAAAA",
+      disabled: "#AAAAAA"
+    },
+    action: {
+      disabled: "#AAAAAA",
+    },
   },
   typography: {
     fontFamily: ['"Ubuntu"', "sans-serif"].join(","),

@@ -12,6 +12,9 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import { Link } from "react-router-dom";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
+import { playButtonClick } from "../redux/actions/dataActions";
+import StopIcon from "@material-ui/icons/Stop";
+import Recent from "./profile content/Recent";
 
 export const getArtistNames = (arr) => {
   const ret = [];
@@ -74,6 +77,9 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     display: "flex",
     justifyContent: "center",
+    [theme.breakpoints.down("sm")]: {
+      marginBottom: "1rem",
+    },
   },
   playlistsRoot: {
     background: theme.palette.primary.dark,
@@ -90,6 +96,9 @@ const useStyles = makeStyles((theme) => ({
     margin: "1rem 4rem",
     paddingTop: "1rem",
     paddingBottom: "1rem",
+    [theme.breakpoints.down("sm")]: {
+      margin: "1rem",
+    },
   },
   recentsSong: {
     display: "flex",
@@ -133,10 +142,13 @@ const useStyles = makeStyles((theme) => ({
     // going to need to add some css here so it wraps ever 3 playlists
     display: "flex",
     justifyContent: "center",
+    [theme.breakpoints.down("sm")]: {
+      paddingBottom: "18%",
+    },
   },
 }));
 //1615322891210
-const ProfileContent = ({ user }) => {
+const ProfileContent = ({ user, ui, playButtonClick }) => {
   const classes = useStyles(theme);
   const history = useHistory();
   const [tabValue, setTabValue] = useState(0);
@@ -175,10 +187,6 @@ const ProfileContent = ({ user }) => {
       });
     });
     return ret;
-  };
-
-  const Playlists = () => {
-    return <div className={classes.playlistsRoot}>playlists</div>;
   };
 
   const Overview = () => {
@@ -250,7 +258,21 @@ const ProfileContent = ({ user }) => {
                             {getArtistNames(song.artists).join(", ")}
                           </Typography>
                         </div>
-                        <PlayArrowIcon style={{ marginRight: ".7rem" }} />
+                        {ui.audio.active && ui.audio.src === song.preview ? (
+                          <StopIcon
+                            style={{ marginRight: ".7rem" }}
+                            onClick={() => {
+                              playButtonClick(song.preview, ui.audio);
+                            }}
+                          />
+                        ) : (
+                          <PlayArrowIcon
+                            style={{ marginRight: ".7rem" }}
+                            onClick={() => {
+                              playButtonClick(song.preview, ui.audio);
+                            }}
+                          />
+                        )}
                       </div>
                     );
                   } else {
@@ -279,7 +301,7 @@ const ProfileContent = ({ user }) => {
                         {index + 1}
                       </Typography>
                       <img
-                        src={artist.images[2].url}
+                        src={artist.image}
                         alt={artist.name}
                         style={{
                           height: "4rem",
@@ -290,15 +312,17 @@ const ProfileContent = ({ user }) => {
                       />
                       <div>
                         <Typography variant="body2">{artist.name}</Typography>
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          style={{
-                            marginRight: ".2rem",
-                          }}
-                        >
-                          {artist.genres.join(", ")}
-                        </Typography>
+                        {artist.genres && (
+                          <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            style={{
+                              marginRight: ".2rem",
+                            }}
+                          >
+                            {artist.genres.join(", ")}
+                          </Typography>
+                        )}
                       </div>
                     </div>
                   );
@@ -320,7 +344,9 @@ const ProfileContent = ({ user }) => {
                 <div
                   className={classes.playlist}
                   key={index}
-                  onClick={() => history.push(`/${playlist.data.user}/${playlist.id}`)}
+                  onClick={() =>
+                    history.push(`/${playlist.data.user}/${playlist.id}`)
+                  }
                 >
                   {playlist.data.image.trim() !== "" ? (
                     <img
@@ -362,13 +388,15 @@ const ProfileContent = ({ user }) => {
             setTabValue(v);
           }}
         >
-          <Tab label="overview" />
+          <Tab label="recent" />
+          <Tab label="artists" />
           <Tab label="playlists" />
         </Tabs>
       </div>
       <div className={classes.content}>
-        {tabValue === 0 && <Overview />}
-        {tabValue === 1 && <Playlists />}
+        {tabValue === 0 && <Recent />}
+        {tabValue === 1 && <Typography>artists</Typography>}
+        {tabValue === 2 && <Typography>playlists</Typography>}
       </div>
     </div>
   );
@@ -377,11 +405,13 @@ const ProfileContent = ({ user }) => {
 const mapState = (state) => {
   return {
     user: state.user,
+    ui: state.ui,
   };
 };
 
 const mapDispatch = {
   setSpotifyRecentData,
+  playButtonClick,
 };
 
 export default connect(mapState, mapDispatch)(ProfileContent);

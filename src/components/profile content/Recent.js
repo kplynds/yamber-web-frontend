@@ -1,0 +1,170 @@
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import Typography from "@material-ui/core/Typography";
+import theme from "../../theme";
+import { playButtonClick } from "../../redux/actions/dataActions";
+import StopIcon from "@material-ui/icons/Stop";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import { getTopArtists } from "../../utils/cheekyAlgos";
+import { Link } from "react-router-dom";
+
+const useStyles = makeStyles((theme) => ({
+  root: {},
+  recentsSong: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: ".15rem 1rem",
+    "&:hover": {
+      background: theme.palette.primary.light,
+      cursor: "pointer",
+    },
+  },
+  songs: {
+    background: theme.palette.primary.main,
+    width: "70%",
+    margin: "0 auto",
+    padding: "1rem 0",
+    [theme.breakpoints.down("md")]: {
+      width: "80%"
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "90%"
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%"
+    },
+  },
+  albumImages: {
+    height: "3.75rem",
+    width: "3.75rem",
+    margin: "0 1rem",
+  },
+  link: {
+    textDecoration: "none",
+    "&:hover": {
+      textDecoration: "underline",
+    },
+    padding: ".3rem 0",
+  },
+  linkText: {
+    "&:hover": {
+      textDecoration: "underline",
+      color: theme.palette.text.primary,
+    },
+  },
+  centerText: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  },
+}));
+const Recent = ({ user, ui, playButtonClick }) => {
+  const classes = useStyles(theme);
+  return (
+    <div className={classes.root}>
+      <Typography>Spotlight</Typography>
+      <div className={classes.songs}>
+        <div className={classes.centerText}>
+          <Typography variant="body1" mx="auto">
+            {getTopArtists(user.recentListening).join(", ")} &amp; more...
+          </Typography>
+          <Link to={`/${user.data.handle}/recentlistening`} className={classes.link}>
+            <Typography
+              variant="body1"
+              color="textSecondary"
+              className={classes.linkText}
+            >
+              See Full Playlist
+            </Typography>
+          </Link>
+        </div>
+        {user.data.recentListening.data.map((song, index) => {
+          if (index < 8) {
+            return (
+              <div className={classes.recentsSong} key={index}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="body2" color="textSecondary">
+                    {index + 1}
+                  </Typography>
+                  <img
+                    src={song.images[0].url}
+                    alt={song.name}
+                    className={classes.albumImages}
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Typography variant="body2">{song.name}</Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      {song.artists.join(", ")}
+                    </Typography>
+                  </div>
+                </div>
+
+                {ui.audio.active && ui.audio.src === song.preview ? (
+                  <StopIcon
+                    onClick={() => {
+                      playButtonClick(song.preview, ui.audio);
+                    }}
+                  />
+                ) : (
+                  <PlayArrowIcon
+                    onClick={() => {
+                      playButtonClick(song.preview, ui.audio);
+                    }}
+                  />
+                )}
+              </div>
+            );
+          } else {
+            return null;
+          }
+        })}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography color="textSecondary" variant="body2">
+            ... and more,&nbsp;
+          </Typography>
+          <Link to={`/${user.data.handle}/recentlistening`} className={classes.link}>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              className={classes.linkText}
+            >
+              see full playlist
+            </Typography>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const mapState = (state) => {
+  return {
+    user: state.user,
+    ui: state.ui,
+  };
+};
+
+const mapDispatch = {
+  playButtonClick,
+};
+
+export default connect(mapState, mapDispatch)(Recent);

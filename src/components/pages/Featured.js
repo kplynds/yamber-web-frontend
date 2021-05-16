@@ -8,10 +8,10 @@ import MobileNav from "../nav/MobileNav";
 export default function Featured() {
   return (
     <div>
-      <Hidden xsDown>
+      <Hidden smDown>
         <DesktopNav />
       </Hidden>
-      <Hidden smUp>
+      <Hidden mdUp>
         <MobileNav />
       </Hidden>
     </div>

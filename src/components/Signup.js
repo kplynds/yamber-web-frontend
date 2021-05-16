@@ -85,6 +85,14 @@ const Signup = (props) => {
     props.signupUser(registerData, history);
   };
 
+  const appleMusic = () => {
+    let music = window.MusicKit.getInstance();
+    music.authorize()
+      .then((res) => {
+        console.log(res)
+      })
+  }
+
   const handleSubmitWithSpotify = (e) => {
     e.preventDefault();
     const registerData = {
@@ -97,7 +105,7 @@ const Signup = (props) => {
     } else {
       registerData.loginValue = formValues.email;
     }
-    props.signupUserWithSpotify(registerData, history);
+    props.signupUserWithSpotify(registerData);
   };
 
   return (
@@ -126,6 +134,9 @@ const Signup = (props) => {
           >
             Spotify
           </Button>
+          <Button 
+            onClick={appleMusic}
+          >Apple Music</Button>
           <Button onClick={handleSubmitNoSpotify}>
             Sign up without syncing (you can do this later)
           </Button>

@@ -15,6 +15,13 @@
       content="Web site created using create-react-app"
     />
     <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+    <!-- <script src="https://js-cdn.music.apple.com/musickit/v1/musickit.js"></script> -->
+    <!-- <meta
+      name="apple-music-developer-token"
+      content="eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkJKVUpEOTVBNVoifQ.eyJpYXQiOjE2MTcxMzMxOTUsImV4cCI6MTYzMjY4NTE5NSwiaXNzIjoiMjQ0QU0yQjZQNCJ9.nFCVtSm7kDlgV_RZqfIdRCRRNsJeQVw-sAWFPwxIuWwtpzmpY8TNsUCcDZ8U50-7uKFqyZzOQAQT9_QA5h3Taw"
+    />
+    <meta name="apple-music-app-name" content="Social network for music" /> -->
+    <!-- <meta name="apple-music-app-build" content="0.1.0" /> -->
     <!-- <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" /> -->
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -35,6 +42,20 @@
   <body style="background-color: #181818">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script src="https://js-cdn.music.apple.com/musickit/v1/musickit.js"></script>
+    <script>
+      const appleDevToken =
+        "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkJKVUpEOTVBNVoifQ.eyJpYXQiOjE2MTcxMzMxOTUsImV4cCI6MTYzMjY4NTE5NSwiaXNzIjoiMjQ0QU0yQjZQNCJ9.nFCVtSm7kDlgV_RZqfIdRCRRNsJeQVw-sAWFPwxIuWwtpzmpY8TNsUCcDZ8U50-7uKFqyZzOQAQT9_QA5h3Taw";
+      document.addEventListener("musickitloaded", () => {
+        MusicKit.configure({
+          developerToken: appleDevToken,
+          app: {
+            name: "Social network for music",
+            build: "0.1.0",
+          },
+        });
+      });
+    </script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

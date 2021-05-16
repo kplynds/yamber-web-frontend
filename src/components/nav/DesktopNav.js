@@ -10,7 +10,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { connect } from "react-redux";
 import { logout, seedWithSpotify } from "../../redux/actions/userActions";
 
-import {colors} from "../../utils/colors";
 import theme from "../../theme";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,19 +27,19 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "15px",
     alignItems: "center",
     textDecoration: "none",
-    color: colors.text,
+    color: theme.palette.text.secondary,
     "&:visited": {
       textDecoration: "none",
     },
     "&:hover": {
-      backgroundColor: theme.palette.primary.light,
+      color: theme.palette.text.primary,
     },
   },
   active: {
     borderBottom: `5px solid ${theme.palette.secondary.light}`,
     borderBottomRightRadius: "0px",
     borderBottomLeftRadius: "0px",
-    color: theme.palette.secondary.light,
+    color: theme.palette.text.primary,
   },
   navItems: {
     display: "flex",
@@ -68,6 +67,17 @@ function DeskTopNav({ user, logout, seedWithSpotify }) {
   const spotifyRefresh = (e) => {
     e.preventDefault()
     seedWithSpotify(user.data, { type: "refresh" })
+  }
+  const testingApple = (e) => {
+    e.preventDefault()
+    let music = window.MusicKit.getInstance();
+    music.authorize()
+      .then((res) => {
+        music.Library.album("p.kGoq3xdHR10Rd6a")
+          .then((res) => {
+            console.log(res)
+          })
+      })
   }
   return (
     <div className={classes.root}>
@@ -106,6 +116,7 @@ function DeskTopNav({ user, logout, seedWithSpotify }) {
       <div style={{display: "flex", flexDirection: "column"}}>
         <button onClick={logoutUser}>logout</button>
         <button onClick={spotifyRefresh}>Refresh Spotify Data</button>
+        <button onClick={testingApple}>Apple music testing</button>
       </div>
     </div>
   );

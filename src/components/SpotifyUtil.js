@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { connect } from "react-redux";
 import { setSpotify } from "../redux/actions/userActions";
 import { useHistory } from "react-router-dom";
+import Typography from "@material-ui/core/Typography";
 
 const SpotifyUtil = ({ setSpotify, user }) => {
   const history = useHistory();
@@ -13,7 +14,13 @@ const SpotifyUtil = ({ setSpotify, user }) => {
       setSpotify(user.data, querystring, history);
     }
   }, [user, setSpotify, history]);
-  return <div>Talking to Spotify...</div>;
+  return (
+    <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+      <Typography variant="body1" color="textPrimary">
+        Talking to Spotify...
+      </Typography>
+    </div>
+  );
 };
 
 const mapState = (state) => {

@@ -4,8 +4,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import theme from "../theme";
-import { FaSpotify } from "react-icons/fa";
 import Button from "@material-ui/core/Button";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import InstagramIcon from "@material-ui/icons/Instagram";
+import { SiApplemusic, SiSoundcloud, SiSpotify } from "react-icons/si";
+import { useHistory } from "react-router-dom";
+
+const icons = {
+  twitter: <TwitterIcon />,
+  instagram: <InstagramIcon />,
+  spotify: <SiSpotify />,
+  apple: <SiApplemusic />,
+  soundcloud: <SiSoundcloud />,
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,16 +29,12 @@ const useStyles = makeStyles((theme) => ({
   content: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    background: theme.palette.primary.main,
-    borderRadius: "15px",
-    width: "25%",
   },
-  basic: {
-    width: "50%",
+  photo: {
+    width: "40%",
     display: "flex",
-    flexDirection: "column",
     justifyContent: "flex-end",
+    marginRight: "5rem",
     alignItems: "center",
   },
   name: {
@@ -35,38 +42,138 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     paddingTop: theme.spacing(1),
   },
+  stats: {
+    display: "flex",
+    justifyContent: "space-evenly",
+    margin: "1rem 0",
+  },
+  displayNameAndSocials: {
+    display: "flex",
+  },
 }));
 
 const DesktopProfile = ({ user }) => {
   const classes = useStyles(theme);
-  const profile = user.data
+  const history = useHistory();
+
   return (
     <div className={classes.root}>
-      <div className={classes.basic}>
+      {/* <Container style={{display: "flex"}}> */}
+      <div className={classes.photo}>
         <Avatar
-          alt={profile.info.displayName}
-          src={profile.info.imageUrl}
+          alt={user.data.info.displayName}
+          src={user.data.info.imageUrl}
           style={{ width: theme.spacing(15), height: theme.spacing(15) }}
         />
-        <Typography variant="h4" color="textPrimary">
-          @{profile.handle}
-        </Typography>
       </div>
       <div className={classes.content}>
         <div className={classes.name}>
-          <Typography
-            variant="h4"
-            style={{ marginRight: theme.spacing(1) }}
-            color="textPrimary"
-          >
-            {profile.info.displayName}
+          <Typography variant="h4" color="textPrimary">
+            @{user.data.handle}
           </Typography>
-          <FaSpotify size={30} color={theme.palette.text.primary} />
+          <Button
+            variant="contained"
+            size="small"
+            color="secondary"
+            style={{ marginLeft: "1.5rem" }}
+            onClick={() => {
+              history.push("/editprofile");
+            }}
+          >
+            Edit Profile
+          </Button>
         </div>
-        <Button>Make a Playlist</Button>
-        <Typography variant="body1" color="textPrimary">
-          {profile.info.bio}
-        </Typography>
+        {/* <div className={classes.stats}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: "3rem",
+            }}
+          >
+            <Typography
+              variant="body1"
+              color="textPrimary"
+              style={{ marginRight: ".3rem" }}
+            >
+              {user.playlists.length}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              playlists
+            </Typography>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: "3rem",
+            }}
+          >
+            <Typography
+              variant="body1"
+              color="textPrimary"
+              style={{ marginRight: ".3rem" }}
+            >
+              {user.data.following.length}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              following
+            </Typography>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              variant="body1"
+              color="textPrimary"
+              style={{ marginRight: ".3rem" }}
+            >
+              {user.data.followers.length}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              followers
+            </Typography>
+          </div>
+        </div> */}
+        <div className={classes.displayNameAndSocials}>
+          <Typography
+            variant="body1"
+            color="textPrimary"
+            style={{ fontWeight: 600 }}
+          >
+            {user.data.info.displayName}
+          </Typography>
+          {Object.keys(user.data.socials).map((social) => {
+            if (user.data.socials[social] && user.data.socials[social] !== "") {
+              return (
+                <div style={{ display: "flex", marginLeft: "1%" }} key={social}>
+                  <a
+                    style={{
+                      textDecoration: "none",
+                      color: theme.palette.text.primary,
+                    }}
+                    href={`https://${social}.com/${
+                      user.data.socials[`${social}`]
+                    }`}
+                  >
+                    {icons[`${social}`]}
+                  </a>
+                </div>
+              );
+            } else return null;
+          })}
+        </div>
+        <div className={classes.bio}>
+          <Typography variant="body1" color="textPrimary">
+            {user.data.info.bio}
+          </Typography>
+        </div>
       </div>
     </div>
   );
