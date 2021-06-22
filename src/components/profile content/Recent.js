@@ -24,16 +24,17 @@ const useStyles = makeStyles((theme) => ({
   songs: {
     background: theme.palette.primary.main,
     width: "70%",
+    borderRadius: "12px",
     margin: "0 auto",
     padding: "1rem 0",
     [theme.breakpoints.down("md")]: {
-      width: "80%"
+      width: "80%",
     },
     [theme.breakpoints.down("sm")]: {
-      width: "90%"
+      width: "90%",
     },
     [theme.breakpoints.down("xs")]: {
-      width: "100%"
+      width: "95%",
     },
   },
   albumImages: {
@@ -60,18 +61,74 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     flexDirection: "column",
   },
+  spotlight: {
+    // background: theme.palette.primary.main,
+    width: "70%",
+    margin: "0rem auto",
+    // padding: "1rem 0",
+    [theme.breakpoints.down("md")]: {
+      width: "80%",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "90%",
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "95%",
+    },
+    borderRadius: "12px",
+  },
 }));
-const Recent = ({ user, ui, playButtonClick }) => {
+const Recent = ({ user, ui, playButtonClick, data }) => {
+  let a;
+  let own;
+  if (data) {
+    a = data;
+    own = false;
+  } else {
+    a = user.data;
+    own = true;
+  }
   const classes = useStyles(theme);
   return (
     <div className={classes.root}>
-      <Typography>Spotlight</Typography>
+      {/* <div className={classes.spotlight}>
+        {own && !a.spotlight.on && (
+          <div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Typography color="textPrimary">Spotlight</Typography>
+              <HighlightIcon />
+            </div>
+            <div>
+              <SpotlightSearch />
+            </div>
+          </div>
+        )}
+        {a.spotlight.on && (
+          <div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Typography color="textPrimary">Spotlight</Typography>
+              <HighlightIcon />
+            </div>
+            <div>
+              <SpotlightData item={a.spotlight.data} />
+            </div>
+          </div>
+        )}
+      </div> */}
       <div className={classes.songs}>
         <div className={classes.centerText}>
-          <Typography variant="body1" mx="auto">
-            {getTopArtists(user.recentListening).join(", ")} &amp; more...
+          <Typography
+            variant="body1"
+            mx="auto"
+            align="center"
+            style={{ margin: "0 .1rem" }}
+          >
+            {getTopArtists(a.recentListening.data).join(", ")} &amp; more...
           </Typography>
-          <Link to={`/${user.data.handle}/recentlistening`} className={classes.link}>
+          <Link
+            to={`/${a.handle}/playlist/recentlistening`}
+            className={classes.link}
+          >
             <Typography
               variant="body1"
               color="textSecondary"
@@ -81,7 +138,7 @@ const Recent = ({ user, ui, playButtonClick }) => {
             </Typography>
           </Link>
         </div>
-        {user.data.recentListening.data.map((song, index) => {
+        {a.recentListening.data.map((song, index) => {
           if (index < 8) {
             return (
               <div className={classes.recentsSong} key={index}>
@@ -141,7 +198,10 @@ const Recent = ({ user, ui, playButtonClick }) => {
           <Typography color="textSecondary" variant="body2">
             ... and more,&nbsp;
           </Typography>
-          <Link to={`/${user.data.handle}/recentlistening`} className={classes.link}>
+          <Link
+            to={`/${a.handle}/playlist/recentlistening`}
+            className={classes.link}
+          >
             <Typography
               variant="body2"
               color="textSecondary"
@@ -150,6 +210,20 @@ const Recent = ({ user, ui, playButtonClick }) => {
               see full playlist
             </Typography>
           </Link>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography color="textSecondary" variant="body2">
+            last updated&nbsp;
+          </Typography>
+          <Typography color="textSecondary" variant="body2">
+            {a.recentListening.lastUpdated} PST
+          </Typography>
         </div>
       </div>
     </div>

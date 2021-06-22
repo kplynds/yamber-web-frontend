@@ -20,13 +20,14 @@ import Edit from "./components/pages/Edit";
 import SignupLand from "./components/signup + onboard/SignupLand";
 import StreamingProvider from "./components/signup + onboard/StreamingProvider";
 import Customize from "./components/signup + onboard/Customize";
+import NewPlaylist from "./components/pages/NewPlaylist";
 
 // const jwtSecret = process.env.JWT_SECRET || 'foofdytdyd';
 
-// const deployed_api = "https://us-central1-flumes-company.cloudfunctions.net/api";
-const local_api = "http://localhost:5000/flumes-company/us-central1/api";
+const deployed_api = "https://us-central1-flumes-company.cloudfunctions.net/api";
+// const local_api = "http://localhost:5000/flumes-company/us-central1/api";
 
-axios.defaults.baseURL = local_api;
+axios.defaults.baseURL = deployed_api;
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -74,8 +75,9 @@ function App() {
               component={StreamingProvider}
             />
             <Route path="/welcome/customize" component={Customize} />
-            <Route path="/:handle/:playlistId" component={Playlist} />
+            <Route path="/:handle/playlist/:playlistId" component={Playlist} />
             <Route path="/editprofile" component={Edit} />
+            <Route path="/newplaylist" component={NewPlaylist} />
             <Route path="/featured" component={Featured} />
             <Route path="/search" component={Search} />
             <Route path="/profile" component={User} />

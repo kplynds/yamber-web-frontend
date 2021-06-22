@@ -4,6 +4,7 @@ import UserProfile from "./UserProfile";
 import {
   getUserData,
   getAuthenticatedUserData,
+  setLoggedInUser,
 } from "../../redux/actions/userActions";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
@@ -13,25 +14,44 @@ import NotFound from "../NotFound";
 import CenterLoadingWithNav from "../CenterLoadingWithNav";
 
 // This component figures out what component to display when someone goes to /:handle
-
-const User = ({ match, user }) => {
+const User = ({ match, user, setLoggedInUser }) => {
   const handle = match.params.handle;
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(true);
+    if (handle === undefined) {
+      localStorage.clear();
+      window.location = "/login";
+    }
     if (handle) {
       axios
         .get(`/userbase/${handle}`)
         .then((res) => {
+          setProfile(res.data.user);
           if (
             res.data.user.recentListeningPreference === "spotify" &&
             res.data.user.recentListening.expireTime < Date.now()
           ) {
-            console.log("gonna set new recentListening");
             let body = {};
+            body.updateTime = res.data.user.recentListening.updateTime;
             if (res.data.user.spotify.expireTime > Date.now()) {
               body.token = res.data.user.spotify.access_token;
+              body.user = res.data.user;
+              axios
+                .post(`/spotifyrecentdata/${handle}`, body)
+                .then((resFinal) => {
+                  if (resFinal.data.handle !== user.data.handle) {
+                    setProfile(resFinal.data);
+                  } else {
+                    setLoggedInUser(resFinal.data);
+                  }
+                  setLoading(false);
+                })
+                .catch((err) => {
+                  console.log(err);
+                  setLoading(false);
+                });
             } else {
               const payload = {
                 refresh_token: res.data.user.spotify.refresh_token,
@@ -45,8 +65,23 @@ const User = ({ match, user }) => {
                   };
                   axios
                     .post("/setnewspotifytoken", settingBody)
-                    .then((res) => {
-                      body.token = res.data.user.spotify.access_token;
+                    .then((last) => {
+                      body.token = last.data;
+                      body.user = res.data.user;
+                      axios
+                        .post(`/spotifyrecentdata/${handle}`, body)
+                        .then((resFinal) => {
+                          if (resFinal.data.handle !== user.data.handle) {
+                            setProfile(resFinal.data);
+                          } else {
+                            setLoggedInUser(resFinal.data);
+                          }
+                          setLoading(false);
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                          setLoading(false);
+                        });
                     })
                     .catch((err) => {
                       console.log("error when posting to /setnewspotifytoken");
@@ -58,16 +93,6 @@ const User = ({ match, user }) => {
                   console.log(err);
                 });
             }
-            axios
-              .post(`/spotifyrecentdata/${handle}`, body)
-              .then((resFinal) => {
-                setProfile(res.data.user);
-                setLoading(false);
-              })
-              .catch((err) => {
-                console.log(err);
-                setLoading(false);
-              });
           } else {
             setProfile(res.data.user);
             setLoading(false);
@@ -78,7 +103,7 @@ const User = ({ match, user }) => {
           setLoading(false);
         });
     }
-  }, [handle]);
+  }, [handle, setLoggedInUser, user.data.handle]);
   if (!loading) {
     if (profile) {
       if (profile.handle === user.data.handle) {
@@ -97,6 +122,7 @@ const User = ({ match, user }) => {
 User.propTypes = {
   getUserData: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
+  setLoggedInUser: PropTypes.func.isRequired,
 };
 
 const mapState = (state) => {
@@ -108,6 +134,7 @@ const mapState = (state) => {
 const mapDispatch = {
   getUserData,
   getAuthenticatedUserData,
+  setLoggedInUser,
 };
 
 export default connect(mapState, mapDispatch)(User);

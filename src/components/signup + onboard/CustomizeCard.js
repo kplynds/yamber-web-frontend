@@ -9,7 +9,6 @@ import Tab from "@material-ui/core/Tab";
 import Avatar from "@material-ui/core/Avatar";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Chip from "@material-ui/core/Chip";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import StepLabel from "@material-ui/core/StepLabel";
 import Step from "@material-ui/core/Step";
 import Stepper from "@material-ui/core/Stepper";
@@ -30,6 +29,7 @@ import InstagramIcon from "@material-ui/icons/Instagram";
 import axios from "axios";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
+import ClearIcon from '@material-ui/icons/Clear';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -139,7 +139,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -300,7 +299,7 @@ const CustomizeCard = ({ data, ui, user }) => {
       });
   };
   const checkIfInArray = (checkArtist) => {
-    const checker = (artist) => artist.image === checkArtist.image;
+    const checker = (artist) => artist.name === checkArtist.name;
     return topArtists.some(checker);
   };
   const addArtist = (newArtist) => {
@@ -309,14 +308,14 @@ const CustomizeCard = ({ data, ui, user }) => {
       alert("max of 6 artists for now, this can be edited later");
       return;
     }
-    const checker = (artist) => artist.image === newArtist.image;
+    const checker = (artist) => artist.name === newArtist.name;
     if (!topArtists.some(checker)) {
       setTopArtists((topArtists) => [...topArtists, newArtist]);
     }
     window.scrollTo({ top: 0 });
   };
-  const handleChipDelete = (image) => {
-    setTopArtists(topArtists.filter((artist) => artist.image !== image));
+  const handleChipDelete = (name) => {
+    setTopArtists(topArtists.filter((artist) => artist.name !== name));
   };
   const LongTerm = () => {
     return (
@@ -330,16 +329,16 @@ const CustomizeCard = ({ data, ui, user }) => {
                 </Typography>
                 <Avatar
                   alt={artist.name}
-                  src={artist.image}
+                  src={artist.images[0].url}
                   className={classes.artistAvatar}
                 />
                 <Typography color="textPrimary">{artist.name}</Typography>
               </div>
               {checkIfInArray(artist) ? (
-                <HighlightOffIcon
+                <ClearIcon
                   style={{ color: "#fff" }}
                   onClick={() => {
-                    handleChipDelete(artist.image);
+                    handleChipDelete(artist.name);
                   }}
                   className={classes.addArtistIcon}
                 />
@@ -370,16 +369,16 @@ const CustomizeCard = ({ data, ui, user }) => {
                 </Typography>
                 <Avatar
                   alt={artist.name}
-                  src={artist.image}
+                  src={artist.images[0].url}
                   className={classes.artistAvatar}
                 />
                 <Typography color="textPrimary">{artist.name}</Typography>
               </div>
               {checkIfInArray(artist) ? (
-                <HighlightOffIcon
+                <ClearIcon
                   style={{ color: "#fff" }}
                   onClick={() => {
-                    handleChipDelete(artist.image);
+                    handleChipDelete(artist.name);
                   }}
                   className={classes.addArtistIcon}
                 />
@@ -434,7 +433,7 @@ const CustomizeCard = ({ data, ui, user }) => {
             >
               <Avatar
                 alt={artist.name}
-                src={artist.image}
+                src={artist.images[0].url}
                 className={classes.artistAvatar}
               />
               <Typography color="textSecondary">{artist.name}</Typography>
@@ -578,12 +577,12 @@ const CustomizeCard = ({ data, ui, user }) => {
                       avatar={
                         <Avatar
                           alt={`${artist.name}`}
-                          src={`${artist.image}`}
+                          src={`${artist.images[0].url}`}
                         />
                       }
                       // variant="outlined"
                       onDelete={() => {
-                        handleChipDelete(artist.image);
+                        handleChipDelete(artist.name);
                       }}
                       key={index}
                       color="primary"
@@ -613,7 +612,7 @@ const CustomizeCard = ({ data, ui, user }) => {
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <Avatar
                         alt={playlist.title}
-                        src={playlist.img}
+                        src={playlist.images[0].url}
                         variant="square"
                         className={classes.playlistImage}
                       />

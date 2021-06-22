@@ -15,6 +15,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import { updateProfileInfo } from "../../redux/actions/userActions";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useHistory } from "react-router-dom";
+import { CircularProgress } from "@material-ui/core";
 
 export const CustomTextField = withStyles({
   root: {
@@ -125,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.dark,
   },
 }));
-const Edit = ({ user, updateProfileInfo }) => {
+const Edit = ({ user, updateProfileInfo, loading }) => {
   const classes = useStyles(theme);
   const history = useHistory();
   const [formValues, setFormValues] = useState({
@@ -251,8 +252,14 @@ const Edit = ({ user, updateProfileInfo }) => {
             <Typography variant="body1" color="textPrimary">
               Profile Information
             </Typography>
-            <Button onClick={handleEditSwitchInfo}>
-              {editState.info ? "edit" : "save"}
+            <Button onClick={handleEditSwitchInfo} disabled={loading}>
+              {loading ? (
+                <CircularProgress style={{ color: "#fff" }} />
+              ) : editState.info ? (
+                "edit"
+              ) : (
+                "save"
+              )}
             </Button>
           </div>
           <div>
@@ -305,8 +312,14 @@ const Edit = ({ user, updateProfileInfo }) => {
             <Typography variant="body1" color="textPrimary">
               Profile Preferences
             </Typography>
-            <Button onClick={preferenceButtonClick}>
-              {editState.preferences ? "edit" : "save"}
+            <Button onClick={preferenceButtonClick} disabled={loading}>
+              {loading ? (
+                <CircularProgress />
+              ) : editState.info ? (
+                "edit"
+              ) : (
+                "save"
+              )}
             </Button>
           </div>
           <div>
@@ -359,6 +372,7 @@ const mapDispatch = {
 const mapState = (state) => {
   return {
     user: state.user,
+    loading: state.ui.loading,
   };
 };
 

@@ -8,11 +8,11 @@ import { connect } from "react-redux";
 import axios from "axios";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
-import { getPlaylistCover } from "../ProfileContent";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import { playButtonClick } from "../../redux/actions/dataActions";
 import StopIcon from "@material-ui/icons/Stop";
 import NotFound from "../NotFound";
+import { getPlaylistCover } from "../../utils/cheekyAlgos";
 
 const useStyles = makeStyles((theme) => ({
   root: {},

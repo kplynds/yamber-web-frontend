@@ -35,27 +35,12 @@ export const logout = (history) => (dispatch) => {
 export const getAuthenticatedUserData = () => (dispatch) => {
   dispatch({ type: "LOADING_USER" });
   axios
-    .get("/authenticateduserplaylists")
-    .then((res) => {
-      if (res.data !== "user has no playlists") {
-        dispatch({
-          type: "SET_USER_PLAYLISTS",
-          payload: res.data,
-        });
-      }
-    })
-    .catch((err) => console.log(err.response));
-  axios
     .get("/user")
     .then((res) => {
       dispatch({
         type: "SET_USER",
         payload: res.data,
       });
-      if (res.data.spotify.authenticated) {
-        // eventually this will become, if user is auth'd with spotify && user has set recentListening to auto update with spotify.
-        dispatch(setSpotifyRecentData(res.data));
-      }
     })
     .catch((err) => console.log(err.response));
 };
@@ -237,80 +222,10 @@ export const updateProfileInfo = (values) => (dispatch) => {
     })
     .catch((err) => {
       console.log("error!!!");
+      dispatch({ type: "STOP_LOADING_UI" });
     });
 };
 
-export const setSpotifyRecentData = (user) => (dispatch) => {
-  const now = Date.now();
-  if (user.spotify.expireTime > now) {
-    spotify.setAccessToken(user.spotify.access_token);
-    spotify
-      .getMyTopTracks({
-        time_range: "short_term",
-        limit: 15,
-      })
-      .then((res) => {
-        const finished = [];
-        res.items.forEach((item) => {
-          const song = {
-            name: item.name,
-            artists: item.artists,
-            preview: item.preview_url,
-            href: item.href,
-            images: item.album.images,
-          };
-          finished.push(song);
-        });
-        dispatch({ type: "SET_RECENT_WITH_SPOTIFY", payload: finished });
-      })
-      .catch((err) => {
-        console.log(err);
-        console.log("error here");
-      });
-  } else {
-    const payload = { refresh_token: user.spotify.refresh_token };
-    axios
-      .post("/spotifyrefreshtoken", payload)
-      .then((res) => {
-        const body = { token: res.data.access_token };
-        axios
-          .post("/setnewspotifytoken", body)
-          .then((res) => {
-            spotify.setAccessToken(res.data);
-            spotify
-              .getMyTopTracks({
-                time_range: "short_term",
-                limit: 15,
-              })
-              .then((res) => {
-                const finished = [];
-                res.items.forEach((item) => {
-                  const song = {
-                    name: item.name,
-                    artists: item.artists,
-                    preview: item.preview_url,
-                    href: item.href,
-                    images: item.album.images,
-                    id: item.id,
-                  };
-                  finished.push(song);
-                });
-                dispatch({
-                  type: "SET_RECENT_WITH_SPOTIFY",
-                  payload: finished,
-                });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log("error posting to refresh token endpoint?");
-        console.log(err);
-      });
-  }
-};
+export const setLoggedInUser = (data) => (dispatch) => {
+  dispatch({ type: "SET_USER", payload: data })
+}

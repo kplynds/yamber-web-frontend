@@ -1,3 +1,6 @@
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+
 export const getArtistNames = (arr) => {
   const ret = [];
   arr.forEach((artist) => {
@@ -11,7 +14,7 @@ export const getTopArtists = (arr) => {
     let hash = {};
     arr.forEach((song) => {
       song.artists.forEach((artist) => {
-        all.push(artist.name);
+        all.push(artist);
       });
     });
     all.forEach((artist) => {
@@ -41,4 +44,74 @@ export const getTopArtists = (arr) => {
       });
     });
     return ret;
+  };
+
+  export const getPlaylistCover = (playlist) => {
+    if (playlist.images.length > 0) {
+      return (
+        <img
+          src={playlist.images[0].url}
+          alt={playlist.title}
+          style={{
+            width: "6rem",
+            height: "6rem",
+          }}
+        />
+      );
+    } else if (playlist.songs.length < 1) {
+      return (
+        <img
+          src={
+            "https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2"
+          }
+          alt={playlist.title}
+          style={{
+            width: "6rem",
+            height: "6rem",
+          }}
+        />
+      );
+    } else if (playlist.songs.length < 4) {
+      return (
+        <img
+          src={playlist.songs[0].images[0].url}
+          alt={playlist.title}
+          style={{
+            width: "6rem",
+            height: "6rem",
+          }}
+        />
+      );
+    } else {
+      return (
+        <GridList
+          cols={2}
+          spacing={0}
+          cellHeight={96}
+          style={{
+            width: "12rem",
+            height: "12rem",
+          }}
+        >
+          {playlist.songs.map((song, index) => {
+            if (index < 4) {
+              return (
+                <GridListTile key={index}>
+                  <img
+                    src={song.images[0].url}
+                    alt={playlist.title}
+                    style={{
+                      width: "6rem",
+                      height: "6rem",
+                    }}
+                  />
+                </GridListTile>
+              );
+            } else {
+              return null;
+            }
+          })}
+        </GridList>
+      );
+    }
   };
