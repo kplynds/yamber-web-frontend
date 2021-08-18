@@ -72,7 +72,7 @@ function MobileNav({ user }) {
           {/* <Typography >Profile</Typography> */}
         </div>
         <NavLink
-          to="/featured"
+          to="/newplaylist"
           className={classes.item}
           activeClassName={classes.active}
         >

@@ -8,6 +8,8 @@ import StopIcon from "@material-ui/icons/Stop";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import { getTopArtists } from "../../utils/cheekyAlgos";
 import { Link } from "react-router-dom";
+import EditIcon from "@material-ui/icons/Edit";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -36,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("xs")]: {
       width: "95%",
     },
+    marginTop: ".5rem",
   },
   albumImages: {
     height: "3.75rem",
@@ -77,6 +80,14 @@ const useStyles = makeStyles((theme) => ({
     },
     borderRadius: "12px",
   },
+  editIcon: {
+    display: "flex",
+    justifyContent: "flex-end",
+    margin: ".1rem 2rem",
+    [theme.breakpoints.down("md")]: {
+      margin: ".1rem 1rem",
+    },
+  },
 }));
 const Recent = ({ user, ui, playButtonClick, data }) => {
   let a;
@@ -92,38 +103,18 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
   if (a !== undefined)
     return (
       <div className={classes.root}>
-        {/* <div className={classes.spotlight}>
-        {own && !a.spotlight.on && (
-          <div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <Typography color="textPrimary">Spotlight</Typography>
-              <HighlightIcon />
-            </div>
-            <div>
-              <SpotlightSearch />
-            </div>
-          </div>
-        )}
-        {a.spotlight.on && (
-          <div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <Typography color="textPrimary">Spotlight</Typography>
-              <HighlightIcon />
-            </div>
-            <div>
-              <SpotlightData item={a.spotlight.data} />
-            </div>
-          </div>
-        )}
-      </div> */}
         <div className={classes.songs}>
+          {own && (
+            <div className={classes.editIcon}>
+              <Button size="small" endIcon={<EditIcon />}>edit</Button>
+            </div>
+          )}
           <div className={classes.centerText}>
-            <Typography>{own ? "own profile" : "not own"}</Typography>
             <Typography
               variant="body1"
               mx="auto"
               align="center"
-              style={{ margin: "0 .1rem" }}
+              style={{ margin: "0 1rem" }}
             >
               {getTopArtists(a.recentListening.data).join(", ")} &amp; more...
             </Typography>

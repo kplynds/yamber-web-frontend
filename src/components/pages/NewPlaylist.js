@@ -8,6 +8,9 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { connect } from "react-redux";
+import Hidden from "@material-ui/core/Hidden";
+import DesktopNav from "../nav/DesktopNav";
+import MobileNav from "../nav/MobileNav";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,6 +84,12 @@ const NewPlaylist = ({ user }) => {
   };
   return (
     <div className={classes.root}>
+      <Hidden smDown>
+        <DesktopNav />
+      </Hidden>
+      <Hidden mdUp>
+        <MobileNav />
+      </Hidden>
       <div className={classes.title}>
         <Typography color="textPrimary" variant="h5">
           Give your playlist a snazzy title

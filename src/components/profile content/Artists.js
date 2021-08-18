@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import theme from "../../theme";
 import { FaSpotify } from "react-icons/fa";
 import Popover from "@material-ui/core/Popover";
+import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +32,14 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: "ellipsis",
     padding: ".3rem 0",
   },
+  editIcon: {
+    display: "flex",
+    justifyContent: "flex-end",
+    margin: ".1rem 2rem",
+    [theme.breakpoints.down("md")]: {
+      margin: ".1rem 1rem"
+    },
+  }
 }));
 const Artists = ({ user, data }) => {
   let a;
@@ -58,6 +67,11 @@ const Artists = ({ user, data }) => {
   };
   return (
     <div className={classes.root}>
+      {own && (
+        <div className={classes.editIcon}>
+        <Button size="small" endIcon={<EditIcon />}>edit</Button>
+      </div>
+      )}
       {a.map((artist, index) => {
         return (
           <div key={index}>
@@ -68,7 +82,6 @@ const Artists = ({ user, data }) => {
                 handlhandlePopoverOpen(e, artist.name);
               }}
             >
-              <Typography>{own ? "own profile" : "not own"}</Typography>
               <Typography
                 variant="body2"
                 color="textSecondary"
