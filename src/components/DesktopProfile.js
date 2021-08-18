@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
@@ -9,6 +9,9 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import { SiApplemusic, SiSoundcloud, SiSpotify } from "react-icons/si";
 import { useHistory } from "react-router-dom";
+import SettingsIcon from "@material-ui/icons/Settings";
+import Modal from "@material-ui/core/Modal";
+import { logout } from "../utils/cheekyAlgos";
 
 const icons = {
   twitter: <TwitterIcon />,
@@ -31,16 +34,19 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   photo: {
-    width: "40%",
+    width: "37%",
     display: "flex",
     justifyContent: "flex-end",
     marginRight: "5rem",
     alignItems: "center",
+    [theme.breakpoints.down("md")]: {
+      width: "30%",
+    },
   },
   name: {
-    display: "flex",
     alignItems: "center",
     paddingTop: theme.spacing(1),
+    maxWidth: "90%",
   },
   stats: {
     display: "flex",
@@ -49,16 +55,57 @@ const useStyles = makeStyles((theme) => ({
   },
   displayNameAndSocials: {
     display: "flex",
+    marginTop: ".8rem",
+    // backgroundColor:"red",
+    marginBottom: ".6rem",
+  },
+  bio: { maxWidth: "30rem" },
+  hover: {
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+  modal: {
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    padding: "2rem 6rem",
+    transform: `translate(-50%, -50%)`,
+    backgroundColor: theme.palette.primary.dark,
+  },
+  title: {
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    maxWidth: "60%",
   },
 }));
 
 const DesktopProfile = ({ user }) => {
   const classes = useStyles(theme);
   const history = useHistory();
-
+  const [modal, setModal] = useState(false);
+  const modalSwitch = () => {
+    setModal(!modal);
+  };
+  const logoutClick = () => {
+    logout();
+  };
   return (
     <div className={classes.root}>
       {/* <Container style={{display: "flex"}}> */}
+      <Modal open={modal} onClose={modalSwitch}>
+        <div className={classes.modal}>
+          <Button
+            variant="contained"
+            color="secondary"
+            size="large"
+            onClick={logoutClick}
+          >
+            logout
+          </Button>
+        </div>
+      </Modal>
       <div className={classes.photo}>
         <Avatar
           alt={user.data.info.displayName}
@@ -68,20 +115,48 @@ const DesktopProfile = ({ user }) => {
       </div>
       <div className={classes.content}>
         <div className={classes.name}>
-          <Typography variant="h4" color="textPrimary">
-            @{user.data.handle}
-          </Typography>
-          <Button
-            variant="contained"
-            size="small"
-            color="secondary"
-            style={{ marginLeft: "1.5rem" }}
-            onClick={() => {
-              history.push("/editprofile");
+          <div
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              display: "flex",
             }}
           >
-            Edit Profile
-          </Button>
+            <Typography
+              variant="h5"
+              color="textPrimary"
+              className={classes.title}
+            >
+              @{user.data.handle}'s&nbsp;
+            </Typography>
+            <Typography
+              variant="h5"
+              color="textPrimary"
+              // className={classes.title}
+            >
+              music taste
+            </Typography>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", marginTop: ".8rem" }}>
+            <Button
+              variant="outlined"
+              size="small"
+              style={{
+                marginRight: "1rem",
+                borderColor: theme.palette.primary.light,
+              }}
+              onClick={() => {
+                history.push("/editprofile");
+              }}
+            >
+              Edit Profile
+            </Button>
+            <SettingsIcon
+              fontSize="large"
+              onClick={modalSwitch}
+              className={classes.hover}
+            />
+          </div>
         </div>
         {/* <div className={classes.stats}>
           <div

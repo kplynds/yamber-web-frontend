@@ -1,10 +1,10 @@
 import React from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
 import Typography from "@material-ui/core/Typography";
-import WhatshotIcon from "@material-ui/icons/Whatshot";
+import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { connect } from "react-redux";
@@ -22,8 +22,9 @@ const useStyles = makeStyles((theme) => ({
   item: {
     display: "flex",
     justifyContent: "center",
-    margin: "0 10%",
-    padding: "10%",
+    flexDirection: 'column',
+    // margin: "0 5%",
+    padding: "0 3rem",
     borderRadius: "15px",
     alignItems: "center",
     textDecoration: "none",
@@ -44,41 +45,43 @@ const useStyles = makeStyles((theme) => ({
   navItems: {
     display: "flex",
     justifyContent: "space-evenly",
-    paddingRight: "5%"
+    width: "60%",
+    // backgroundColor: "blue"
   },
   logo: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "flex-end",
     color: theme.palette.text.primary,
-    paddingLeft: "5%"
+    width: "11%",
   },
   iconText: {
     fontWeight: "bold",
-  }
+    fontSize: "1rem"
+  },
+  empty: {
+    display: "flex",
+    flexDirection: "column",
+    width: "11%",
+  },
 }));
 
 function DeskTopNav({ user, logout, seedWithSpotify }) {
   const classes = useStyles(theme);
-  const history = useHistory();
-  const logoutUser = (e) => {
-    e.preventDefault();
-    logout(history);
-  };
-  const spotifyRefresh = (e) => {
-    e.preventDefault()
-    seedWithSpotify(user.data, { type: "refresh" })
-  }
-  const testingApple = (e) => {
-    e.preventDefault()
-    let music = window.MusicKit.getInstance();
-    music.authorize()
-      .then((res) => {
-        music.Library.album("p.kGoq3xdHR10Rd6a")
-          .then((res) => {
-            console.log(res)
-          })
-      })
-  }
+  // const history = useHistory();
+  // const logoutUser = (e) => {
+  //   e.preventDefault();
+  //   logout(history);
+  // };
+  // const testingApple = (e) => {
+  //   e.preventDefault();
+  //   let music = window.MusicKit.getInstance();
+  //   music.authorize().then((res) => {
+  //     music.Library.album("p.kGoq3xdHR10Rd6a").then((res) => {
+  //       console.log(res);
+  //     });
+  //   });
+  // };
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -94,15 +97,19 @@ function DeskTopNav({ user, logout, seedWithSpotify }) {
           activeClassName={classes.active}
         >
           <PersonIcon fontSize="large" />
-          <Typography variant="h6" className={classes.iconText}>Profile</Typography>
+          <Typography variant="h6" className={classes.iconText}>
+            Profile
+          </Typography>
         </NavLink>
         <NavLink
           to="/featured"
           className={classes.item}
           activeClassName={classes.active}
         >
-          <WhatshotIcon fontSize="large" />
-          <Typography variant="h6" className={classes.iconText}>Featured</Typography>
+          <AddIcon fontSize="large" />
+          <Typography variant="h6" className={classes.iconText}>
+            new playlist
+          </Typography>
         </NavLink>
         <NavLink
           to="/search"
@@ -110,13 +117,15 @@ function DeskTopNav({ user, logout, seedWithSpotify }) {
           activeClassName={classes.active}
         >
           <SearchIcon fontSize="large" />
-          <Typography variant="h6" className={classes.iconText}>Search</Typography>
+          <Typography variant="h6" className={classes.iconText}>
+            explore
+          </Typography>
         </NavLink>
       </div>
-      <div style={{display: "flex", flexDirection: "column"}}>
-        <button onClick={logoutUser}>logout</button>
+      <div className={classes.empty}>
+        {/* <button onClick={logoutUser}>logout</button>
         <button onClick={spotifyRefresh}>Refresh Spotify Data</button>
-        <button onClick={testingApple}>Apple music testing</button>
+        <button onClick={testingApple}>Apple music testing</button> */}
       </div>
     </div>
   );
@@ -130,7 +139,7 @@ const mapState = (state) => {
 
 const mapDispatch = {
   logout,
-  seedWithSpotify
-}
+  seedWithSpotify,
+};
 
 export default connect(mapState, mapDispatch)(DeskTopNav);

@@ -68,6 +68,7 @@ const Artists = ({ user, data }) => {
                 handlhandlePopoverOpen(e, artist.name);
               }}
             >
+              <Typography>{own ? "own profile" : "not own"}</Typography>
               <Typography
                 variant="body2"
                 color="textSecondary"

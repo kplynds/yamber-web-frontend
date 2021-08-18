@@ -38,11 +38,41 @@ const useStyles = makeStyles((theme) => ({
     borderTop: `1px solid ${theme.palette.primary.light}`,
     padding: ".2rem 0",
   },
+  button: {
+    borderColor: theme.palette.primary.light,
+    textTransform: "capitalize",
+  },
+  title: {
+    display: "flex",
+    width: "100%",
+    justifyContent: "center",
+    padding: "0 1rem",
+    borderBottom: `1px solid ${theme.palette.primary.light}`
+  },
+  textOverflow: {
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    maxWidth: "65%",
+  },
 }));
 const MobileProfile = ({ user, playlistsLength }) => {
   const classes = useStyles(theme);
   return (
     <div className={classes.root}>
+      <div className={classes.title}>
+        <Typography
+          variant="h6"
+          color="textPrimary"
+          align="center"
+          className={classes.textOverflow}
+        >
+          @{user.handle}'s&nbsp;
+        </Typography>
+        <Typography variant="h6" color="textPrimary" align="center">
+          music taste
+        </Typography>
+      </div>
       <div className={classes.basic}>
         <div>
           <Avatar
@@ -51,20 +81,35 @@ const MobileProfile = ({ user, playlistsLength }) => {
             style={{ width: theme.spacing(11), height: theme.spacing(11) }}
           />
         </div>
-        <div style={{ marginLeft: "2rem" }}>
+        <div style={{ marginLeft: "2rem", width: "100%" }}>
           <div
             style={{
               display: "flex",
-              alignItems: "center",
-              paddingBottom: ".5rem",
+              width: "100%",
             }}
           >
-            <Typography variant="body1" color="textPrimary">
-              @{user.handle}
-            </Typography>
+            <Button
+              variant="outlined"
+              size="small"
+              // color="secondary"
+              style={{
+                borderColor: theme.palette.primary.light,
+                textTransform: "capitalize",
+                marginRight: "1rem",
+              }}
+              fullWidth
+            >
+              follow
+            </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              className={classes.button}
+              fullWidth
+            >
+              playlist
+            </Button>
           </div>
-          <Button>Follow</Button>
-          <Button>Playlist</Button>
         </div>
       </div>
       <div className={classes.socialAndName}>

@@ -2,6 +2,19 @@ import Spotify from "spotify-web-api-js";
 import axios from "axios";
 const spotify = new Spotify();
 
+export const getAuthenticatedUserDataAndPushUtil = (handle) => async (
+  dispatch
+) => {
+  // eslint-disable-next-line no-unused-vars
+  const setRecentData = await axios.get(`/spotifyrecentdata/${handle}`);
+  const userFetch = await axios.get("/user");
+  dispatch({
+    type: "SET_USER",
+    payload: userFetch.data,
+  });
+  window.location.href = `/${handle}`;
+};
+
 export const loginUser = (userData, history) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
   axios
@@ -29,7 +42,7 @@ export const logout = (history) => (dispatch) => {
   delete axios.defaults.headers.common["Authorization"];
   dispatch({ type: "SET_UNAUTHENTICATED" });
   dispatch({ type: "JUST_LOGGED_OUT" });
-  window.location.href="/login";
+  window.location.href = "/login";
 };
 
 export const getAuthenticatedUserData = () => (dispatch) => {
@@ -161,7 +174,7 @@ export const setSpotify = (user, querystring, history) => (dispatch) => {
     .then((res) => {
       // dispatch(seedWithSpotify(access_token, { type: "seed" }));
       dispatch(getAuthenticatedUserData());
-      history.push('/welcome/customize');
+      history.push("/welcome/customize");
     })
     .catch((err) => {
       console.log("error posting to spotify from useractions");
@@ -227,5 +240,5 @@ export const updateProfileInfo = (values) => (dispatch) => {
 };
 
 export const setLoggedInUser = (data) => (dispatch) => {
-  dispatch({ type: "SET_USER", payload: data })
-}
+  dispatch({ type: "SET_USER", payload: data });
+};

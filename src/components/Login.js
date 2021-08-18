@@ -49,7 +49,6 @@ function Login(props) {
     loginValue: "",
     password: "",
   });
-
   const classes = useStyles(theme);
 
   const handleChange = (e) => {
@@ -62,8 +61,8 @@ function Login(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const userData = {
-      loginValue: formValues.loginValue,
-      password: formValues.password,
+      loginValue: formValues.loginValue.trim(),
+      password: formValues.password.trim(),
     };
     props.loginUser(userData, history);
   };
@@ -104,6 +103,7 @@ function Login(props) {
               variant="contained"
               color="primary"
               className={classes.submit}
+              disabled={props.loading}
             >
               Sign in
               {props.loading && (

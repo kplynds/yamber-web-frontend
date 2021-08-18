@@ -89,9 +89,10 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
     own = true;
   }
   const classes = useStyles(theme);
-  return (
-    <div className={classes.root}>
-      {/* <div className={classes.spotlight}>
+  if (a !== undefined)
+    return (
+      <div className={classes.root}>
+        {/* <div className={classes.spotlight}>
         {own && !a.spotlight.on && (
           <div>
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -115,119 +116,120 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
           </div>
         )}
       </div> */}
-      <div className={classes.songs}>
-        <div className={classes.centerText}>
-          <Typography
-            variant="body1"
-            mx="auto"
-            align="center"
-            style={{ margin: "0 .1rem" }}
-          >
-            {getTopArtists(a.recentListening.data).join(", ")} &amp; more...
-          </Typography>
-          <Link
-            to={`/${a.handle}/playlist/recentlistening`}
-            className={classes.link}
-          >
+        <div className={classes.songs}>
+          <div className={classes.centerText}>
+            <Typography>{own ? "own profile" : "not own"}</Typography>
             <Typography
               variant="body1"
-              color="textSecondary"
-              className={classes.linkText}
+              mx="auto"
+              align="center"
+              style={{ margin: "0 .1rem" }}
             >
-              See Full Playlist
+              {getTopArtists(a.recentListening.data).join(", ")} &amp; more...
             </Typography>
-          </Link>
-        </div>
-        {a.recentListening.data.map((song, index) => {
-          if (index < 8) {
-            return (
-              <div className={classes.recentsSong} key={index}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography variant="body2" color="textSecondary">
-                    {index + 1}
-                  </Typography>
-                  <img
-                    src={song.images[0].url}
-                    alt={song.name}
-                    className={classes.albumImages}
-                  />
+            <Link
+              to={`/${a.handle}/playlist/recentlistening`}
+              className={classes.link}
+            >
+              <Typography
+                variant="body1"
+                color="textSecondary"
+                className={classes.linkText}
+              >
+                See Full Playlist
+              </Typography>
+            </Link>
+          </div>
+          {a.recentListening.data.map((song, index) => {
+            if (index < 8) {
+              return (
+                <div className={classes.recentsSong} key={index}>
                   <div
                     style={{
                       display: "flex",
-                      flexDirection: "column",
+                      alignItems: "center",
                     }}
                   >
-                    <Typography variant="body2">{song.name}</Typography>
                     <Typography variant="body2" color="textSecondary">
-                      {song.artists.join(", ")}
+                      {index + 1}
                     </Typography>
+                    <img
+                      src={song.images[0].url}
+                      alt={song.name}
+                      className={classes.albumImages}
+                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Typography variant="body2">{song.name}</Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {song.artists.join(", ")}
+                      </Typography>
+                    </div>
                   </div>
-                </div>
 
-                {ui.audio.active && ui.audio.src === song.preview ? (
-                  <StopIcon
-                    onClick={() => {
-                      playButtonClick(song.preview, ui.audio);
-                    }}
-                  />
-                ) : (
-                  <PlayArrowIcon
-                    onClick={() => {
-                      playButtonClick(song.preview, ui.audio);
-                    }}
-                  />
-                )}
-              </div>
-            );
-          } else {
-            return null;
-          }
-        })}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography color="textSecondary" variant="body2">
-            ... and more,&nbsp;
-          </Typography>
-          <Link
-            to={`/${a.handle}/playlist/recentlistening`}
-            className={classes.link}
+                  {ui.audio.active && ui.audio.src === song.preview ? (
+                    <StopIcon
+                      onClick={() => {
+                        playButtonClick(song.preview, ui.audio);
+                      }}
+                    />
+                  ) : (
+                    <PlayArrowIcon
+                      onClick={() => {
+                        playButtonClick(song.preview, ui.audio);
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            } else {
+              return null;
+            }
+          })}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              className={classes.linkText}
-            >
-              see full playlist
+            <Typography color="textSecondary" variant="body2">
+              ... and more,&nbsp;
             </Typography>
-          </Link>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography color="textSecondary" variant="body2">
-            last updated&nbsp;
-          </Typography>
-          <Typography color="textSecondary" variant="body2">
-            {a.recentListening.lastUpdated} PST
-          </Typography>
+            <Link
+              to={`/${a.handle}/playlist/recentlistening`}
+              className={classes.link}
+            >
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                className={classes.linkText}
+              >
+                see full playlist
+              </Typography>
+            </Link>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography color="textSecondary" variant="body2">
+              last updated&nbsp;
+            </Typography>
+            <Typography color="textSecondary" variant="body2">
+              {a.recentListening.lastUpdated} PST
+            </Typography>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 };
 
 const mapState = (state) => {

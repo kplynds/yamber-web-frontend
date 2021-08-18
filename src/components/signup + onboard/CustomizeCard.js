@@ -29,7 +29,8 @@ import InstagramIcon from "@material-ui/icons/Instagram";
 import axios from "axios";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
-import ClearIcon from '@material-ui/icons/Clear';
+import ClearIcon from "@material-ui/icons/Clear";
+import { getAuthenticatedUserDataAndPushUtil } from "../../redux/actions/userActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -151,7 +152,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     height: "100vh",
-  }
+  },
 }));
 
 const StepperStyles = withStyles({
@@ -212,14 +213,14 @@ function ColorlibStepIcon(props) {
     </div>
   );
 }
-const CustomizeCard = ({ data, ui, user }) => {
+const CustomizeCard = ({ data, ui, user, getAuthenticatedUserDataAndPushUtil }) => {
   const classes = useStyles(theme);
   const [slide, setSlide] = useState(0);
   const [tabValue, setTabValue] = useState(0);
   const [topArtists, setTopArtists] = useState([]);
   const [playlistsToImport, setPlaylistsToImport] = useState(["top50Spotify"]);
   const [preferences, setPreferences] = useState({
-    recentListeningPreference: "",
+    recentListeningPreference: "spotify",
     instagram: "",
     twitter: "",
     displayName: "",
@@ -250,48 +251,24 @@ const CustomizeCard = ({ data, ui, user }) => {
       topArtists: topArtists,
     };
     if (playlistsToImport.length > 0) {
-      const clonePlaylists = (ids, token) => {
-        const body = {
-          ids,
-          token,
-        }
-        axios.post("/clonespotifyplaylists", body)
-          .then(res => {
-            console.log(res)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
-      if (user.data.spotify.expireTime > Date.now()) {
-        const token = user.data.spotify.access_token
-        clonePlaylists(playlistsToImport, token)
-      } else {
-        const payload = { refresh_token: user.data.spotify.refresh_token };
-        axios
-          .post("/spotifyrefreshtoken", payload)
-          .then((res) => {
-            const body = { token: res.data.access_token };
-            axios
-              .post("/setnewspotifytoken", body)
-              .then((res) => {
-                const token = user.data.spotify.access_token
-                clonePlaylists(playlistsToImport, token)
-              })
-              .catch((err) => {
-                console.log("error setting spotify token");
-              });
-          })
-          .catch((err) => {
-            console.log("error getting new spotify token");
-          });
-      }
+      const body = {
+        ids: playlistsToImport,
+      };
+      axios
+        .post("/clonespotifyplaylists", body)
+        .then((res) => {
+          // console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
     axios
       .post("/update", submitValues)
       .then((res) => {
+        getAuthenticatedUserDataAndPushUtil(user.data.handle)
         setLoading(false);
-        window.location.href = `/${user.data.handle}`;
+        // window.location.href = `/${user.data.handle}`;
       })
       .catch((err) => {
         setLoading(false);
@@ -310,6 +287,7 @@ const CustomizeCard = ({ data, ui, user }) => {
     }
     const checker = (artist) => artist.name === newArtist.name;
     if (!topArtists.some(checker)) {
+      setSearchValue("")
       setTopArtists((topArtists) => [...topArtists, newArtist]);
     }
     window.scrollTo({ top: 0 });
@@ -446,46 +424,52 @@ const CustomizeCard = ({ data, ui, user }) => {
 
   useEffect(() => {
     if (searchValue !== "") {
-      let body = {};
-      if (user.data.spotify.expireTime > Date.now()) {
-        body.token = user.data.spotify.access_token;
-      } else {
-        const payload = { refresh_token: user.data.spotify.refresh_token };
-        axios
-          .post("/spotifyrefreshtoken", payload)
-          .then((res) => {
-            const body = { token: res.data.access_token };
-            axios
-              .post("/setnewspotifytoken", body)
-              .then((res) => {
-                body.token = res.data;
-              })
-              .catch((err) => {
-                console.log("error setting spotify token");
-              });
-          })
-          .catch((err) => {
-            console.log("error getting new spotify token");
-          });
-      }
-      body.query = searchValue;
-      axios
-        .post("searchspotifyartist", body)
-        .then((res) => {
-          setSearchResults(res.data);
+      axios.get(`/searchspotifyclient/${searchValue}/artist`)
+        .then(res => {
+          setSearchResults(res.data)
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch(err => {
+          console.log(err)
+        })
+      // let body = {};
+      // if (user.data.spotify.expireTime > Date.now()) {
+      //   body.token = user.data.spotify.access_token;
+      // } else {
+      //   const payload = { refresh_token: user.data.spotify.refresh_token };
+      //   axios
+      //     .post("/spotifyrefreshtoken", payload)
+      //     .then((res) => {
+      //       const body = { token: res.data.access_token };
+      //       axios
+      //         .post("/setnewspotifytoken", body)
+      //         .then((res) => {
+      //           body.token = res.data;
+      //         })
+      //         .catch((err) => {
+      //           console.log("error setting spotify token");
+      //         });
+      //     })
+      //     .catch((err) => {
+      //       console.log("error getting new spotify token");
+      //     });
+      // }
+      // body.query = searchValue;
+      // axios
+      //   .post("/searchspotifyartist", body)
+      //   .then((res) => {
+      //     setSearchResults(res.data);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     }
-  }, [
-    searchValue,
-    user.data.spotify.expireTime,
-    user.data.spotify.refresh_token,
-    user.data.spotify.access_token,
-  ]);
+  }, [searchValue]);
 
-  if (data.longTermArtists.length > 0 || data.mediumTermArtists.length || data.playlists.length) {
+  if (
+    data.longTermArtists.length > 0 ||
+    data.mediumTermArtists.length ||
+    data.playlists.length
+  ) {
     return (
       <div className={classes.root}>
         <div className={classes.top}>
@@ -673,10 +657,13 @@ const CustomizeCard = ({ data, ui, user }) => {
                   onChange={handleChange}
                   className={classes.select}
                 >
-                  <option value="auto" label="auto">
+                  <option
+                    value="spotify"
+                    label="auto update from spotify activity"
+                  >
                     auto update from spotify activity
                   </option>
-                  <option value="link" label="link">
+                  <option value="manual" label="manually set">
                     link to a spotify playlist
                   </option>
                 </select>
@@ -736,6 +723,8 @@ const mapState = (state) => {
   };
 };
 
-const mapDispatch = {};
+const mapDispatch = {
+  getAuthenticatedUserDataAndPushUtil
+};
 
 export default connect(mapState, mapDispatch)(CustomizeCard);

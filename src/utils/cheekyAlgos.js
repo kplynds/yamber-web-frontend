@@ -7,9 +7,10 @@ export const getArtistNames = (arr) => {
     ret.push(artist.name);
   });
   return ret;
-}; 
+};
 
 export const getTopArtists = (arr) => {
+  if (arr !== undefined) {
     const all = [];
     let hash = {};
     arr.forEach((song) => {
@@ -44,74 +45,85 @@ export const getTopArtists = (arr) => {
       });
     });
     return ret;
-  };
+  } else {
+    return []
+  }
+};
 
-  export const getPlaylistCover = (playlist) => {
-    if (playlist.images.length > 0) {
-      return (
-        <img
-          src={playlist.images[0].url}
-          alt={playlist.title}
-          style={{
-            width: "6rem",
-            height: "6rem",
-          }}
-        />
-      );
-    } else if (playlist.songs.length < 1) {
-      return (
-        <img
-          src={
-            "https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2"
+export const getPlaylistCover = (playlist, width) => {
+  if (playlist.images.length > 0) {
+    return (
+      <img
+        src={playlist.images[0].url}
+        alt={playlist.title}
+        style={{
+          width: `${width * 2}rem`,
+          height: `${width * 2}rem`,
+        }}
+      />
+    );
+  } else if (playlist.songs.length < 1) {
+    return (
+      // playlist has no songs
+      <img
+        src={
+          "https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2"
+        }
+        alt={playlist.title}
+        style={{
+          width: `${width * 2}rem`,
+          height: `${width * 2}rem`,
+        }}
+      />
+    );
+  } else if (playlist.songs.length < 4) {
+    // playlist has less than 4 songs
+    return (
+      <img
+        src={playlist.songs[0].images[0].url}
+        alt={playlist.title}
+        style={{
+          width: `${width * 2}rem`,
+          height: `${width * 2}rem`,
+        }}
+      />
+    );
+  } else {
+    // playlist has at least 4 songs
+    return (
+      <GridList
+        cols={2}
+        spacing={0}
+        cellHeight={width * 16}
+        style={{
+          width: `${width * 2}rem`,
+          height: `${width * 2}rem`,
+        }}
+      >
+        {playlist.songs.map((song, index) => {
+          if (index < 4) {
+            return (
+              <GridListTile key={index}>
+                <img
+                  src={song.images[0].url}
+                  alt={playlist.title}
+                  style={{
+                    width: `${width}rem`,
+                    height: `${width}rem`,
+                  }}
+                />
+              </GridListTile>
+            );
+          } else {
+            return null;
           }
-          alt={playlist.title}
-          style={{
-            width: "6rem",
-            height: "6rem",
-          }}
-        />
-      );
-    } else if (playlist.songs.length < 4) {
-      return (
-        <img
-          src={playlist.songs[0].images[0].url}
-          alt={playlist.title}
-          style={{
-            width: "6rem",
-            height: "6rem",
-          }}
-        />
-      );
-    } else {
-      return (
-        <GridList
-          cols={2}
-          spacing={0}
-          cellHeight={96}
-          style={{
-            width: "12rem",
-            height: "12rem",
-          }}
-        >
-          {playlist.songs.map((song, index) => {
-            if (index < 4) {
-              return (
-                <GridListTile key={index}>
-                  <img
-                    src={song.images[0].url}
-                    alt={playlist.title}
-                    style={{
-                      width: "6rem",
-                      height: "6rem",
-                    }}
-                  />
-                </GridListTile>
-              );
-            } else {
-              return null;
-            }
-          })}
-        </GridList>
-      );
-    }
-  };
+        })}
+      </GridList>
+    );
+  }
+};
+
+export const logout = () => {
+  localStorage.clear();
+  window.location.href = "/";
+};

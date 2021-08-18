@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "column"
   },
 }));
 const Customize = ({ user }) => {
@@ -28,49 +29,19 @@ const Customize = ({ user }) => {
   useEffect(() => {
     if (Object.keys(user.data).length > 0) {
       if (user.data.streamingProvider === "spotify") {
-        if (user.data.spotify.expireTime > Date.now()) {
-          axios
-            .post("/getwelcomespotifydata", {
-              token: user.data.spotify.access_token,
-            })
-            .then((res) => {
-              setLongTermArtists(res.data.longTermArtists);
-              setMediumTermArtists(res.data.mediumTermArtists);
-              setUserPlaylists(res.data.playlists);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        } else {
-          const payload = { refresh_token: user.data.spotify.refresh_token };
-          axios
-            .post("/spotifyrefreshtoken", payload)
-            .then((res) => {
-              const body = { token: res.data.access_token };
-              axios
-                .post("/setnewspotifytoken", body)
-                .then((res) => {
-                  axios
-                    .post("/getwelcomespotifydata", { token: res.data })
-                    .then((res) => {
-                      setLongTermArtists(res.data.longTermArtists);
-                      setMediumTermArtists(res.data.mediumTermArtists);
-                      setUserPlaylists(res.data.playlists);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                })
-                .catch((err) => {
-                  console.log("error setting spotify token");
-                });
-            })
-            .catch((err) => {
-              console.log("error getting new spotify token");
-            });
-        }
+        axios
+          .get("/getwelcomespotifydata")
+          .then((res) => {
+            setLongTermArtists(res.data.longTermArtists);
+            setMediumTermArtists(res.data.mediumTermArtists);
+            setUserPlaylists(res.data.playlists);
+            setLoading(false);
+          })
+          .catch((err) => {
+            console.log(err);
+            setLoading(false);
+          });
       }
-      setLoading(false);
     }
   }, [user.data]);
   if (Object.keys(user.data).length > 0 && !loading) {
@@ -89,7 +60,8 @@ const Customize = ({ user }) => {
   } else {
     return (
       <div className={classes.loading}>
-        <CircularProgress style={{ color: "#fff" }} />
+        <Typography color="textPrimary">Talking to Spotify...</Typography>
+        <CircularProgress style={{ color: "#fff", marginTop: "1rem" }} />
       </div>
     );
   }

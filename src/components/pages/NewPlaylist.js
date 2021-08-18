@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core";
 import theme from "../../theme";
 import Typography from "@material-ui/core/Typography";
-import { connect } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,21 +61,23 @@ const CssTextField = withStyles({
 const NewPlaylist = ({ user }) => {
   const classes = useStyles(theme);
   const [title, setTitle] = useState("Untitled");
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
   const onClick = () => {
-    setLoading(true)
-    axios.post("/playlist", {
-      title: title,
-    })
+    setLoading(true);
+    axios
+      .post("/playlist", {
+        title: title,
+      })
       .then((res) => {
-        const playlistId = res.data.message.split(" ")[1]
-        history.push(`/${user.data.handle}/playlist/${playlistId}`)
-        setLoading(false)
+        history.push(`/${user.data.handle}/playlist/${res.data.message}`);
+        setLoading(false);
       })
       .catch((err) => {
-        console.log(err)
-      })
+        console.log(err);
+        console.log("failing");
+        setLoading(false);
+      });
   };
   return (
     <div className={classes.root}>
@@ -86,7 +89,9 @@ const NewPlaylist = ({ user }) => {
       <div className={classes.textField}>
         <CssTextField
           value={title}
-          onChange={(e, v) => setTitle(v)}
+          onChange={(e, v) => {
+            setTitle(e.target.value);
+          }}
           fullWidth
           autoFocus
           inputProps={{ style: { textAlign: "center" } }}
@@ -100,7 +105,11 @@ const NewPlaylist = ({ user }) => {
           onClick={onClick}
           disabled={loading}
         >
-          create
+          {loading ? (
+            <CircularProgress fontSize="small" style={{ color: "#fff" }} />
+          ) : (
+            "create"
+          )}
         </Button>
       </div>
     </div>

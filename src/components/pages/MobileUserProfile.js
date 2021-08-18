@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import Typography from "@material-ui/core/Typography";
@@ -8,8 +8,10 @@ import { Avatar } from "@material-ui/core";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import { SiApplemusic, SiSoundcloud, SiSpotify } from "react-icons/si";
-import { Link, useHistory } from "react-router-dom";
-import { logout } from "../../redux/actions/userActions";
+import { Link } from "react-router-dom";
+import SettingsIcon from "@material-ui/icons/Settings";
+import Modal from "@material-ui/core/Modal";
+import { logout } from "../../utils/cheekyAlgos";
 
 const icons = {
   twitter: <TwitterIcon />,
@@ -32,9 +34,11 @@ const useStyles = makeStyles((theme) => ({
   socialAndName: {
     display: "flex",
     marginLeft: "1.7rem",
+    fontWeight: "bold",
   },
   bio: {
-    marginLeft: "1.7rem",
+    margin: "0 1.7rem",
+    marginBottom: "1rem",
   },
   stats: {
     display: "flex",
@@ -43,17 +47,70 @@ const useStyles = makeStyles((theme) => ({
     padding: ".2rem 0",
     marginTop: "1%",
   },
+  hover: {
+    "&:hover": {
+      cursor: "pointer",
+    },
+    marginLeft: ".6rem",
+  },
+  modal: {
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    padding: "2rem 6rem",
+    transform: `translate(-50%, -50%)`,
+    backgroundColor: theme.palette.primary.dark,
+  },
+  textOverflow: {
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    maxWidth: "65%",
+  },
+  title: {
+    display: "flex",
+    width: "100%",
+    justifyContent: "center",
+    padding: "0 1rem",
+    borderBottom: `1px solid ${theme.palette.primary.light}`
+  },
 }));
 const MobileUserProfile = ({ user, logout }) => {
-  const history = useHistory();
   const classes = useStyles(theme);
-  const logoutUser = (e) => {
-    e.preventDefault();
-    logout(history);
+  const [modal, setModal] = useState(false);
+  const modalSwitch = () => {
+    setModal(!modal);
+  };
+  const logoutClick = () => {
+    logout();
   };
   return (
     <div className={classes.root}>
-      <button onClick={logoutUser}>logout</button>
+      <Modal open={modal} onClose={modalSwitch}>
+        <div className={classes.modal}>
+          <Button
+            variant="contained"
+            color="secondary"
+            size="large"
+            onClick={logoutClick}
+          >
+            logout
+          </Button>
+        </div>
+      </Modal>
+      <div className={classes.title}>
+        <Typography
+          variant="h6"
+          color="textPrimary"
+          align="center"
+          className={classes.textOverflow}
+        >
+          @{user.data.handle}'s&nbsp;
+        </Typography>
+        <Typography variant="h6" color="textPrimary" align="center">
+          music taste
+        </Typography>
+      </div>
       <div className={classes.basic}>
         <div>
           <Avatar
@@ -62,28 +119,23 @@ const MobileUserProfile = ({ user, logout }) => {
             style={{ width: theme.spacing(11), height: theme.spacing(11) }}
           />
         </div>
-        <div style={{ marginLeft: "2rem" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              paddingBottom: ".5rem",
-            }}
-          >
-            <Typography variant="body1" color="textPrimary">
-              @{user.data.handle}
-            </Typography>
-          </div>
-          <Link to="/editprofile">
+        <div style={{ marginLeft: "1rem", width: "100%", display: "flex", alignItems: "center" }}>
+          <Link to="/editprofile" style={{ textDecoration: "none", flexGrow: 1 }}>
             <Button
-              variant="contained"
+              variant="outlined"
               size="small"
-              color="secondary"
               fullWidth
+              style={{
+                borderColor: theme.palette.primary.light,
+              }}
             >
               Edit Profile
             </Button>
           </Link>
+          <SettingsIcon
+              onClick={modalSwitch}
+              className={classes.hover}
+            />
         </div>
       </div>
       <div className={classes.socialAndName}>
@@ -111,7 +163,7 @@ const MobileUserProfile = ({ user, logout }) => {
         })}
       </div>
       <div className={classes.bio}>
-        <Typography variant="body1" color="textPrimary">
+        <Typography variant="body2" color="textPrimary">
           {user.data.info.bio}
         </Typography>
       </div>
