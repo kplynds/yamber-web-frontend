@@ -83,43 +83,45 @@ const NewPlaylist = ({ user }) => {
       });
   };
   return (
-    <div className={classes.root}>
+    <div>
       <Hidden smDown>
         <DesktopNav />
       </Hidden>
       <Hidden mdUp>
         <MobileNav />
       </Hidden>
-      <div className={classes.title}>
-        <Typography color="textPrimary" variant="h5">
-          Give your playlist a snazzy title
-        </Typography>
-      </div>
-      <div className={classes.textField}>
-        <CssTextField
-          value={title}
-          onChange={(e, v) => {
-            setTitle(e.target.value);
-          }}
-          fullWidth
-          autoFocus
-          inputProps={{ style: { textAlign: "center" } }}
-        />
-      </div>
-      <div className={classes.button}>
-        <Button
-          variant="contained"
-          className={classes.buttonStyles}
-          size="large"
-          onClick={onClick}
-          disabled={loading}
-        >
-          {loading ? (
-            <CircularProgress fontSize="small" style={{ color: "#fff" }} />
-          ) : (
-            "create"
-          )}
-        </Button>
+      <div className={classes.root}>
+        <div className={classes.title}>
+          <Typography color="textPrimary" variant="h5">
+            Give your playlist a snazzy title
+          </Typography>
+        </div>
+        <div className={classes.textField}>
+          <CssTextField
+            value={title}
+            onChange={(e, v) => {
+              setTitle(e.target.value);
+            }}
+            fullWidth
+            autoFocus
+            inputProps={{ style: { textAlign: "center" } }}
+          />
+        </div>
+        <div className={classes.button}>
+          <Button
+            variant="contained"
+            className={classes.buttonStyles}
+            size="large"
+            onClick={onClick}
+            disabled={loading}
+          >
+            {loading ? (
+              <CircularProgress fontSize="small" style={{ color: "#fff" }} />
+            ) : (
+              "create"
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   );

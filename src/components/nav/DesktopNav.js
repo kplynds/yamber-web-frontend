@@ -102,7 +102,7 @@ function DeskTopNav({ user, logout, seedWithSpotify }) {
           </Typography>
         </NavLink>
         <NavLink
-          to="/featured"
+          to="/newplaylist"
           className={classes.item}
           activeClassName={classes.active}
         >

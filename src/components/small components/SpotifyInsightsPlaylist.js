@@ -73,8 +73,6 @@ const SpotifyInsightsPlaylist = ({ playlistToDeleteId, handle }) => {
         <Typography color="textSecondary" variant="body2">
           select from the options below
         </Typography>
-        <Typography>{selectValues.time_range}</Typography>
-        <Typography>{selectValues.limit}</Typography>
       </div>
       <Select
         native
