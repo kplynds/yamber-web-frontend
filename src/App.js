@@ -17,7 +17,7 @@ import theme from "./theme";
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import Playlist from "./components/pages/Playlist";
 import Edit from "./components/pages/Edit";
-import SignupLand from "./components/signup + onboard/SignupLand";
+// import SignupLand from "./components/signup + onboard/SignupLand";
 import StreamingProvider from "./components/signup + onboard/StreamingProvider";
 import Customize from "./components/signup + onboard/Customize";
 import NewPlaylist from "./components/pages/NewPlaylist";
