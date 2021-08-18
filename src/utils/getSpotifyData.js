@@ -1,5 +1,6 @@
 import Spotify from "spotify-web-api-js";
 import axios from "axios";
+import React from "react";
 
 const spotify = new Spotify();
 
