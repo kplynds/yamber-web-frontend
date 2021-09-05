@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import Typography from "@material-ui/core/Typography";
@@ -10,6 +10,7 @@ import { getTopArtists } from "../../utils/cheekyAlgos";
 import { Link } from "react-router-dom";
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
+import Select from "@material-ui/core/Select";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -82,14 +83,32 @@ const useStyles = makeStyles((theme) => ({
   },
   editIcon: {
     display: "flex",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
     margin: ".1rem 2rem",
     [theme.breakpoints.down("md")]: {
       margin: ".1rem 1rem",
     },
   },
+  select: {
+    "&:before": {
+      borderColor: theme.palette.text.primary,
+    },
+    "&:after": {
+      borderColor: theme.palette.text.primary,
+    },
+  },
+  icon: {
+    fill: theme.palette.text.primary,
+  },
+  selectOther: {
+    padding: ".1rem 2rem"
+  }
 }));
 const Recent = ({ user, ui, playButtonClick, data }) => {
+  const [timeRange, setTimeRange] = useState("short_term");
+  const handleChange = (e) => {
+    setTimeRange(e.target.value);
+  };
   let a;
   let own;
   if (data) {
@@ -106,20 +125,58 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
         <div className={classes.songs}>
           {own && (
             <div className={classes.editIcon}>
-              <Button size="small" endIcon={<EditIcon />}>edit</Button>
+              <Select
+                native
+                onChange={handleChange}
+                value={timeRange}
+                className={classes.select}
+                inputProps={{
+                  classes: {
+                    icon: classes.icon,
+                  },
+                }}
+                name="time_range"
+              >
+                <option value={"short_term"}>last 30 days</option>
+                <option value={"medium_term"}>last 6 months</option>
+                <option value={"long_term"}>all time</option>
+              </Select>
+              <Button size="small" endIcon={<EditIcon />}>
+                edit
+              </Button>
+            </div>
+          )}
+          {!own && (
+            <div className={classes.selectOther}>
+              <Select
+                native
+                onChange={handleChange}
+                value={timeRange}
+                className={classes.select}
+                inputProps={{
+                  classes: {
+                    icon: classes.icon,
+                  },
+                }}
+                name="time_range"
+              >
+                <option value={"short_term"}>last 30 days</option>
+                <option value={"medium_term"}>last 6 months</option>
+                <option value={"long_term"}>all time</option>
+              </Select>
             </div>
           )}
           <div className={classes.centerText}>
-            <Typography
+            {/* <Typography
               variant="body1"
               mx="auto"
               align="center"
               style={{ margin: "0 1rem" }}
             >
               {getTopArtists(a.recentListening.data).join(", ")} &amp; more...
-            </Typography>
+            </Typography> */}
             <Link
-              to={`/${a.handle}/playlist/recentlistening`}
+              to={`/${a.handle}/playlist/recentlistening?timeRange=${timeRange}`}
               className={classes.link}
             >
               <Typography
@@ -131,7 +188,7 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
               </Typography>
             </Link>
           </div>
-          {a.recentListening.data.map((song, index) => {
+          {a.recentListening.data[timeRange].map((song, index) => {
             if (index < 8) {
               return (
                 <div className={classes.recentsSong} key={index}>

@@ -16,7 +16,9 @@ export default function Search() {
       <Hidden mdUp>
         <MobileNav />
       </Hidden>
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}
+      >
         <Link
           to="/kyle"
           style={{

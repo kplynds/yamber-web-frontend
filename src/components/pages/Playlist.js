@@ -112,11 +112,13 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
       recentPlaylist: false,
     });
     if (id === "recentlistening") {
+      const querystring = new URLSearchParams(window.location.search)
+      const timeRange = querystring.get("timeRange")
       axios
         .get(`/userbase/${handle}`)
         .then((res) => {
           setPlaylist({
-            songs: res.data.user.recentListening.data,
+            songs: res.data.user.recentListening.data[timeRange],
             title: "Recent Listening",
             user: res.data.user.handle,
             images: [],

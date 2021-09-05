@@ -240,9 +240,6 @@ const CustomizeCard = ({ data, ui, user, getAuthenticatedUserDataAndPushUtil }) 
   const finish = (e) => {
     setLoading(true);
     const submitValues = {
-      info: {
-        displayName: preferences.displayName,
-      },
       recentListeningPreference: preferences.recentListeningPreference,
       socials: {
         instagram: preferences.instagram,

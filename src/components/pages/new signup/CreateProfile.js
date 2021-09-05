@@ -120,6 +120,27 @@ const CreateProfile = () => {
       ? urlParams.get("displayName")
       : "",
   });
+  const [photoLoading, setPhotoLoading] = useState(false);
+
+  const profilePhotoFunc = (e) => {
+    setPhotoLoading(true);
+    const image = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+    axios
+      .post("/uploadimage", formData)
+      .then((res) => {
+        setFormValues({
+          ...formValues,
+          profilePhoto: res.data,
+        });
+        setPhotoLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setPhotoLoading(false);
+      });
+  };
   useEffect(() => {
     setCheckingUsername(true);
     axios
@@ -151,14 +172,27 @@ const CreateProfile = () => {
             <Typography align="left" color="textPrimary">
               Profile Picture
             </Typography>
-            <Button onClick={() => {alert("not functional yet :(")}}>Edit</Button>
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={profilePhotoFunc}
+            />
+            <label htmlFor="image">
+              <Button component="span">upload photo</Button>
+            </label>
           </div>
           <div>
-            <Avatar
-              alt={formValues.profilePhoto}
-              src={formValues.profilePhoto}
-              className={classes.profilePhoto}
-            />
+            {photoLoading ? (
+              <CircularProgress />
+            ) : (
+              <Avatar
+                alt={formValues.profilePhoto}
+                src={formValues.profilePhoto}
+                className={classes.profilePhoto}
+              />
+            )}
           </div>
         </div>
         <div className={classes.smallFieldContainer}>
@@ -197,7 +231,9 @@ const CreateProfile = () => {
                 Your sharable link:&nbsp;
               </Typography>
               <Typography variant="body2" color="textPrimary">
-                {usernameTaken ? "unavailable :(" : `${formValues.handle}.yamber.com`}
+                {usernameTaken
+                  ? "unavailable :("
+                  : `${formValues.handle}.yamber.com`}
               </Typography>
             </div>
           </div>
