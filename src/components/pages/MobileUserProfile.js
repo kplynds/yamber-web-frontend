@@ -98,7 +98,7 @@ const MobileUserProfile = ({ user, logout }) => {
           </Button>
         </div>
       </Modal>
-      <div className={classes.title}>
+      {/* <div className={classes.title}>
         <Typography
           variant="h6"
           color="textPrimary"
@@ -110,7 +110,7 @@ const MobileUserProfile = ({ user, logout }) => {
         <Typography variant="h6" color="textPrimary" align="center">
           music taste
         </Typography>
-      </div>
+      </div> */}
       <div className={classes.basic}>
         <div>
           <Avatar
@@ -140,7 +140,7 @@ const MobileUserProfile = ({ user, logout }) => {
       </div>
       <div className={classes.socialAndName}>
         <Typography variant="body1" color="textPrimary">
-          {user.data.info.displayName}
+          {user.data.handle}
         </Typography>
         {Object.keys(user.data.socials).map((social) => {
           if (user.data.socials[social] && user.data.socials[social] !== "") {

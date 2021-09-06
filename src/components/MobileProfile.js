@@ -60,7 +60,7 @@ const MobileProfile = ({ user, playlistsLength }) => {
   const classes = useStyles(theme);
   return (
     <div className={classes.root}>
-      <div className={classes.title}>
+      {/* <div className={classes.title}>
         <Typography
           variant="h6"
           color="textPrimary"
@@ -72,7 +72,7 @@ const MobileProfile = ({ user, playlistsLength }) => {
         <Typography variant="h6" color="textPrimary" align="center">
           music taste
         </Typography>
-      </div>
+      </div> */}
       <div className={classes.basic}>
         <div>
           <Avatar
@@ -114,7 +114,7 @@ const MobileProfile = ({ user, playlistsLength }) => {
       </div>
       <div className={classes.socialAndName}>
         <Typography variant="body1" color="textPrimary">
-          {user.info.displayName}
+          {user.handle}
         </Typography>
         {Object.keys(user.socials).map((social) => {
           return (

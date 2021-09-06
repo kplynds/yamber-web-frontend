@@ -115,7 +115,7 @@ const DesktopProfile = ({ user }) => {
       </div>
       <div className={classes.content}>
         <div className={classes.name}>
-          <div
+          {/* <div
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -136,7 +136,7 @@ const DesktopProfile = ({ user }) => {
             >
               music taste
             </Typography>
-          </div>
+          </div> */}
           <div style={{ display: "flex", alignItems: "center", marginTop: ".8rem" }}>
             <Button
               variant="outlined"
@@ -222,7 +222,7 @@ const DesktopProfile = ({ user }) => {
             color="textPrimary"
             style={{ fontWeight: 600 }}
           >
-            {user.data.info.displayName}
+            {user.data.handle}
           </Typography>
           {Object.keys(user.data.socials).map((social) => {
             if (user.data.socials[social] && user.data.socials[social] !== "") {

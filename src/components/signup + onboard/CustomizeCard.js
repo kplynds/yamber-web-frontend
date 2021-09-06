@@ -625,7 +625,7 @@ const CustomizeCard = ({ data, ui, user, getAuthenticatedUserDataAndPushUtil }) 
         {slide === 2 && (
           <Slide direction="left" in={slide === 2}>
             <div className={classes.preferenceRoot}>
-              <CustomTextField
+              {/* <CustomTextField
                 variant="outlined"
                 label="Display Name"
                 className={classes.textField}
@@ -633,7 +633,7 @@ const CustomizeCard = ({ data, ui, user, getAuthenticatedUserDataAndPushUtil }) 
                 onChange={handleChange}
                 name="displayName"
                 fullWidth
-              />
+              /> */}
               <div
                 style={{
                   display: "flex",

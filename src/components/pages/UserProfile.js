@@ -104,7 +104,7 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
         </div>
         <div className={classes.content}>
           <div className={classes.name}>
-            <div
+            {/* <div
               style={{
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -125,7 +125,7 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
               >
                 music taste
               </Typography>
-            </div>
+            </div> */}
             <div
               style={{
                 display: "flex",
@@ -167,7 +167,7 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
               color="textPrimary"
               style={{ fontWeight: 600 }}
             >
-              {profile.info.displayName}
+              {profile.handle}
             </Typography>
             {Object.keys(profile.socials).map((social) => {
               if (profile.socials[social] && profile.socials[social] !== "") {

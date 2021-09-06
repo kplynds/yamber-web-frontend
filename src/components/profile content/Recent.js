@@ -6,7 +6,7 @@ import theme from "../../theme";
 import { playButtonClick } from "../../redux/actions/dataActions";
 import StopIcon from "@material-ui/icons/Stop";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import { getTopArtists } from "../../utils/cheekyAlgos";
+// import { getTopArtists } from "../../utils/cheekyAlgos";
 import { Link } from "react-router-dom";
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
