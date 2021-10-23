@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@mui/material";
 import theme from "../../theme";
 import { connect } from "react-redux";
 import axios from "axios";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import CircularProgress from "@mui/material/CircularProgress";
 import CustomizeCard from "./CustomizeCard";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { makeStyles, withStyles } from "@material-ui/core";
+import { makeStyles, withStyles } from "@mui/material";
 import theme from "../../theme";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import CircularProgress from "@mui/material/CircularProgress";
 import { connect } from "react-redux";
-import Hidden from "@material-ui/core/Hidden";
+import Hidden from "@mui/material/Hidden";
 import DesktopNav from "../nav/DesktopNav";
 import MobileNav from "../nav/MobileNav";
 
@@ -24,13 +24,13 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     margin: "2rem 25rem",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       margin: "2rem 20rem",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       margin: "3rem 10rem",
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
       margin: "3rem 3rem",
     },
   },
@@ -84,7 +84,7 @@ const NewPlaylist = ({ user }) => {
   };
   return (
     <div>
-      <Hidden smDown>
+      <Hidden mdDown>
         <DesktopNav />
       </Hidden>
       <Hidden mdUp>

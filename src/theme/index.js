@@ -1,6 +1,8 @@
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+// import createMuiTheme from "@mui/material/styles/createMuiTheme";
 
-const theme = createMuiTheme({
+import { adaptV4Theme, createTheme } from '@mui/material/styles';
+
+const theme = createTheme(adaptV4Theme({
   palette: {
     primary: {
       dark: "#181818",
@@ -8,7 +10,7 @@ const theme = createMuiTheme({
       light: "#3D3D3D",
     },
     secondary: {
-      main: "#4e43cc",
+      main: "#89CFF0",
     },
     text: {
       primary: "#FFFFFF",
@@ -22,6 +24,6 @@ const theme = createMuiTheme({
   typography: {
     fontFamily: ['"Ubuntu"', "sans-serif"].join(","),
   },
-});
+}));
 
 export default theme;

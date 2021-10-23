@@ -1,11 +1,11 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@mui/styles";
+import Typography from "@mui/material/Typography";
 import theme from "../theme";
-import Button from "@material-ui/core/Button";
-import { Avatar } from "@material-ui/core";
-import TwitterIcon from "@material-ui/icons/Twitter";
-import InstagramIcon from "@material-ui/icons/Instagram";
+import Button from "@mui/material/Button";
+import { Avatar } from "@mui/material";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
 import { SiApplemusic, SiSoundcloud, SiSpotify } from "react-icons/si";
 
 const icons = {

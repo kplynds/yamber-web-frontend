@@ -1,14 +1,14 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import PersonIcon from "@material-ui/icons/Person";
-import SearchIcon from "@material-ui/icons/Search";
+import { makeStyles } from '@material-ui/styles';
+import PersonIcon from "@mui/icons-material/Person";
+import SearchIcon from "@mui/icons-material/Search";
 import { NavLink, useHistory } from "react-router-dom";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import CssBaseline from "@mui/material/CssBaseline";
 import { connect } from "react-redux";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import theme from "../../theme";
-import AddIcon from "@material-ui/icons/Add";
-import Typography from "@material-ui/core/Typography";
+import AddIcon from "@mui/icons-material/Add";
+import Typography from "@mui/material/Typography";
 
 const useStyles = makeStyles((theme) => ({
   nav: {
@@ -21,8 +21,6 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.primary.dark,
     zIndex: "99",
     borderTop: `1px solid ${theme.palette.primary.light}`,
-    // left: "50%",
-    // transform: "translateX(-50%)",
   },
   back: {
     zIndex: "99",
@@ -54,41 +52,43 @@ function MobileNav({ user }) {
   const classes = useStyles(theme);
   const history = useHistory();
   return (
-    <div className="root">
+    <div>
       <CssBaseline />
-      <div className={classes.back}>
-        <ArrowBackIcon onClick={() => history.goBack()} />
-      </div>
-      <div className={classes.nav}>
-        <div className={classes.linkContainer}>
+      <div className={classes.root}>
+        <div className={classes.back}>
+          <ArrowBackIcon onClick={() => history.goBack()} />
+        </div>
+        <div className={classes.nav}>
+          <div className={classes.linkContainer}>
+            <NavLink
+              to={`/${user.data.handle}`}
+              className={classes.item}
+              activeClassName={classes.active}
+            >
+              <PersonIcon fontSize="large" />
+              <Typography className={classes.text}>profile</Typography>
+            </NavLink>
+            {/* <Typography >Profile</Typography> */}
+          </div>
           <NavLink
-            to={`/${user.data.handle}`}
+            to="/newplaylist"
             className={classes.item}
             activeClassName={classes.active}
           >
-            <PersonIcon fontSize="large" />
-            <Typography className={classes.text}>profile</Typography>
+            <AddIcon fontSize="large" />
+            <Typography align="center" className={classes.text}>
+              new playlist
+            </Typography>
           </NavLink>
-          {/* <Typography >Profile</Typography> */}
+          <NavLink
+            to="/search"
+            className={classes.item}
+            activeClassName={classes.active}
+          >
+            <SearchIcon fontSize="large" />
+            <Typography className={classes.text}>explore</Typography>
+          </NavLink>
         </div>
-        <NavLink
-          to="/newplaylist"
-          className={classes.item}
-          activeClassName={classes.active}
-        >
-          <AddIcon fontSize="large" />
-          <Typography align="center" className={classes.text}>
-            new playlist
-          </Typography>
-        </NavLink>
-        <NavLink
-          to="/search"
-          className={classes.item}
-          activeClassName={classes.active}
-        >
-          <SearchIcon fontSize="large" />
-          <Typography className={classes.text}>explore</Typography>
-        </NavLink>
       </div>
     </div>
   );

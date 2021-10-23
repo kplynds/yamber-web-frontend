@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import theme from "../theme";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { FaSpotify } from "react-icons/fa";
 import { SiApplemusic, SiSoundcloud } from "react-icons/si";
-import BubbleChartIcon from "@material-ui/icons/BubbleChart";
+import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import { connect } from "react-redux";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import { Button } from "@material-ui/core";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import { Button } from "@mui/material";
 import SearchSpotify from "./small components/SearchSpotify";
 import UserPlaylistsSelect from "./small components/UserPlaylistsSelect";
 import SpotifyInsightsPlaylist from "./small components/SpotifyInsightsPlaylist";
@@ -59,7 +59,7 @@ const EmptyPlaylist = ({ user, id }) => {
           there are no songs in this playlist yet, would you like to:
         </Typography>
       </div>
-      <Grid container spacing={3} justify="center">
+      <Grid container spacing={3} justifyContent="center">
         {buttons.map((item, index) => {
           return (
             <Grid item xs={6} md={4} className={classes.buttonDiv} key={index}>

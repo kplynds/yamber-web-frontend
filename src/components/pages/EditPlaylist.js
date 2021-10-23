@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import theme from "../../theme";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import { getPlaylistCover } from "../../utils/cheekyAlgos";
 import { CustomTextField } from "./Edit";
 import axios from "axios";
@@ -10,11 +10,11 @@ import axios from "axios";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "50%",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       width: "75%",
       paddingBottom: "18%",
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
       width: "95%",
     },
     margin: "0 auto",

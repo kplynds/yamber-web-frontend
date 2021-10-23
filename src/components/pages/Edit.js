@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import Hidden from "@material-ui/core/Hidden";
+import Hidden from "@mui/material/Hidden";
 import DesktopNav from "../nav/DesktopNav";
 import MobileNav from "../nav/MobileNav";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@mui/styles";
 import theme from "../../theme";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
 import { updateProfileInfo } from "../../redux/actions/userActions";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useHistory } from "react-router-dom";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress } from "@mui/material";
 
 export const CustomTextField = withStyles({
   root: {
@@ -73,11 +73,11 @@ const useStyles = makeStyles((theme) => ({
     margin: "0 auto",
     borderRadius: "8px",
     background: theme.palette.primary.main,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       width: "75%",
       paddingBottom: "18%",
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
       width: "95%",
     },
   },
@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       cursor: "pointer",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       display: "none",
     },
   },
@@ -211,7 +211,7 @@ const Edit = ({ user, updateProfileInfo, loading }) => {
   }, [user.data]);
   return (
     <div className={classes.root}>
-      <Hidden smDown>
+      <Hidden mdDown>
         <DesktopNav />
       </Hidden>
       <Hidden mdUp>

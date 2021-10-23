@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import { connect } from "react-redux";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 import theme from "../../theme";
-import Button from "@material-ui/core/Button";
-import { Avatar } from "@material-ui/core";
-import TwitterIcon from "@material-ui/icons/Twitter";
-import InstagramIcon from "@material-ui/icons/Instagram";
+import Button from "@mui/material/Button";
+import { Avatar } from "@mui/material";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
 import { SiApplemusic, SiSoundcloud, SiSpotify } from "react-icons/si";
 import { Link } from "react-router-dom";
-import SettingsIcon from "@material-ui/icons/Settings";
-import Modal from "@material-ui/core/Modal";
+import SettingsIcon from "@mui/icons-material/Settings";
+import Modal from "@mui/material/Modal";
 import { logout } from "../../utils/cheekyAlgos";
 
 const icons = {

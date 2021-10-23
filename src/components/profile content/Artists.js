@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import { connect } from "react-redux";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 import theme from "../../theme";
 import { FaSpotify } from "react-icons/fa";
-import Popover from "@material-ui/core/Popover";
-import EditIcon from "@material-ui/icons/Edit";
-import Button from "@material-ui/core/Button";
+import Popover from "@mui/material/Popover";
+import EditIcon from "@mui/icons-material/Edit";
+import Button from "@mui/material/Button";
+import AutoArtists from "./components/AutoArtists";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,13 +17,13 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "1rem",
     width: "70%",
     margin: "0rem auto",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       width: "80%",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       width: "90%",
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
       width: "95%",
     },
   },
@@ -36,12 +37,18 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "flex-end",
     margin: ".1rem 2rem",
-    [theme.breakpoints.down("md")]: {
-      margin: ".1rem 1rem"
+    [theme.breakpoints.down('lg')]: {
+      margin: ".1rem 1rem",
     },
-  }
+  },
+  nothing: {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: "1rem",
+    margin: "0 2rem"
+  },
 }));
-const Artists = ({ user, data }) => {
+const Artists = ({ user, data, auto }) => {
   let a;
   let own;
   if (data) {
@@ -65,89 +72,106 @@ const Artists = ({ user, data }) => {
   const openInSpotify = (artist) => {
     window.location.href = artist.spotifyHref;
   };
-  return (
-    <div className={classes.root}>
-      {own && (
-        <div className={classes.editIcon}>
-        <Button size="small" endIcon={<EditIcon />}>edit</Button>
-      </div>
-      )}
-      {a.map((artist, index) => {
-        return (
-          <div key={index}>
-            <div
-              className={classes.artist}
-              key={index}
-              onClick={(e) => {
-                handlhandlePopoverOpen(e, artist.name);
-              }}
-            >
-              <Typography
-                variant="body2"
-                color="textSecondary"
-                style={{ paddingLeft: "1rem" }}
-              >
-                {index + 1}
-              </Typography>
-              <img
-                src={artist.images[0].url}
-                alt={artist.name}
-                style={{
-                  height: "4rem",
-                  borderRadius: "15px",
-                  width: "4rem",
-                  margin: "0 1rem",
-                }}
-              />
-              <div>
-                <Typography variant="body2">{artist.name}</Typography>
-                {artist.genres && (
+  if (!auto) {
+    if (a.length < 0) {
+      return (
+        <div className={classes.nothing}>
+          <Typography color="textPrimary">
+            this user has no top artists set. they probably like country music
+            hahahah
+          </Typography>
+        </div>
+      );
+    } else {
+      return (
+        <div className={classes.root}>
+          {own && (
+            <div className={classes.editIcon}>
+              <Button size="small" endIcon={<EditIcon />}>
+                edit
+              </Button>
+            </div>
+          )}
+          {a.map((artist, index) => {
+            return (
+              <div key={index}>
+                <div
+                  className={classes.artist}
+                  key={index}
+                  onClick={(e) => {
+                    handlhandlePopoverOpen(e, artist.name);
+                  }}
+                >
                   <Typography
                     variant="body2"
                     color="textSecondary"
+                    style={{ paddingLeft: "1rem" }}
+                  >
+                    {index + 1}
+                  </Typography>
+                  <img
+                    src={artist.images[0].url}
+                    alt={artist.name}
                     style={{
-                      marginRight: ".2rem",
+                      height: "4rem",
+                      borderRadius: "15px",
+                      width: "4rem",
+                      margin: "0 1rem",
+                    }}
+                  />
+                  <div>
+                    <Typography variant="body2">{artist.name}</Typography>
+                    {artist.genres && (
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        style={{
+                          marginRight: ".2rem",
+                        }}
+                      >
+                        {artist.genres.join(", ")}
+                      </Typography>
+                    )}
+                  </div>
+                </div>
+                <Popover
+                  open={popoverState.openedPopoverId === artist.name}
+                  anchorEl={popoverState.anchorEl}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                  PaperProps={{
+                    style: {
+                      background: theme.palette.primary.main,
+                    },
+                  }}
+                  onClose={handlhandlePopoverOpen}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<FaSpotify />}
+                    onClick={() => {
+                      openInSpotify(artist);
                     }}
                   >
-                    {artist.genres.join(", ")}
-                  </Typography>
-                )}
+                    Open in Spotify
+                  </Button>
+                </Popover>
               </div>
-            </div>
-            <Popover
-              open={popoverState.openedPopoverId === artist.name}
-              anchorEl={popoverState.anchorEl}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "center",
-              }}
-              PaperProps={{
-                style: {
-                  background: theme.palette.primary.main,
-                },
-              }}
-              onClose={handlhandlePopoverOpen}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<FaSpotify />}
-                onClick={() => {
-                  openInSpotify(artist);
-                }}
-              >
-                Open in Spotify
-              </Button>
-            </Popover>
-          </div>
-        );
-      })}
-    </div>
-  );
+            );
+          })}
+        </div>
+      );
+    }
+  } else {
+    return <AutoArtists ownProf={own} data={a} />;
+  }
 };
 
 const mapState = (state) => {

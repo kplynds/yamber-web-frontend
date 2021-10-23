@@ -1,6 +1,6 @@
 import React from "react";
 
-import Hidden from "@material-ui/core/Hidden";
+import Hidden from "@mui/material/Hidden";
 
 import DesktopNav from "../nav/DesktopNav";
 import MobileNav from "../nav/MobileNav";
@@ -8,7 +8,7 @@ import MobileNav from "../nav/MobileNav";
 export default function Featured() {
   return (
     <div>
-      <Hidden smDown>
+      <Hidden mdDown>
         <DesktopNav />
       </Hidden>
       <Hidden mdUp>

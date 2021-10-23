@@ -1,10 +1,10 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@mui/material";
 import theme from "../../../theme";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
 import { SiApplemusic, SiSpotify } from "react-icons/si";
 // import { redirectToSpotify } from "../../../redux/actions/userActions";
 import axios from "axios";

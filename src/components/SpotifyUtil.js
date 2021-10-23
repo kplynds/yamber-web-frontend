@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { connect } from "react-redux";
 import { setSpotify } from "../redux/actions/userActions";
 import { useHistory } from "react-router-dom";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 
 const SpotifyUtil = ({ setSpotify, user }) => {
   const history = useHistory();

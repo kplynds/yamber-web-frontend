@@ -1,6 +1,6 @@
 import React from "react";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
 
 export const getArtistNames = (arr) => {
   const ret = [];
@@ -92,7 +92,7 @@ export const getPlaylistCover = (playlist, width) => {
   } else {
     // playlist has at least 4 songs
     return (
-      <GridList
+      <ImageList
         cols={2}
         spacing={0}
         cellHeight={width * 16}
@@ -104,7 +104,7 @@ export const getPlaylistCover = (playlist, width) => {
         {playlist.songs.map((song, index) => {
           if (index < 4) {
             return (
-              <GridListTile key={index}>
+              <ImageListItem key={index}>
                 <img
                   src={song.images[0].url}
                   alt={playlist.title}
@@ -113,13 +113,13 @@ export const getPlaylistCover = (playlist, width) => {
                     height: `${width}rem`,
                   }}
                 />
-              </GridListTile>
+              </ImageListItem>
             );
           } else {
             return null;
           }
         })}
-      </GridList>
+      </ImageList>
     );
   }
 };

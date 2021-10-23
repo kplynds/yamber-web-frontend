@@ -1,7 +1,7 @@
 import React from "react";
-import { makeStyles, Typography } from "@material-ui/core";
+import { makeStyles, Typography } from "@mui/material";
 import theme from "../../../theme";
-import HighlightIcon from "@material-ui/icons/Highlight";
+import HighlightIcon from "@mui/icons-material/Highlight";
 
 const useStyles = makeStyles((theme) => ({
   root: {

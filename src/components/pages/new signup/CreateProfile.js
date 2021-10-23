@@ -1,21 +1,21 @@
 // will redirect here after successfull auth from spotify with tokens in the querystring
 // if (querystring), show loading screen and fill in form
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@mui/material";
 import theme from "../../../theme";
-import Container from "@material-ui/core/Container";
-import InputBase from "@material-ui/core/InputBase";
-import Typography from "@material-ui/core/Typography";
-import InputLabel from "@material-ui/core/InputLabel";
-import Avatar from "@material-ui/core/Avatar";
-// import TwitterIcon from "@material-ui/icons/Twitter";
-// import InstagramIcon from "@material-ui/icons/Instagram";
-import Button from "@material-ui/core/Button";
-// import InputAdornment from "@material-ui/core/InputAdornment";
+import Container from "@mui/material/Container";
+import InputBase from "@mui/material/InputBase";
+import Typography from "@mui/material/Typography";
+import InputLabel from "@mui/material/InputLabel";
+import Avatar from "@mui/material/Avatar";
+// import TwitterIcon from "@mui/icons-material/Twitter";
+// import InstagramIcon from "@mui/icons-material/Instagram";
+import Button from "@mui/material/Button";
+// import InputAdornment from "@mui/material/InputAdornment";
 import axios from "axios";
-import CheckIcon from "@material-ui/icons/Check";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import ErrorIcon from "@material-ui/icons/Error";
+import CheckIcon from "@mui/icons-material/Check";
+import CircularProgress from "@mui/material/CircularProgress";
+import ErrorIcon from "@mui/icons-material/Error";
 
 const useStyles = makeStyles((theme) => ({
   root: {},

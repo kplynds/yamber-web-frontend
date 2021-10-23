@@ -1,10 +1,10 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import theme from "../theme";
-import Hidden from "@material-ui/core/Hidden";
+import Hidden from "@mui/material/Hidden";
 import DesktopNav from "./nav/DesktopNav";
 import MobileNav from "./nav/MobileNav";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -19,7 +19,7 @@ const NotFound = ({ user }) => {
   const classes = useStyles(theme);
   return (
     <div className={classes.root}>
-      <Hidden smDown>
+      <Hidden mdDown>
         <DesktopNav />
       </Hidden>
       <Hidden mdUp>

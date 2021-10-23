@@ -1,15 +1,15 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import { connect } from "react-redux";
-import Hidden from "@material-ui/core/Hidden";
+import Hidden from "@mui/material/Hidden";
 import DesktopNav from "../nav/DesktopNav";
 import MobileNav from "../nav/MobileNav";
 import theme from "../../theme";
-import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import MobileProfile from "../MobileProfile";
 import { playButtonClick } from "../../redux/actions/dataActions";
 import Playlists from "../profile content/Playlists";
@@ -23,8 +23,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import { SiApplemusic, SiSoundcloud, SiSpotify } from "react-icons/si";
-import TwitterIcon from "@material-ui/icons/Twitter";
-import InstagramIcon from "@material-ui/icons/Instagram";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
 
 const icons = {
   twitter: <TwitterIcon />,
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     display: "flex",
     justifyContent: "center",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       marginBottom: "1rem",
     },
   },
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     marginRight: "5rem",
     alignItems: "center",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       width: "30%",
     },
   },
@@ -205,7 +205,7 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
   let location = useLocation();
   return (
     <div className={classes.base}>
-      <Hidden smDown>
+      <Hidden mdDown>
         <DesktopNav />
         <DesktopProfile />
       </Hidden>
@@ -243,7 +243,7 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
       <div className={classes.stuff}>
         <Switch>
           <Route path={`${match.path}/artists`}>
-            <Artists data={profile.topArtists} />
+            <Artists data={profile.topArtists} auto={profile.artistsAuto} />
           </Route>
           <Route path={`${match.path}/playlists`}>
             <Playlists handle={profile.handle} />

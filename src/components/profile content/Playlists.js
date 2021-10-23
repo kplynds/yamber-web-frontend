@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@mui/styles";
+import Typography from "@mui/material/Typography";
 import { connect } from "react-redux";
 import theme from "../../theme";
 import axios from "axios";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import CircularProgress from "@mui/material/CircularProgress";
 import { getPlaylistCover } from "../../utils/cheekyAlgos";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "0 5rem",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       margin: "0 3rem",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       margin: "0 1rem",
     },
   },
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-evenly",
     flexWrap: "wrap",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       display: "none",
     },
   },

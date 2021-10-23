@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import { connect } from "react-redux";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 import theme from "../../theme";
 import { playButtonClick } from "../../redux/actions/dataActions";
-import StopIcon from "@material-ui/icons/Stop";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import StopIcon from "@mui/icons-material/Stop";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 // import { getTopArtists } from "../../utils/cheekyAlgos";
 import { Link } from "react-router-dom";
-import EditIcon from "@material-ui/icons/Edit";
-import Button from "@material-ui/core/Button";
-import Select from "@material-ui/core/Select";
+import EditIcon from "@mui/icons-material/Edit";
+import Button from "@mui/material/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -30,13 +29,13 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "12px",
     margin: "0 auto",
     padding: "1rem 0",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       width: "80%",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       width: "90%",
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
       width: "95%",
     },
     marginTop: ".5rem",
@@ -70,13 +69,13 @@ const useStyles = makeStyles((theme) => ({
     width: "70%",
     margin: "0rem auto",
     // padding: "1rem 0",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       width: "80%",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       width: "90%",
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
       width: "95%",
     },
     borderRadius: "12px",
@@ -85,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     margin: ".1rem 2rem",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       margin: ".1rem 1rem",
     },
   },
@@ -101,14 +100,47 @@ const useStyles = makeStyles((theme) => ({
     fill: theme.palette.text.primary,
   },
   selectOther: {
-    padding: ".1rem 2rem"
-  }
+    padding: ".1rem 2rem",
+  },
+  selected: {
+    borderTop: `1px solid ${theme.palette.text.secondary}`,
+    borderRight: `1px solid ${theme.palette.text.secondary}`,
+    borderLeft: `1px solid ${theme.palette.text.secondary}`,
+    color: theme.palette.text.primary,
+    borderBottom: "0px solid red",
+  },
+  notSelected: {
+    borderBottom: `1px solid ${theme.palette.text.secondary}`,
+    color: theme.palette.text.secondary,
+    borderTop: `1px solid transparent`, 
+    borderRight: `1px solid transparent`, 
+    borderLeft: `1px solid transparent`, 
+  },
+  tabDiv: {
+    borderRadius: "2px",
+    display: "flex",
+    justifyContent: "center",
+    width: "33%",
+    padding: ".6rem 0",
+    alignItems: "center",
+    "&:hover": {
+      cursor: "pointer",
+      borderRight: "1px solid #D3D3D3",
+      borderLeft: "1px solid #D3D3D3",
+      borderTop: "1px solid #D3D3D3",
+    },
+  },
+  tabs: {
+    display: "flex",
+    margin: "0 auto",
+    justifyContent: "center",
+  },
+  bruh: {
+    textDecoration: "none",
+  },
 }));
 const Recent = ({ user, ui, playButtonClick, data }) => {
   const [timeRange, setTimeRange] = useState("short_term");
-  const handleChange = (e) => {
-    setTimeRange(e.target.value);
-  };
   let a;
   let own;
   if (data) {
@@ -124,48 +156,93 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
       <div className={classes.root}>
         <div className={classes.songs}>
           {own && (
-            <div className={classes.editIcon}>
-              <Select
-                native
-                onChange={handleChange}
-                value={timeRange}
-                className={classes.select}
-                inputProps={{
-                  classes: {
-                    icon: classes.icon,
-                  },
-                }}
-                name="time_range"
-              >
-                <option value={"short_term"}>last 30 days</option>
-                <option value={"medium_term"}>last 6 months</option>
-                <option value={"long_term"}>all time</option>
-              </Select>
-              <Button size="small" endIcon={<EditIcon />}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                padding: ".2rem 1rem",
+              }}
+            >
+              <a href="/editsongs" className={classes.bruh}>
+                <Button size="small" endIcon={<EditIcon />}>
+                  edit
+                </Button>
+              </a>
+            </div>
+          )}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Typography variant="h6" color="textPrimary">
+              Most Streamed Songs
+            </Typography>
+          </div>
+          <div className={classes.tabs}>
+            <div
+              onClick={() => setTimeRange("short_term")}
+              className={`${classes.tabDiv}
+                ${
+                  timeRange === "short_term"
+                    ? classes.selected
+                    : classes.notSelected
+                }`}
+            >
+              <Typography variant="body2">last month</Typography>
+            </div>
+            <div
+              onClick={() => setTimeRange("medium_term")}
+              className={`${classes.tabDiv}
+                ${
+                  timeRange === "medium_term"
+                    ? classes.selected
+                    : classes.notSelected
+                }`}
+            >
+              <Typography variant="body2">last 6 months</Typography>
+            </div>
+            <div
+              onClick={() => setTimeRange("long_term")}
+              className={`${classes.tabDiv}
+                ${
+                  timeRange === "long_term"
+                    ? classes.selected
+                    : classes.notSelected
+                }`}
+            >
+              <Typography variant="body2">all time</Typography>
+            </div>
+            {/* <Tabs value={timeRange} onChange={handleChange} centered>
+              <Tab label="last month" value="short_term" />
+              <Tab label="last 6 months" value="medium_term" />
+              <Tab label="all time" value="long_term" />
+            </Tabs> */}
+          </div>
+          {/* {own && (
+            <div className={classes.editIcon}> */}
+          {/* <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography color="textPrimary" style={{ marginRight: ".4rem" }}>
+                  most listened to songs&nbsp;
+                </Typography>
+                <Select
+                  native
+                  onChange={handleChange}
+                  value={timeRange}
+                  className={classes.select}
+                  inputProps={{
+                    classes: {
+                      icon: classes.icon,
+                    },
+                  }}
+                  name="time_range"
+                >
+                  <option value={"short_term"}>last 30 days</option>
+                  <option value={"medium_term"}>last 6 months</option>
+                  <option value={"long_term"}>all time</option>
+                </Select>
+              </div> */}
+          {/* <Button size="small" endIcon={<EditIcon />}>
                 edit
               </Button>
             </div>
-          )}
-          {!own && (
-            <div className={classes.selectOther}>
-              <Select
-                native
-                onChange={handleChange}
-                value={timeRange}
-                className={classes.select}
-                inputProps={{
-                  classes: {
-                    icon: classes.icon,
-                  },
-                }}
-                name="time_range"
-              >
-                <option value={"short_term"}>last 30 days</option>
-                <option value={"medium_term"}>last 6 months</option>
-                <option value={"long_term"}>all time</option>
-              </Select>
-            </div>
-          )}
+          )} */}
           <div className={classes.centerText}>
             {/* <Typography
               variant="body1"

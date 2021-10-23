@@ -1,35 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles, withStyles, fade } from "@material-ui/core";
-import Slide from "@material-ui/core/Slide";
+import { makeStyles, withStyles } from "@mui/material";
+import Slide from "@mui/material/Slide";
 import theme from "../../theme";
 import { connect } from "react-redux";
-import Typography from "@material-ui/core/Typography";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Avatar from "@material-ui/core/Avatar";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import Chip from "@material-ui/core/Chip";
-import StepLabel from "@material-ui/core/StepLabel";
-import Step from "@material-ui/core/Step";
-import Stepper from "@material-ui/core/Stepper";
-import StepConnector from "@material-ui/core/StepConnector";
+import Typography from "@mui/material/Typography";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Avatar from "@mui/material/Avatar";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import Chip from "@mui/material/Chip";
+import StepLabel from "@mui/material/StepLabel";
+import Step from "@mui/material/Step";
+import Stepper from "@mui/material/Stepper";
+import StepConnector from "@mui/material/StepConnector";
 import clsx from "clsx";
-import SettingsIcon from "@material-ui/icons/Settings";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
-import VideoLabelIcon from "@material-ui/icons/VideoLabel";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
+import SettingsIcon from "@mui/icons-material/Settings";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import VideoLabelIcon from "@mui/icons-material/VideoLabel";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
 import { CustomTextField } from "../pages/Edit";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import TwitterIcon from "@material-ui/icons/Twitter";
-import InstagramIcon from "@material-ui/icons/Instagram";
-// import HelpIcon from "@material-ui/icons/Help";
+import InputAdornment from "@mui/material/InputAdornment";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
+// import HelpIcon from "@mui/icons-material/Help";
 import axios from "axios";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
-import ClearIcon from "@material-ui/icons/Clear";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
 import { getAuthenticatedUserDataAndPushUtil } from "../../redux/actions/userActions";
 
 const useStyles = makeStyles((theme) => ({
@@ -114,7 +114,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.primary.light,
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: theme.palette.common.white,
       cursor: "pointer",
     },
     width: "90%",
@@ -140,7 +140,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
@@ -213,7 +213,12 @@ function ColorlibStepIcon(props) {
     </div>
   );
 }
-const CustomizeCard = ({ data, ui, user, getAuthenticatedUserDataAndPushUtil }) => {
+const CustomizeCard = ({
+  data,
+  ui,
+  user,
+  getAuthenticatedUserDataAndPushUtil,
+}) => {
   const classes = useStyles(theme);
   const [slide, setSlide] = useState(0);
   const [tabValue, setTabValue] = useState(0);
@@ -263,7 +268,7 @@ const CustomizeCard = ({ data, ui, user, getAuthenticatedUserDataAndPushUtil }) 
     axios
       .post("/update", submitValues)
       .then((res) => {
-        getAuthenticatedUserDataAndPushUtil(user.data.handle)
+        getAuthenticatedUserDataAndPushUtil(user.data.handle);
         setLoading(false);
         // window.location.href = `/${user.data.handle}`;
       })
@@ -284,7 +289,7 @@ const CustomizeCard = ({ data, ui, user, getAuthenticatedUserDataAndPushUtil }) 
     }
     const checker = (artist) => artist.name === newArtist.name;
     if (!topArtists.some(checker)) {
-      setSearchValue("")
+      setSearchValue("");
       setTopArtists((topArtists) => [...topArtists, newArtist]);
     }
     window.scrollTo({ top: 0 });
@@ -421,13 +426,14 @@ const CustomizeCard = ({ data, ui, user, getAuthenticatedUserDataAndPushUtil }) 
 
   useEffect(() => {
     if (searchValue !== "") {
-      axios.get(`/searchspotifyclient/${searchValue}/artist`)
-        .then(res => {
-          setSearchResults(res.data)
+      axios
+        .get(`/searchspotifyclient/${searchValue}/artist`)
+        .then((res) => {
+          setSearchResults(res.data);
         })
-        .catch(err => {
-          console.log(err)
-        })
+        .catch((err) => {
+          console.log(err);
+        });
       // let body = {};
       // if (user.data.spotify.expireTime > Date.now()) {
       //   body.token = user.data.spotify.access_token;
@@ -721,7 +727,7 @@ const mapState = (state) => {
 };
 
 const mapDispatch = {
-  getAuthenticatedUserDataAndPushUtil
+  getAuthenticatedUserDataAndPushUtil,
 };
 
 export default connect(mapState, mapDispatch)(CustomizeCard);

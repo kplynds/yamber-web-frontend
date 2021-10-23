@@ -1,7 +1,7 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import theme from "../../theme";
-import Hidden from "@material-ui/core/Hidden";
+import Hidden from "@mui/material/Hidden";
 import DesktopNav from "../nav/DesktopNav";
 import MobileNav from "../nav/MobileNav";
 import DesktopProfile from "../DesktopProfile";
@@ -16,7 +16,7 @@ const Profile = () => {
   const classes = useStyles(theme);
   return (
     <div className={classes.root}>
-      <Hidden smDown>
+      <Hidden mdDown>
         <DesktopNav />
         <DesktopProfile />
       </Hidden>

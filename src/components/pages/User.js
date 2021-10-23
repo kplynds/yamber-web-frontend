@@ -30,7 +30,7 @@ const User = ({ match, user, setLoggedInUser }) => {
         .then((res) => {
           // setProfile(res.data.user);
           if (
-            res.data.user.recentListeningPreference === "spotify" &&
+            res.data.user.songsDataPreference === "autoSpotify" &&
             res.data.user.recentListening.expireTime < Date.now()
           ) {
             axios

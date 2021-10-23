@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import DesktopNav from "../nav/DesktopNav";
-import Hidden from "@material-ui/core/Hidden";
+import Hidden from "@mui/material/Hidden";
 import MobileNav from "../nav/MobileNav";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import theme from "../../theme";
 import { connect } from "react-redux";
 import axios from "axios";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 import { useHistory, Switch, Route, Link } from "react-router-dom";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { playButtonClick } from "../../redux/actions/dataActions";
-import StopIcon from "@material-ui/icons/Stop";
+import StopIcon from "@mui/icons-material/Stop";
 import NotFound from "../NotFound";
 import { getPlaylistCover } from "../../utils/cheekyAlgos";
 import EmptyPlaylist from "../EmptyPlaylist";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import EditIcon from "@material-ui/icons/Edit";
-import AddIcon from "@material-ui/icons/Add";
-import Button from "@material-ui/core/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import Button from "@mui/material/Button";
 import EditPlaylist from "./EditPlaylist";
 import AddSongToPlaylist from "./AddSongToPlaylist";
 
@@ -29,14 +29,14 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "flex-end",
     marginTop: "2.5rem",
     marginBottom: "1rem",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       flexDirection: "column",
       alignItems: "center",
       textAlign: "center",
     },
   },
   margin: {
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       margin: "1rem 0",
     },
   },
@@ -57,13 +57,13 @@ const useStyles = makeStyles((theme) => ({
     width: "70%",
     margin: "0 auto",
     padding: "1rem 0",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       width: "80%",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       width: "90%",
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
       width: "100%",
     },
   },
@@ -288,7 +288,7 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
   // let location = useLocation();
   return (
     <div className={classes.root}>
-      <Hidden smDown>
+      <Hidden mdDown>
         <DesktopNav />
       </Hidden>
       <Hidden mdUp>

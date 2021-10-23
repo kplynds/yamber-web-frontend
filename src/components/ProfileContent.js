@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import { makeStyles } from "@material-ui/core/styles";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import { makeStyles } from "@mui/styles";
 import theme from "../theme";
 import { playButtonClick } from "../redux/actions/dataActions";
 import Recent from "./profile content/Recent";
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     display: "flex",
     justifyContent: "center",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       marginBottom: "1rem",
     },
   },
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "1rem 4rem",
     paddingTop: "1rem",
     paddingBottom: "1rem",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       margin: "1rem",
     },
   },
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     // going to need to add some css here so it wraps ever 3 playlists
     display: "flex",
     justifyContent: "center",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       paddingBottom: "18%",
     },
   },
@@ -364,7 +364,7 @@ const ProfileContent = ({ user, ui, playButtonClick }) => {
       <div className={classes.content}>
         <Switch>
           <Route path={`${match.path}/artists`}>
-            <Artists />
+            <Artists auto={user.data.artistsAuto}/>
           </Route>
           <Route path={`${match.path}/playlists`}>
             <Playlists handle={user.data.handle} />

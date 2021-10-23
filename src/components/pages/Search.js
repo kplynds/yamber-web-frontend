@@ -1,16 +1,16 @@
 import React from "react";
 
-import Hidden from "@material-ui/core/Hidden";
+import Hidden from "@mui/material/Hidden";
 
 import DesktopNav from "../nav/DesktopNav";
 import MobileNav from "../nav/MobileNav";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 
 export default function Search() {
   return (
     <div>
-      <Hidden smDown>
+      <Hidden mdDown>
         <DesktopNav />
       </Hidden>
       <Hidden mdUp>

@@ -1,15 +1,15 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { makeStyles } from "@material-ui/core/styles";
-import PersonIcon from "@material-ui/icons/Person";
-import Typography from "@material-ui/core/Typography";
-import AddIcon from "@material-ui/icons/Add";
-import SearchIcon from "@material-ui/icons/Search";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import { makeStyles } from '@material-ui/styles';
+import PersonIcon from "@mui/icons-material/Person";
+import Typography from "@mui/material/Typography";
+import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
+import CssBaseline from "@mui/material/CssBaseline";
 import { connect } from "react-redux";
 import { logout, seedWithSpotify } from "../../redux/actions/userActions";
-
+ 
 import theme from "../../theme";
 
 const useStyles = makeStyles((theme) => ({
