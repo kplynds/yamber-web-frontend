@@ -125,8 +125,10 @@ const MobileUserProfile = ({ user, logout }) => {
               variant="outlined"
               size="small"
               fullWidth
-              style={{
+              sx={{
                 borderColor: theme.palette.primary.light,
+                textTransform: "capitalize",
+                color: theme.palette.text.primary,
               }}
             >
               Edit Profile
@@ -167,50 +169,6 @@ const MobileUserProfile = ({ user, logout }) => {
           {user.data.info.bio}
         </Typography>
       </div>
-      {/* <div className={classes.stats}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="body1" color="textPrimary">
-            {user.playlists.length}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            playlists
-          </Typography>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="body1" color="textPrimary">
-            {user.data.following.length}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            following
-          </Typography>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="body1" color="textPrimary">
-            {user.data.followers.length}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            followers
-          </Typography>
-        </div>
-      </div> */}
     </div>
   );
 };

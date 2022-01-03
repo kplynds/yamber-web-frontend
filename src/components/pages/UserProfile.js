@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     display: "flex",
     justifyContent: "center",
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
       marginBottom: "1rem",
     },
   },
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     marginRight: "5rem",
     alignItems: "center",
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
       width: "30%",
     },
   },
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     // alignItems: "center",
     paddingTop: theme.spacing(1),
     // maxWidth: "90%",
-    minWidth: "25rem"
+    minWidth: "25rem",
   },
   stats: {
     display: "flex",
@@ -131,17 +131,18 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
                 display: "flex",
                 alignItems: "center",
                 marginTop: ".8rem",
-                whiteSpace: "nowrap"
+                whiteSpace: "nowrap",
               }}
             >
               <Button
                 variant="outlined"
                 size="small"
                 // color="secondary"
-                style={{
+                sx={{
                   borderColor: theme.palette.primary.light,
                   textTransform: "capitalize",
                   marginRight: "1rem",
+                  color: theme.palette.text.primary,
                 }}
                 fullWidth
               >
@@ -151,9 +152,11 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
                 variant="outlined"
                 size="small"
                 // color="secondary"
-                style={{
+                sx={{
                   borderColor: theme.palette.primary.light,
                   textTransform: "capitalize",
+                  marginRight: "1rem",
+                  color: theme.palette.text.primary,
                 }}
                 fullWidth
               >
@@ -216,23 +219,29 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
       <div className={classes.tabs}>
         <Tabs
           value={location.pathname}
-          // onChange={(e, v) => {
-          //   setTabValue(v);
-          // }}
+          textColor="inherit"
+          TabIndicatorProps={{
+            style: {
+              background: theme.palette.text.primary,
+            },
+          }}
         >
           <Tab
+            disableRipple
             label="recent"
             component={Link}
             to={`${match.url}`}
             value={`${match.url}`}
           />
           <Tab
+            disableRipple
             label="artists"
             component={Link}
             to={`${match.url}/artists`}
             value={`${match.url}/artists`}
           />
           <Tab
+            disableRipple
             label="playlists"
             to={`${match.url}/playlists`}
             component={Link}

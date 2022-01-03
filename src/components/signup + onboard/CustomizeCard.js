@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles, withStyles } from "@mui/material";
+import { makeStyles, withStyles } from "@mui/styles";
 import Slide from "@mui/material/Slide";
 import theme from "../../theme";
 import { connect } from "react-redux";
@@ -114,7 +114,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.primary.light,
     "&:hover": {
-      backgroundColor: theme.palette.common.white,
       cursor: "pointer",
     },
     width: "90%",

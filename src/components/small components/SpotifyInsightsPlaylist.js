@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import theme from "../../theme";
 import Select from "@mui/material/Select";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 import { connect } from "react-redux";
+import Typography from "@mui/material/Typography";
 
 const useStyles = makeStyles((theme) => ({
   root: {

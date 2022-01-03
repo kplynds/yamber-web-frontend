@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import theme from "../../theme";
 import { connect } from "react-redux";
 import axios from "axios";

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { makeStyles } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import theme from "../../theme";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";

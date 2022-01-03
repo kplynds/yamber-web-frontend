@@ -1,5 +1,3 @@
-// import createMuiTheme from "@mui/material/styles/createMuiTheme";
-
 import { adaptV4Theme, createTheme } from '@mui/material/styles';
 
 const theme = createTheme(adaptV4Theme({

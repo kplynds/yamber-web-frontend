@@ -115,39 +115,20 @@ const DesktopProfile = ({ user }) => {
       </div>
       <div className={classes.content}>
         <div className={classes.name}>
-          {/* <div
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              display: "flex",
-            }}
-          >
-            <Typography
-              variant="h5"
-              color="textPrimary"
-              className={classes.title}
-            >
-              @{user.data.handle}'s&nbsp;
-            </Typography>
-            <Typography
-              variant="h5"
-              color="textPrimary"
-              // className={classes.title}
-            >
-              music taste
-            </Typography>
-          </div> */}
           <div style={{ display: "flex", alignItems: "center", marginTop: ".8rem" }}>
             <Button
               variant="outlined"
               size="small"
-              style={{
-                marginRight: "1rem",
+              sx={{
                 borderColor: theme.palette.primary.light,
+                textTransform: "capitalize",
+                marginRight: "1rem",
+                color: theme.palette.text.primary,
               }}
               onClick={() => {
                 history.push("/editprofile");
               }}
+              fullWidth
             >
               Edit Profile
             </Button>

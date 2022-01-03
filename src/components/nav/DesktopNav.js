@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import PersonIcon from "@mui/icons-material/Person";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
@@ -9,9 +9,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import CssBaseline from "@mui/material/CssBaseline";
 import { connect } from "react-redux";
 import { logout, seedWithSpotify } from "../../redux/actions/userActions";
- 
 import theme from "../../theme";
-
+ 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "5rem",
@@ -68,20 +67,6 @@ const useStyles = makeStyles((theme) => ({
 
 function DeskTopNav({ user, logout, seedWithSpotify }) {
   const classes = useStyles(theme);
-  // const history = useHistory();
-  // const logoutUser = (e) => {
-  //   e.preventDefault();
-  //   logout(history);
-  // };
-  // const testingApple = (e) => {
-  //   e.preventDefault();
-  //   let music = window.MusicKit.getInstance();
-  //   music.authorize().then((res) => {
-  //     music.Library.album("p.kGoq3xdHR10Rd6a").then((res) => {
-  //       console.log(res);
-  //     });
-  //   });
-  // };
   return (
     <div className={classes.root}>
       <CssBaseline />

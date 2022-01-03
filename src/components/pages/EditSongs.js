@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { makeStyles } from "@mui/styles";
 import theme from "../../theme";
@@ -21,17 +21,18 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import useWindowDimensions from "../../utils/useWindowDimensions";
 import CloseIcon from "@mui/icons-material/Close";
-// import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
 
 const useStyles = makeStyles((theme) => ({
   content: {
     width: "50%",
     margin: "0 auto",
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
       width: "75%",
-      paddingBottom: "18%",
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       width: "95%",
     },
   },
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   playlistImage: {
-    marginRight: ".4rem",
+    margin: "0 .4rem",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -80,7 +81,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.primary.light,
     "&:hover": {
-      backgroundColor: theme.palette.common.white,
       cursor: "pointer",
     },
     width: "100%",
@@ -101,29 +101,55 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// Need to be able to:
-// Edit autoupdate preference
-// Exclude a song from showing.
-// Link to a spotify playlist
-
-// if they link it to a playlist, have a refresh button that pulls from spotify/apple api and updates the playlist.
+const ranges = [
+  {
+    key: "short_term",
+    label: "Recent (past month)",
+  },
+  { key: "medium_term", label: "Medium (past 6 months)" },
+  { key: "long_term", label: "All Time" },
+];
 
 const EditSongs = ({ user }) => {
   const classes = useStyles(theme);
-  const [formValue, setFormValue] = useState("auto");
+  const [formValue, setFormValue] = useState({
+    short_term: "",
+    medium_term: "",
+    long_term: "",
+  });
   const [fetchPlaylists, setFetchPlaylists] = useState(null);
   const [editState, setEditState] = useState("none");
   const [filter, setFilter] = useState("");
+  const [activeDialog, setActiveDialog] = useState(null);
+  const [linkPlaylist, setLinkPlaylist] = useState({
+    short_term: null,
+    medium_term: null,
+    long_term: null,
+  });
+  const [loading, setLoading] = useState(false);
   const { width } = useWindowDimensions();
-  const handleDialogClose = () => {
-    setFormValue(null);
+  const handleDialogClose = (e, v) => {
+    setFormValue({
+      ...formValue,
+      [activeDialog]: null,
+    });
   };
   const handleSearch = (e) => {
     setFilter(e.target.value);
   };
+  const selectPlaylist = (playlist, range) => {
+    setLinkPlaylist({
+      ...linkPlaylist,
+      [range]: playlist,
+    });
+  };
   const handleChange = (e, v) => {
-    setFormValue(v);
-    if (v === "link") {
+    setFormValue({
+      ...formValue,
+      [e.target.name]: e.target.value,
+    });
+    if (e.target.value === "link") {
+      setActiveDialog(e.target.name);
       setFetchPlaylists("loading");
       axios
         .get(`/getuserplaylists/${user.data.streamingProvider}`)
@@ -135,17 +161,117 @@ const EditSongs = ({ user }) => {
         });
     }
   };
-
-  if (user.data.streamingProvider === undefined) {
+  const updateSongsDataPreference = () => {
+    setLoading(true);
+    const firstArray = [
+      formValue.short_term || "auto",
+      formValue.medium_term || "auto",
+      formValue.long_term || "auto",
+    ];
+    let keys = Object.keys(formValue);
+    const arrayToBePosted = firstArray.map((item, index) => {
+      if (item === "link") {
+        return linkPlaylist[keys[index]].spotifyId;
+      } else {
+        return item;
+      }
+    });
+    let body = {
+      prefArray: arrayToBePosted,
+    };
+    user.data.songsDataPreference.forEach((item, index) => {
+      if (item !== "auto" && item !== "manual") {
+        const ref = arrayToBePosted[index];
+        if (ref === "auto" || ref === "manual") {
+          if (body.removeLink) {
+            body.removeLink.push(index);
+          } else {
+            body.removeLink = [index];
+          }
+        }
+      }
+    });
+    axios
+      .post("/updatesongspref_spotify", body)
+      .then((res) => {
+        setLoading(false);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+  useEffect(() => {
+    if (Object.keys(user.data).length > 0) {
+      setLinkPlaylist(user.data.linkedPlaylists);
+      setFormValue({
+        short_term:
+          user.data.songsDataPreference[0] !== "auto" &&
+          user.data.songsDataPreference[0] !== "manual"
+            ? "link"
+            : user.data.songsDataPreference[0],
+        medium_term:
+          user.data.songsDataPreference[1] !== "auto" &&
+          user.data.songsDataPreference[1] !== "manual"
+            ? "link"
+            : user.data.songsDataPreference[1],
+        long_term:
+          user.data.songsDataPreference[2] !== "auto" &&
+          user.data.songsDataPreference[2] !== "manual"
+            ? "link"
+            : user.data.songsDataPreference[2],
+      });
+    }
+  }, [user.data]);
+  if (Object.keys(user.data).length === 0) {
     return (
       <div>
-          <Hidden mdDown>
-            <DesktopNav />
-          </Hidden>
-          <Hidden mdUp>
-            <MobileNav />
-          </Hidden>
-          {/* <Skeleton variant="text" /> */}
+        <Hidden mdDown>
+          <DesktopNav />
+        </Hidden>
+        <Hidden mdUp>
+          <MobileNav />
+        </Hidden>
+        <Stack
+          spacing={1}
+          sx={{
+            width: "50%",
+            margin: "auto",
+            marginTop: "4rem",
+            [theme.breakpoints.down("lg")]: {
+              width: "70%",
+            },
+            [theme.breakpoints.down("md")]: {
+              width: "80%",
+            },
+            [theme.breakpoints.down("sm")]: {
+              width: "90%",
+            },
+          }}
+        >
+          <Skeleton variant="text" sx={{ width: "50%", mx: "auto" }} />
+          <div style={{ display: "flex" }}>
+            <Skeleton
+              sx={{ mx: "1rem" }}
+              variant="rectangular"
+              width={250}
+              height={150}
+            />
+            <Skeleton
+              sx={{ mx: "1rem" }}
+              variant="rectangular"
+              width={250}
+              height={150}
+            />
+            <Skeleton
+              sx={{ mx: "1rem" }}
+              variant="rectangular"
+              width={250}
+              height={150}
+            />
+          </div>
+        </Stack>
       </div>
     );
   } else {
@@ -161,190 +287,256 @@ const EditSongs = ({ user }) => {
           <div className={classes.divContainer}>
             <div className={classes.divTitle}>
               <div className={classes.empty}></div>
-              <Button
-                id="test"
-                name="test"
-                onClick={() => {
-                  if (editState !== "songsDataPreference") {
-                    setEditState("songsDataPreference");
-                  } else {
-                    console.log("post");
-                  }
-                }}
-                variant={
-                  editState === "songsDataPreference" ? "contained" : "text"
-                }
-              >
-                {editState === "songsDataPreference" ? "save" : "edit"}
-              </Button>
-            </div>
-            <Typography>How should we display your listening data?</Typography>
-            <RadioGroup
-              aria-label="songsDataPreference"
-              defaultValue="auto"
-              name="songsDataPreference"
-              value={formValue}
-              onChange={handleChange}
-            >
-              <FormControlLabel
-                disabled={editState !== "songsDataPreference"}
-                value="auto"
-                control={<Radio />}
-                label={`Auto update from ${user.data.streamingProvider}`}
-              />
-              <FormControlLabel
-                disabled={editState !== "songsDataPreference"}
-                value="link"
-                control={<Radio />}
-                label={`Link to a playlist from ${user.data.streamingProvider}`}
-              />
-              <Dialog
-                open={formValue === "link"}
-                onClose={handleDialogClose}
-                className={classes.dialogBase}
-                fullWidth
-                fullScreen={width < 600}
-              >
-                {width < 600 && (
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      backgroundColor: theme.palette.primary.main,
-                    }}
-                  >
-                    <CloseIcon
-                      style={{ paddingRight: "1rem", paddingTop: "1rem" }}
-                      onClick={handleDialogClose}
-                      fontSize="large"
-                    />
-                  </div>
-                )}
-                <DialogTitle
-                  style={{
-                    background: theme.palette.primary.main,
+              {editState === "songsDataPreference" ? (
+                <Button
+                  onClick={updateSongsDataPreference}
+                  variant="contained"
+                  disabled={loading}
+                  sx={{
+                    color: theme.palette.primary.dark,
+                    background: theme.palette.text.primary,
+                    "&:hover": {
+                      color: theme.palette.primary.dark,
+                      background: theme.palette.text.primary,
+                    },
                   }}
                 >
-                  {fetchPlaylists === "loading"
-                    ? "getting your playlists..."
-                    : fetchPlaylists === "error"
-                    ? "could not get"
-                    : "choose which playlist to link"}
-                </DialogTitle>
-                {fetchPlaylists === "loading" && (
-                  <DialogContent
-                    style={{ background: theme.palette.primary.main }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        marginTop: ".8rem",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <CircularProgress
-                        style={{ color: theme.palette.text.secondary }}
-                      />
-                    </div>
-                  </DialogContent>
-                )}
-                {Array.isArray(fetchPlaylists) && (
-                  <DialogContent
-                    style={{
-                      background: theme.palette.primary.main,
-                      margin: "0",
-                    }}
-                  >
-                    <div className={classes.search}>
-                      <div className={classes.searchIcon}>
-                        <SearchIcon style={{ color: "#fff" }} />
-                      </div>
-                      <InputBase
-                        placeholder="Search for a playlist"
-                        inputProps={{ "aria-label": "search" }}
-                        classes={{
-                          root: classes.inputRoot,
-                          input: classes.inputInput,
-                        }}
-                        value={filter}
-                        onChange={handleSearch}
-                        autoFocus={true}
-                      />
-                    </div>
-                    {fetchPlaylists
-                      .filter((playlist) =>
-                        playlist.title
-                          .toLowerCase()
-                          .includes(filter.toLowerCase())
-                      )
-                      .map((playlist) => {
-                        return (
-                          <div key={playlist.id} className={classes.playlist}>
-                            <div
-                              style={{ display: "flex", alignItems: "center" }}
-                            >
-                              <Avatar
-                                alt={playlist.title}
-                                src={playlist.images[0].url}
-                                variant="square"
-                                className={classes.playlistImage}
-                              />
-                              <Typography color="textSecondary">
-                                {playlist.title}
-                              </Typography>
-                            </div>
-                            <AddCircleOutlineIcon />
-                          </div>
-                        );
-                      })}
-                  </DialogContent>
-                )}
-              </Dialog>
-              {/* {formValue === "link" ? (
-              <div>
-                {fetchPlaylists === "loading" ? (
-                  <div>loading</div>
-                ) : fetchPlaylists === "error" ? (
-                  <div>could not get your playlists :(. damn</div>
-                ) : (
-                  <div className={classes.playlistsContainer}>
-                    {fetchPlaylists
-                      .filter((playlist) => playlist.title.includes(filter))
-                      .map((playlist) => {
-                        return (
-                          <div key={playlist.id} className={classes.playlist}>
-                            <div
-                              style={{ display: "flex", alignItems: "center" }}
-                            >
-                              <Avatar
-                                alt={playlist.title}
-                                src={playlist.images[0].url}
-                                variant="square"
-                                className={classes.playlistImage}
-                              />
-                              <Typography color="textSecondary">
-                                {playlist.title}
-                              </Typography>
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div style={{ display: "none" }}></div>
-            )} */}
-              <FormControlLabel
-                disabled={editState !== "songsDataPreference"}
-                value="manual"
-                control={<Radio />}
-                label="Set manually"
-              />
-            </RadioGroup>
+                  {loading ? "loading..." : "save"}
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setEditState("songsDataPreference");
+                  }}
+                  variant="text"
+                  sx={{ color: theme.palette.text.primary }}
+                >
+                  edit
+                </Button>
+              )}
+            </div>
           </div>
         </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Typography>How should we display your listening data?</Typography>
+        </div>
+        <Container
+          sx={{
+            display: "flex",
+            [theme.breakpoints.down("md")]: {
+              flexDirection: "column",
+              // marginTop: ".2rem",
+            },
+            marginTop: "1rem",
+            justifyContent: "center",
+          }}
+        >
+          {ranges.map((range) => {
+            return (
+              <div key={range.key}>
+                <Typography color="textSecondary">{range.label}:</Typography>
+                <RadioGroup
+                  aria-label="songsDataPreference"
+                  // defaultValue={user.data.songsDataPreference[index]}
+                  name={range.key}
+                  value={formValue[range.key]}
+                  onChange={handleChange}
+                  key={range.key}
+                >
+                  <FormControlLabel
+                    disabled={editState !== "songsDataPreference"}
+                    value="auto"
+                    control={
+                      <Radio
+                        sx={{
+                          color: theme.palette.text.secondary,
+                          "&.Mui-checked": {
+                            color: theme.palette.text.primary,
+                          },
+                        }}
+                      />
+                    }
+                    label={`Auto update from ${user.data.streamingProvider}`}
+                    sx={{ my: ".2rem" }}
+                  />
+                  <FormControlLabel
+                    disabled={editState !== "songsDataPreference"}
+                    value="link"
+                    control={
+                      <Radio
+                        sx={{
+                          color: theme.palette.text.secondary,
+                          "&.Mui-checked": {
+                            color: theme.palette.text.primary,
+                          },
+                        }}
+                      />
+                    }
+                    label={
+                      linkPlaylist[range.key] ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            maxWidth: "25rem",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Typography>Link to&nbsp;</Typography>
+                          <Avatar
+                            alt={linkPlaylist[range.key].title}
+                            src={linkPlaylist[range.key].images[0].url}
+                            variant="square"
+                            sx={{ height: "2rem", width: "2rem", m: "0 .2rem" }}
+                          />
+                          <Typography>
+                            &nbsp;{linkPlaylist[range.key].title}
+                          </Typography>
+                        </div>
+                      ) : (
+                        `Link to a playlist from ${user.data.streamingProvider}`
+                      )
+                    }
+                  />
+                  <Dialog
+                    open={
+                      formValue[range.key] === "link" &&
+                      !linkPlaylist[range.key]
+                    }
+                    onClose={handleDialogClose}
+                    className={classes.dialogBase}
+                    fullWidth
+                    fullScreen={width < 600}
+                  >
+                    {width < 600 && (
+                      <div
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          backgroundColor: theme.palette.primary.main,
+                        }}
+                      >
+                        <CloseIcon
+                          style={{
+                            paddingRight: "1rem",
+                            paddingTop: "1rem",
+                          }}
+                          onClick={handleDialogClose}
+                          fontSize="large"
+                        />
+                      </div>
+                    )}
+                    <DialogTitle
+                      style={{
+                        background: theme.palette.primary.main,
+                      }}
+                    >
+                      {fetchPlaylists === "loading"
+                        ? "getting your playlists..."
+                        : fetchPlaylists === "error"
+                        ? "could not get"
+                        : "choose which playlist to link"}
+                    </DialogTitle>
+                    {fetchPlaylists === "loading" && (
+                      <DialogContent
+                        style={{ background: theme.palette.primary.main }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            marginTop: ".8rem",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <CircularProgress
+                            style={{ color: theme.palette.text.secondary }}
+                          />
+                        </div>
+                      </DialogContent>
+                    )}
+                    {Array.isArray(fetchPlaylists) && (
+                      <DialogContent
+                        style={{
+                          background: theme.palette.primary.main,
+                          margin: "0",
+                        }}
+                      >
+                        <div className={classes.search}>
+                          <div className={classes.searchIcon}>
+                            <SearchIcon style={{ color: "#fff" }} />
+                          </div>
+                          <InputBase
+                            placeholder="Search for a playlist"
+                            inputProps={{ "aria-label": "search" }}
+                            classes={{
+                              root: classes.inputRoot,
+                              input: classes.inputInput,
+                            }}
+                            value={filter}
+                            onChange={handleSearch}
+                            autoFocus={true}
+                          />
+                        </div>
+                        {fetchPlaylists
+                          .filter((playlist) =>
+                            playlist.title
+                              .toLowerCase()
+                              .includes(filter.toLowerCase())
+                          )
+                          .map((playlist) => {
+                            return (
+                              <div
+                                key={playlist.spotifyId}
+                                className={classes.playlist}
+                              >
+                                <div
+                                  key={playlist.spotifyId}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <Avatar
+                                    alt={playlist.title}
+                                    src={playlist.images[0].url}
+                                    variant="square"
+                                    className={classes.playlistImage}
+                                  />
+                                  <Typography color="textSecondary">
+                                    {playlist.title}
+                                  </Typography>
+                                </div>
+                                <AddCircleOutlineIcon
+                                  onClick={() => {
+                                    selectPlaylist(playlist, activeDialog);
+                                  }}
+                                />
+                              </div>
+                            );
+                          })}
+                      </DialogContent>
+                    )}
+                  </Dialog>
+                  <FormControlLabel
+                    disabled={editState !== "songsDataPreference"}
+                    value="manual"
+                    control={
+                      <Radio
+                        sx={{
+                          color: theme.palette.text.secondary,
+                          "&.Mui-checked": {
+                            color: theme.palette.text.primary,
+                          },
+                        }}
+                      />
+                    }
+                    label="Set manually"
+                  />
+                </RadioGroup>
+              </div>
+            );
+          })}
+        </Container>
       </div>
     );
   }

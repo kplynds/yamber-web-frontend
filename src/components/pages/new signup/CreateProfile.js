@@ -1,7 +1,7 @@
 // will redirect here after successfull auth from spotify with tokens in the querystring
 // if (querystring), show loading screen and fill in form
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import theme from "../../../theme";
 import Container from "@mui/material/Container";
 import InputBase from "@mui/material/InputBase";

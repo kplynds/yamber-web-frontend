@@ -104,232 +104,6 @@ const useStyles = makeStyles((theme) => ({
 //1615322891210
 const ProfileContent = ({ user, ui, playButtonClick }) => {
   const classes = useStyles(theme);
-  // const getTopArtists = (arr) => {
-  //   const all = [];
-  //   let hash = {};
-  //   arr.forEach((song) => {
-  //     song.artists.forEach((artist) => {
-  //       all.push(artist.name);
-  //     });
-  //   });
-  //   all.forEach((artist) => {
-  //     if (hash[artist] === undefined) {
-  //       hash[artist] = 1;
-  //     } else {
-  //       hash[artist] = hash[artist] + 1;
-  //     }
-  //   });
-  //   const ret = [0, 0, 0];
-  //   Object.keys(hash).forEach((key) => {
-  //     let counter = 0;
-  //     ret.forEach((num, index) => {
-  //       if (typeof num === "number") {
-  //         if (counter === 0 && hash[key] > num) {
-  //           ret[index] = key;
-  //           counter++;
-  //         }
-  //       } else {
-  //         if (counter === 0 && hash[key] > hash[num]) {
-  //           const current = ret[index];
-  //           ret[index] = key;
-  //           ret[index + 1] = current;
-  //           counter++;
-  //         }
-  //       }
-  //     });
-  //   });
-  //   return ret;
-  // };
-
-  // const Overview = () => {
-  //   return (
-  //     <div>
-  //       <Grid container spacing={0}>
-  //         <Grid item xs={12} sm={6}>
-  //           <div className={classes.recentsRoot}>
-  //             <div className={classes.centerText}>
-  //               <Typography variant="h4">Listening Recently</Typography>
-  //             </div>
-  //             <div className={classes.recentsContent}>
-  //               <div className={classes.centerText}>
-  //                 <Typography variant="body1" mx="auto">
-  //                   {getTopArtists(user.recentListening).join(", ")} &amp;
-  //                   more...
-  //                 </Typography>
-  //                 <Link
-  //                   to={`/${user.data.handle}/recent`}
-  //                   className={classes.link}
-  //                 >
-  //                   <Typography
-  //                     variant="body1"
-  //                     color="textSecondary"
-  //                     className={classes.linkText}
-  //                   >
-  //                     See Full Playlist
-  //                   </Typography>
-  //                 </Link>
-  //               </div>
-  //               {user.recentListening.map((song, index) => {
-  //                 if (index < 6) {
-  //                   return (
-  //                     <div className={classes.recentsSong} key={index}>
-  //                       <div
-  //                         style={{
-  //                           display: "flex",
-  //                           alignItems: "center",
-  //                           marginRight: "1rem",
-  //                         }}
-  //                       >
-  //                         <Typography
-  //                           variant="body2"
-  //                           color="textSecondary"
-  //                           style={{ paddingLeft: "1rem" }}
-  //                         >
-  //                           {index + 1}
-  //                         </Typography>
-  //                         <img
-  //                           src={song.images[0].url}
-  //                           alt={song.name}
-  //                           style={{
-  //                             marginLeft: "1rem",
-  //                             height: "3.75rem",
-  //                             width: "3.75rem",
-  //                           }}
-  //                         />
-  //                       </div>
-  //                       <div
-  //                         style={{
-  //                           display: "flex",
-  //                           flexDirection: "column",
-  //                           justifyContent: "space-between",
-  //                           width: "72%",
-  //                         }}
-  //                       >
-  //                         <Typography variant="body2">{song.name}</Typography>
-  //                         <Typography variant="body2" color="textSecondary">
-  //                           {getArtistNames(song.artists).join(", ")}
-  //                         </Typography>
-  //                       </div>
-  //                       {ui.audio.active && ui.audio.src === song.preview ? (
-  //                         <StopIcon
-  //                           style={{ marginRight: ".7rem" }}
-  //                           onClick={() => {
-  //                             playButtonClick(song.preview, ui.audio);
-  //                           }}
-  //                         />
-  //                       ) : (
-  //                         <PlayArrowIcon
-  //                           style={{ marginRight: ".7rem" }}
-  //                           onClick={() => {
-  //                             playButtonClick(song.preview, ui.audio);
-  //                           }}
-  //                         />
-  //                       )}
-  //                     </div>
-  //                   );
-  //                 } else {
-  //                   return null;
-  //                 }
-  //               })}
-  //             </div>
-  //           </div>
-  //         </Grid>
-  //         <Grid item xs={12} sm={6}>
-  //           <div className={classes.recentsRoot}>
-  //             <div className={classes.centerText}>
-  //               <Typography variant="h4" mx="auto">
-  //                 Top Artists
-  //               </Typography>
-  //             </div>
-  //             <div className={classes.recentsContent}>
-  // {user.data.topArtists.map((artist, index) => {
-  //   return (
-  //     <div className={classes.artist} key={index}>
-  //       <Typography
-  //         variant="body2"
-  //         color="textSecondary"
-  //         style={{ paddingLeft: "1rem" }}
-  //       >
-  //         {index + 1}
-  //       </Typography>
-  //       <img
-  //         src={artist.image}
-  //         alt={artist.name}
-  //         style={{
-  //           height: "4rem",
-  //           borderRadius: "15px",
-  //           width: "4rem",
-  //           margin: "0 1rem",
-  //         }}
-  //       />
-  //       <div>
-  //         <Typography variant="body2">{artist.name}</Typography>
-  //         {artist.genres && (
-  //           <Typography
-  //             variant="body2"
-  //             color="textSecondary"
-  //             style={{
-  //               marginRight: ".2rem",
-  //             }}
-  //           >
-  //             {artist.genres.join(", ")}
-  //           </Typography>
-  //         )}
-  //       </div>
-  //     </div>
-  //   );
-  // })}
-  //             </div>
-  //           </div>
-  //         </Grid>
-  //         {/* later this will be: if (user has other playlists they want to show) */}
-  //         <Grid item xs={12}>
-  //           <div className={classes.centerText}>
-  //             <Typography variant="h4">Featured Playlists</Typography>
-  //           </div>
-  //         </Grid>
-  //       </Grid>
-  //       <div className={classes.playlistContainer}>
-  //         {user.playlists.map((playlist, index) => {
-  //           if (playlist.data.showOnOverview) {
-  //             return (
-  //               <div
-  //                 className={classes.playlist}
-  //                 key={index}
-  //                 onClick={() =>
-  //                   history.push(`/${playlist.data.user}/${playlist.id}`)
-  //                 }
-  //               >
-  //                 {playlist.data.image.trim() !== "" ? (
-  //                   <img
-  //                     src={playlist.data.image}
-  //                     alt={playlist.data.title}
-  //                     style={{
-  //                       width: "6rem",
-  //                       height: "6rem",
-  //                       marginBottom: "",
-  //                     }}
-  //                   />
-  //                 ) : (
-  //                   getPlaylistCover(playlist.data)
-  //                 )}
-  //                 <Typography
-  //                   variant="body1"
-  //                   color="textPrimary"
-  //                   style={{ marginTop: ".6rem" }}
-  //                 >
-  //                   {playlist.data.title}
-  //                 </Typography>
-  //               </div>
-  //             );
-  //           } else {
-  //             return null;
-  //           }
-  //         })}
-  //       </div>
-  //     </div>
-  //   );
-  // };
   let match = useRouteMatch();
   let location = useLocation();
   return (
@@ -337,28 +111,39 @@ const ProfileContent = ({ user, ui, playButtonClick }) => {
       <div className={classes.tabs}>
         <Tabs
           value={location.pathname}
-          // onChange={(e, v) => {
-          //   setTabValue(v);
-          // }}
+          textColor="inherit"
+          TabIndicatorProps={{ style: {
+            background: theme.palette.text.primary
+          }}}
         >
           <Tab
+            disableRipple
             label="recent"
             component={Link}
             to={`${match.url}`}
             value={`${match.url}`}
           />
           <Tab
+            disableRipple
             label="artists"
             component={Link}
             to={`${match.url}/artists`}
             value={`${match.url}/artists`}
           />
           <Tab
+            disableRipple
             label="playlists"
             to={`${match.url}/playlists`}
             component={Link}
             value={`${match.url}/playlists`}
           />
+          {/* <Tab
+            disableRipple
+            label="NFTs"
+            to={`${match.url}/nfts`}
+            component={Link}
+            value={`${match.url}/playlists`}
+          /> */}
         </Tabs>
       </div>
       <div className={classes.content}>

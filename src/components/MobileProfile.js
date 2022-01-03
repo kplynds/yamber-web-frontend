@@ -60,19 +60,6 @@ const MobileProfile = ({ user, playlistsLength }) => {
   const classes = useStyles(theme);
   return (
     <div className={classes.root}>
-      {/* <div className={classes.title}>
-        <Typography
-          variant="h6"
-          color="textPrimary"
-          align="center"
-          className={classes.textOverflow}
-        >
-          @{user.handle}'s&nbsp;
-        </Typography>
-        <Typography variant="h6" color="textPrimary" align="center">
-          music taste
-        </Typography>
-      </div> */}
       <div className={classes.basic}>
         <div>
           <Avatar
@@ -92,10 +79,11 @@ const MobileProfile = ({ user, playlistsLength }) => {
               variant="outlined"
               size="small"
               // color="secondary"
-              style={{
+              sx={{
                 borderColor: theme.palette.primary.light,
                 textTransform: "capitalize",
                 marginRight: "1rem",
+                color: theme.palette.text.primary,
               }}
               fullWidth
             >
@@ -104,8 +92,13 @@ const MobileProfile = ({ user, playlistsLength }) => {
             <Button
               variant="outlined"
               size="small"
-              className={classes.button}
               fullWidth
+              sx={{
+                borderColor: theme.palette.primary.light,
+                textTransform: "capitalize",
+                marginRight: "1rem",
+                color: theme.palette.text.primary,
+              }}
             >
               playlist
             </Button>

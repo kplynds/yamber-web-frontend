@@ -17,13 +17,13 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "1rem",
     width: "70%",
     margin: "0rem auto",
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
       width: "80%",
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
       width: "90%",
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       width: "95%",
     },
   },
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "flex-end",
     margin: ".1rem 2rem",
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
       margin: ".1rem 1rem",
     },
   },
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     marginTop: "1rem",
-    margin: "0 2rem"
+    margin: "0 2rem",
   },
 }));
 const Artists = ({ user, data, auto }) => {
@@ -87,7 +87,17 @@ const Artists = ({ user, data, auto }) => {
         <div className={classes.root}>
           {own && (
             <div className={classes.editIcon}>
-              <Button size="small" endIcon={<EditIcon />}>
+              <Button
+                size="small"
+                endIcon={<EditIcon />}
+                sx={{
+                  color: theme.palette.text.primary,
+                  borderColor: theme.palette.text.primary,
+                  "&:hover": {
+                    background: theme.palette.primary.light,
+                  },
+                }}
+              >
                 edit
               </Button>
             </div>

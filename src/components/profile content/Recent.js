@@ -29,13 +29,13 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "12px",
     margin: "0 auto",
     padding: "1rem 0",
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
       width: "80%",
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
       width: "90%",
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       width: "95%",
     },
     marginTop: ".5rem",
@@ -69,13 +69,13 @@ const useStyles = makeStyles((theme) => ({
     width: "70%",
     margin: "0rem auto",
     // padding: "1rem 0",
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
       width: "80%",
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
       width: "90%",
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       width: "95%",
     },
     borderRadius: "12px",
@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     margin: ".1rem 2rem",
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
       margin: ".1rem 1rem",
     },
   },
@@ -112,9 +112,9 @@ const useStyles = makeStyles((theme) => ({
   notSelected: {
     borderBottom: `1px solid ${theme.palette.text.secondary}`,
     color: theme.palette.text.secondary,
-    borderTop: `1px solid transparent`, 
-    borderRight: `1px solid transparent`, 
-    borderLeft: `1px solid transparent`, 
+    borderTop: `1px solid transparent`,
+    borderRight: `1px solid transparent`,
+    borderLeft: `1px solid transparent`,
   },
   tabDiv: {
     borderRadius: "2px",
@@ -164,13 +164,23 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
               }}
             >
               <a href="/editsongs" className={classes.bruh}>
-                <Button size="small" endIcon={<EditIcon />}>
+                <Button
+                  size="small"
+                  endIcon={<EditIcon />}
+                  sx={{
+                    color: theme.palette.text.primary,
+                    borderColor: theme.palette.text.primary,
+                    "&:hover": {
+                      background: theme.palette.primary.light,
+                    },
+                  }}
+                >
                   edit
                 </Button>
               </a>
             </div>
           )}
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: ".5rem" }}>
             <Typography variant="h6" color="textPrimary">
               Most Streamed Songs
             </Typography>
@@ -326,7 +336,7 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
               ... and more,&nbsp;
             </Typography>
             <Link
-              to={`/${a.handle}/playlist/recentlistening`}
+              to={`/${a.handle}/playlist/recentlistening?timeRange=${timeRange}`}
               className={classes.link}
             >
               <Typography

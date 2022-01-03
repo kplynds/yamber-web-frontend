@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-import { makeStyles } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import theme from "../theme";
 
 const useStyles = makeStyles((theme) => ({

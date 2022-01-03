@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import theme from "../../theme";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.primary.light,
     "&:hover": {
-      backgroundColor: theme.palette.common.white,
       cursor: "pointer",
     },
     width: "90%",

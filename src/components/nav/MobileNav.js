@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import PersonIcon from "@mui/icons-material/Person";
 import SearchIcon from "@mui/icons-material/Search";
 import { NavLink, useHistory } from "react-router-dom";

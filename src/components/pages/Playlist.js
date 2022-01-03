@@ -29,14 +29,14 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "flex-end",
     marginTop: "2.5rem",
     marginBottom: "1rem",
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
       flexDirection: "column",
       alignItems: "center",
       textAlign: "center",
     },
   },
   margin: {
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
       margin: "1rem 0",
     },
   },
@@ -57,13 +57,13 @@ const useStyles = makeStyles((theme) => ({
     width: "70%",
     margin: "0 auto",
     padding: "1rem 0",
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
       width: "80%",
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
       width: "90%",
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       width: "100%",
     },
   },
@@ -89,8 +89,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: ".5rem",
   },
   noLinkStyles: {
-    textDecoration: "none"
-  }
+    textDecoration: "none",
+  },
 }));
 
 const Playlist = ({ user, match, ui, playButtonClick }) => {
@@ -112,17 +112,30 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
       recentPlaylist: false,
     });
     if (id === "recentlistening") {
-      const querystring = new URLSearchParams(window.location.search)
-      const timeRange = querystring.get("timeRange")
+      const querystring = new URLSearchParams(window.location.search);
+      const timeRange = querystring.get("timeRange");
+      const util = {
+        short_term: 0,
+        medium_term: 1,
+        long_term: 2,
+      };
+      const key = util[timeRange];
       axios
         .get(`/userbase/${handle}`)
         .then((res) => {
-          setPlaylist({
-            songs: res.data.user.recentListening.data[timeRange],
-            title: "Recent Listening",
-            user: res.data.user.handle,
-            images: [],
-          });
+          if (
+            res.data.user.songsDataPreference[key] !== "manual" &&
+            res.data.user.songsDataPreference[key] !== "auto"
+          ) {
+            setPlaylist(res.data.user.linkedPlaylists[timeRange]);
+          } else {
+            setPlaylist({
+              songs: res.data.user.recentListening.data[timeRange],
+              title: "Recent Listening",
+              user: res.data.user.handle,
+              images: [],
+            });
+          }
           setState({
             loading: false,
             error: false,
@@ -218,10 +231,16 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
           </div>
           {own && (
             <div className={classes.editButtons}>
-              <Link to={`${window.location.pathname}/add`} className={classes.noLinkStyles}>
+              <Link
+                to={`${window.location.pathname}/add`}
+                className={classes.noLinkStyles}
+              >
                 <Button startIcon={<AddIcon />}>add songs</Button>
               </Link>
-              <Link to={`${window.location.pathname}/edit`} className={classes.noLinkStyles}>
+              <Link
+                to={`${window.location.pathname}/edit`}
+                className={classes.noLinkStyles}
+              >
                 <Button startIcon={<EditIcon />}>edit details</Button>
               </Link>
             </div>
