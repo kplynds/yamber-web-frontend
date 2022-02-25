@@ -163,7 +163,7 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
                 padding: ".2rem 1rem",
               }}
             >
-              <a href="/editsongs" className={classes.bruh}>
+              <a href="/editsongs" style={{ textDecoration: "none" }}>
                 <Button
                   size="small"
                   endIcon={<EditIcon />}
@@ -180,7 +180,13 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
               </a>
             </div>
           )}
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: ".5rem" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: ".5rem",
+            }}
+          >
             <Typography variant="h6" color="textPrimary">
               Most Streamed Songs
             </Typography>

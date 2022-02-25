@@ -81,7 +81,7 @@ function MobileNav({ user }) {
             </Typography>
           </NavLink>
           <NavLink
-            to="/search"
+            to="/explore"
             className={classes.item}
             activeClassName={classes.active}
           >

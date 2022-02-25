@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import theme from "../../../theme";
 import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Avatar from "@mui/material/Avatar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,13 +15,13 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "12px",
     margin: "0 auto",
     padding: "1rem 0",
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
       width: "80%",
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
       width: "90%",
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       width: "95%",
     },
     marginTop: ".5rem",
@@ -60,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   albumImages: {
     height: "3.75rem",
     width: "3.75rem",
-    margin: "0 1rem",
+    // margin: "0 1rem",
   },
   recentsSong: {
     display: "flex",
@@ -71,6 +73,13 @@ const useStyles = makeStyles((theme) => ({
       background: theme.palette.primary.light,
       cursor: "pointer",
     },
+  },
+  artistContainer: {
+    background: "blue",
+  },
+  sectionContainer: {
+    display: "flex",
+    justifyContent: "center",
   },
 }));
 
@@ -89,9 +98,21 @@ const AutoArtists = ({ ownProf, data }) => {
             padding: ".2rem 1rem",
           }}
         >
-          <Button size="small" endIcon={<EditIcon />}>
-            edit
-          </Button>
+          <a href="/editartists" style={{ textDecoration: "none" }}>
+            <Button
+              size="small"
+              endIcon={<EditIcon />}
+              sx={{
+                color: theme.palette.text.primary,
+                borderColor: theme.palette.text.primary,
+                "&:hover": {
+                  background: theme.palette.primary.light,
+                },
+              }}
+            >
+              edit
+            </Button>
+          </a>
         </div>
       )}
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -134,7 +155,7 @@ const AutoArtists = ({ ownProf, data }) => {
           <Typography variant="body2">all time</Typography>
         </div>
       </div>
-      {data[timeRange].map((artist, index) => {
+      {/* {data[timeRange].map((artist, index) => {
         return (
           <div className={classes.recentsSong} key={index}>
             <div
@@ -162,7 +183,54 @@ const AutoArtists = ({ ownProf, data }) => {
             </div>
           </div>
         );
-      })}
+      })} */}
+      {/* <div className={classes.sectionContainer}> */}
+      <Grid container spacing={0}>
+        {data[timeRange].map((artist, index) => {
+          return (
+            <Grid
+              item
+              xs={4}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                margin: ".5rem 0",
+              }}
+              key={index}
+            >
+              <Avatar
+                src={artist.images[0].url}
+                alt={artist.name}
+                sx={{
+                  width: 180,
+                  height: 180,
+                  [theme.breakpoints.down("md")]: {
+                    width: 100,
+                    height: 100,
+                  },
+                }}
+              />
+              <Typography variant="body2">
+                {index + 1}. {artist.name}
+              </Typography>
+            </Grid>
+            // <div className={classes.artistContainer} key={index}>
+            // <Typography variant="body2" color="textSecondary">
+            //   {index + 1}
+            // </Typography>
+            // <img
+            //   src={artist.images[0].url}
+            //   alt={artist.name}
+            //   className={classes.albumImages}
+            // />
+
+            // <Typography variant="body2">{artist.name}</Typography>
+            // </div>
+          );
+        })}
+      </Grid>
+      {/* </div> */}
     </div>
   );
 };

@@ -4,7 +4,6 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Featured from "./components/pages/Featured";
-import Search from "./components/pages/Search";
 import SpotifyUtil from "./components/SpotifyUtil";
 import User from "./components/pages/User";
 import Playlist from "./components/pages/Playlist";
@@ -22,6 +21,8 @@ import jwtDecode from "jwt-decode";
 import { logout, getAuthenticatedUserData } from "./redux/actions/userActions";
 import { Provider } from "react-redux";
 import axios from "axios";
+import Explore from "./components/Explore/Explore";
+import EditArtists from "./components/pages/EditArtists";
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -80,6 +81,9 @@ const AppRoutes = () => {
             <Route path="/editsongs">
               <EditSongs />
             </Route>
+            <Route path="/editartists">
+              <EditArtists />
+            </Route>
             {/* Might need to protect these routes */}
             <Route
               path="/welcome/streamingProvider"
@@ -92,7 +96,7 @@ const AppRoutes = () => {
             <Route path="/editprofile" component={Edit} />
             <Route path="/newplaylist" component={NewPlaylist} />
             <Route path="/featured" component={Featured} />
-            <Route path="/search" component={Search} />
+            <Route path="/explore" component={Explore} />
             <Route path="/profile" component={User} />
             <Route path="/:handle" component={User} />
             <Route exact path="/" component={Home} />

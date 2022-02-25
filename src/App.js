@@ -2,10 +2,7 @@ import React from "react";
 import axios from "axios";
 
 import theme from "./theme";
-import {
-  ThemeProvider,
-  StyledEngineProvider,
-} from "@mui/material/styles";
+import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 
 import AppRoutes from "./AppRoutes";
 

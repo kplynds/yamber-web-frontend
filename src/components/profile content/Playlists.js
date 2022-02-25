@@ -1,73 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@mui/styles";
 import Typography from "@mui/material/Typography";
 import { connect } from "react-redux";
-import theme from "../../theme";
 import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getPlaylistCover } from "../../utils/cheekyAlgos";
+import Grid from "@mui/material/Grid";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: "0 5rem",
-    [theme.breakpoints.down('lg')]: {
-      margin: "0 3rem",
-    },
-    [theme.breakpoints.down('md')]: {
-      margin: "0 1rem",
-    },
-  },
-  nonMobile: {
-    display: "flex",
-    justifyContent: "space-evenly",
-    flexWrap: "wrap",
-    [theme.breakpoints.down('md')]: {
-      display: "none",
-    },
-  },
-  playlistContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    backgroundColor: theme.palette.primary.main,
-    padding: "1rem",
-    paddingBottom: "2rem",
-    margin: "1rem 2rem",
-    "&:hover": {
-      backgroundColor: theme.palette.primary.light,
-      cursor: "pointer",
-    },
-    width: "13rem",
-    textOverflow: "ellipsis",
-    // wordWrap: "break-word",
-    whiteSpace: "nowrap",
-    overflow: "clip",
-    // boxShadow: "10px 10px 5px #ccc",
-  },
-  mobile: {
-    display: "flex",
-    justifyContent: "space-evenly",
-    flexWrap: "wrap",
-    [theme.breakpoints.up("sm")]: {
-      display: "none",
-    },
-  },
-  mobilePlaylistContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    backgroundColor: theme.palette.primary.main,
-    padding: "1rem",
-    paddingBottom: "2rem",
-    marginBottom: "1rem",
-    width: "9rem",
-    wordWrap: "break-word",
-    whiteSpace: "nowrap",
-    overflow: "scroll",
-  },
-}));
 const Playlists = ({ handle, user }) => {
-  const classes = useStyles(theme);
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -104,56 +43,33 @@ const Playlists = ({ handle, user }) => {
       );
     }
     return (
-      <div className={classes.root}>
-        <div className={classes.nonMobile}>
-          {playlists.map((playlist, i) => {
-            return (
-              <div
-                key={i}
-                className={classes.playlistContainer}
-                onClick={() => {
-                  window.location.href = `/${user.data.handle}/playlist/${playlist.id}`;
-                }}
-              >
+      <Grid container spacing={2}>
+        {playlists.map((playlist) => {
+          return (
+            <Grid
+              item
+              key={playlist.id}
+              xs={6}
+              md={4}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <a href={`/${playlist.user}/playlist/${playlist.id}`}>
                 {getPlaylistCover(playlist.data, 5)}
-                <Typography color="textPrimary" align="left">
-                  {playlist.data.title}
-                </Typography>
-              </div>
-            );
-          })}
-        </div>
-        <div className={classes.mobile}>
-          {playlists.map((playlist, i) => {
-            return (
-              <div
-                key={i}
-                className={classes.mobilePlaylistContainer}
-                onClick={() => {
-                  window.location.href = `/${user.data.handle}/playlist/${playlist.id}`;
-                }}
+              </a>
+              <Typography
+                sx={{ marginTop: ".4rem", padding: "0 1rem" }}
+                align="center"
               >
-                {getPlaylistCover(playlist.data, 4)}
-                <Typography
-                  color="textPrimary"
-                  align="left"
-                  variant="body2"
-                  style={{
-                    marginTop: ".2rem",
-                    fontSize: ".75rem",
-                    margin: "0 3rem",
-                    whiteSpace: "nowrap",
-                    overflow: "clip",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {playlist.data.title}
-                </Typography>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+                {playlist.data.title}
+              </Typography>
+            </Grid>
+          );
+        })}
+      </Grid>
     );
   } else {
     return (

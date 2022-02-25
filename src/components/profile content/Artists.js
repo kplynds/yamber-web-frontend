@@ -36,10 +36,7 @@ const useStyles = makeStyles((theme) => ({
   editIcon: {
     display: "flex",
     justifyContent: "flex-end",
-    margin: ".1rem 2rem",
-    [theme.breakpoints.down("lg")]: {
-      margin: ".1rem 1rem",
-    },
+    padding: ".2rem 1rem",
   },
   nothing: {
     display: "flex",
@@ -85,8 +82,16 @@ const Artists = ({ user, data, auto }) => {
     } else {
       return (
         <div className={classes.root}>
+          <div>penis</div>
           {own && (
-            <div className={classes.editIcon}>
+            <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              padding: ".2rem 1rem",
+            }}
+          >
+            <a href="/editsongs" style={{ textDecoration: "none" }}>
               <Button
                 size="small"
                 endIcon={<EditIcon />}
@@ -100,7 +105,8 @@ const Artists = ({ user, data, auto }) => {
               >
                 edit
               </Button>
-            </div>
+            </a>
+          </div>
           )}
           {a.map((artist, index) => {
             return (

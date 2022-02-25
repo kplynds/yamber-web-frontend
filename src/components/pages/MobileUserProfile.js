@@ -147,7 +147,7 @@ const MobileUserProfile = ({ user, logout }) => {
         {Object.keys(user.data.socials).map((social) => {
           if (user.data.socials[social] && user.data.socials[social] !== "") {
             return (
-              <div style={{ display: "flex", marginLeft: "1%" }}>
+              <div style={{ display: "flex", marginLeft: "1%" }} key={social}>
                 <a
                   style={{
                     textDecoration: "none",

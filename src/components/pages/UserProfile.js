@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
 import { connect } from "react-redux";
 import Hidden from "@mui/material/Hidden";
@@ -25,6 +25,7 @@ import {
 import { SiApplemusic, SiSoundcloud, SiSpotify } from "react-icons/si";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import axios from "axios";
 
 const icons = {
   twitter: <TwitterIcon />,
@@ -90,8 +91,47 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserProfile = ({ profile, playButtonClick, ui }) => {
+const UserProfile = ({ profile, user }) => {
   const classes = useStyles(theme);
+  const [following, setFollowing] = useState(null);
+  const followUser = () => {
+    if (user.authenticated) {
+      if (following === "follow") {
+        setFollowing("following");
+        axios
+          .get(`/follow/${profile.handle}`)
+          .then((res) => {})
+          .catch((err) => {
+            alert(`error trying to follow ${profile.handle}`);
+            setFollowing("follow");
+          });
+      } else if (following === "following") {
+        setFollowing("follow");
+        axios
+          .get(`/unfollow/${profile.handle}`)
+          .then((res) => {})
+          .catch((err) => {
+            alert(`error trying to unfollow ${profile.handle}`);
+            setFollowing("following");
+          });
+      }
+    } else {
+      alert("make an account to follow people!");
+    }
+  };
+  useEffect(() => {
+    if (Object.keys(user.data).length > 0) {
+      if (user.authenticated) {
+        if (user.data.following.includes(profile.handle)) {
+          setFollowing("following");
+        } else {
+          setFollowing("follow");
+        }
+      } else {
+        setFollowing("follow");
+      }
+    }
+  }, [user]);
   const DesktopProfile = () => {
     return (
       <div className={classes.root}>
@@ -104,28 +144,6 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
         </div>
         <div className={classes.content}>
           <div className={classes.name}>
-            {/* <div
-              style={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                display: "flex",
-              }}
-            >
-              <Typography
-                variant="h5"
-                color="textPrimary"
-                className={classes.title}
-              >
-                @{profile.handle}'s&nbsp;
-              </Typography>
-              <Typography
-                variant="h5"
-                color="textPrimary"
-                className={classes.title}
-              >
-                music taste
-              </Typography>
-            </div> */}
             <div
               style={{
                 display: "flex",
@@ -137,7 +155,6 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
               <Button
                 variant="outlined"
                 size="small"
-                // color="secondary"
                 sx={{
                   borderColor: theme.palette.primary.light,
                   textTransform: "capitalize",
@@ -145,13 +162,13 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
                   color: theme.palette.text.primary,
                 }}
                 fullWidth
+                onClick={followUser}
               >
-                follow
+                {!following ? "loading" : following}
               </Button>
               <Button
                 variant="outlined"
                 size="small"
-                // color="secondary"
                 sx={{
                   borderColor: theme.palette.primary.light,
                   textTransform: "capitalize",
@@ -214,7 +231,7 @@ const UserProfile = ({ profile, playButtonClick, ui }) => {
       </Hidden>
       <Hidden mdUp>
         <MobileNav />
-        <MobileProfile user={profile} />
+        <MobileProfile profile_p={profile} />
       </Hidden>
       <div className={classes.tabs}>
         <Tabs

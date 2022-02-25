@@ -95,7 +95,6 @@ export const getPlaylistCover = (playlist, width) => {
       <ImageList
         cols={2}
         spacing={0}
-        cellHeight={width * 16}
         style={{
           width: `${width * 2}rem`,
           height: `${width * 2}rem`,

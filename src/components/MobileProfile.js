@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
 import Typography from "@mui/material/Typography";
 import theme from "../theme";
 import Button from "@mui/material/Button";
-import { Avatar } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { SiApplemusic, SiSoundcloud, SiSpotify } from "react-icons/si";
+import { connect } from "react-redux";
+import axios from "axios";
 
 const icons = {
   twitter: <TwitterIcon />,
@@ -47,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     justifyContent: "center",
     padding: "0 1rem",
-    borderBottom: `1px solid ${theme.palette.primary.light}`
+    borderBottom: `1px solid ${theme.palette.primary.light}`,
   },
   textOverflow: {
     overflow: "hidden",
@@ -56,15 +58,56 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "65%",
   },
 }));
-const MobileProfile = ({ user, playlistsLength }) => {
+const MobileProfile = ({ profile_p, user }) => {
   const classes = useStyles(theme);
+  const [following, setFollowing] = useState(null);
+  const followUser = () => {
+    if (user.authenticated) {
+      if (following === "follow") {
+        setFollowing("following");
+        axios
+          .get(`/follow/${profile_p.handle}`)
+          .then((res) => {
+          })
+          .catch((err) => {
+            alert(`error trying to follow ${profile_p.handle}`);
+            setFollowing("follow");
+          });
+      } else if (following === "following") {
+        setFollowing("follow");
+        axios
+          .get(`/unfollow/${profile_p.handle}`)
+          .then((res) => {
+          })
+          .catch((err) => {
+            alert(`error trying to unfollow ${profile_p.handle}`);
+            setFollowing("following");
+          });
+      }
+    } else {
+      alert("make an account to follow people!");
+    }
+  };
+  useEffect(() => {
+    if (Object.keys(user.data).length > 0) {
+      if (user.authenticated) {
+        if (profile_p.followers.includes(user.data.handle)) {
+          setFollowing("following");
+        } else {
+          setFollowing("follow");
+        }
+      } else {
+        setFollowing("follow");
+      }
+    }
+  }, [user]);
   return (
     <div className={classes.root}>
       <div className={classes.basic}>
         <div>
           <Avatar
-            alt={user.info.displayName}
-            src={user.info.imageUrl}
+            alt={profile_p.info.displayName}
+            src={profile_p.info.imageUrl}
             style={{ width: theme.spacing(11), height: theme.spacing(11) }}
           />
         </div>
@@ -86,8 +129,9 @@ const MobileProfile = ({ user, playlistsLength }) => {
                 color: theme.palette.text.primary,
               }}
               fullWidth
+              onClick={followUser}
             >
-              follow
+              {!following ? "loading" : following}
             </Button>
             <Button
               variant="outlined"
@@ -107,9 +151,9 @@ const MobileProfile = ({ user, playlistsLength }) => {
       </div>
       <div className={classes.socialAndName}>
         <Typography variant="body1" color="textPrimary">
-          {user.handle}
+          {profile_p.handle}
         </Typography>
-        {Object.keys(user.socials).map((social) => {
+        {Object.keys(profile_p.socials).map((social) => {
           return (
             <div style={{ display: "flex", marginLeft: "1%" }} key={social}>
               <a
@@ -117,7 +161,7 @@ const MobileProfile = ({ user, playlistsLength }) => {
                   textDecoration: "none",
                   color: theme.palette.text.primary,
                 }}
-                href={`https://${social}.com/${user.socials[`${social}`]}`}
+                href={`https://${social}.com/${profile_p.socials[`${social}`]}`}
               >
                 {icons[`${social}`]}
               </a>
@@ -127,11 +171,18 @@ const MobileProfile = ({ user, playlistsLength }) => {
       </div>
       <div className={classes.bio}>
         <Typography variant="body1" color="textPrimary">
-          {user.info.bio}
+          {profile_p.info.bio}
         </Typography>
       </div>
     </div>
   );
 };
 
-export default MobileProfile;
+const mapState = (state) => {
+  return {
+    user: state.user,
+    ui: state.ui,
+  };
+};
+
+export default connect(mapState)(MobileProfile);
