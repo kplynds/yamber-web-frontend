@@ -94,7 +94,7 @@ function Home({ user, ui, dispatch }) {
             </Typography>
             <Link to="/signup">
               <Button variant="outlined" startIcon={<Phone />}>
-                sign up
+                signup
               </Button>
             </Link>
           </div>

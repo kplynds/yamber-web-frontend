@@ -6,11 +6,11 @@ import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 
 import AppRoutes from "./AppRoutes";
 
-const deployed_api =
-  "https://us-central1-flumes-company.cloudfunctions.net/api";
-// const local_api = "http://localhost:5000/flumes-company/us-central1/api";
+// const deployed_api =
+//   "https://us-central1-flumes-company.cloudfunctions.net/api";
+const local_api = "http://localhost:5000/flumes-company/us-central1/api";
 
-axios.defaults.baseURL = deployed_api;
+axios.defaults.baseURL = local_api;
 
 function App() {
   return (

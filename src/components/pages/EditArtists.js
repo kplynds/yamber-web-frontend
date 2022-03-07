@@ -15,6 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import { arrayMoveImmutable } from "array-move";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import Button from "@mui/material/Button";
 
 function EditArtists({ user }) {
   const [topArtists, setTopArtists] = useState({
@@ -22,6 +23,43 @@ function EditArtists({ user }) {
     medium_term: null,
     long_term: null,
   });
+  const [editsHaveBeenMade, setEditsHaveBeenMade] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const makeUpdate = async () => {
+    setLoading(true);
+    // try {
+    // const update = await axios.post("/updateartists", {
+    //   artistsPreference: [
+    //     artistsPreference.short_term,
+    //     topArtists.medium_term,
+    //     topArtists.long_term,
+    //   ],
+    //   topArtists: topArtists,
+    // });
+    // setLoading(false);
+    // document.location.reload();
+    axios
+      .post("/updateartists", {
+        artistsPreference: [
+          artistsPreference.short_term,
+          topArtists.medium_term,
+          topArtists.long_term,
+        ],
+        topArtists: topArtists,
+      })
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+    // } catch {
+    //   setLoading(false)
+    //   alert("could not update with those values, sorry my brother m8")
+    // }
+  };
   const ranges = [
     {
       key: "short_term",
@@ -93,10 +131,34 @@ function EditArtists({ user }) {
       <Hidden mdUp>
         <MobileNav />
       </Hidden>
+      <div
+        style={{
+          position: "fixed",
+          display: "flex",
+          justifyContent: "flex-end",
+          width: "95%",
+          zIndex: 99,
+        }}
+      >
+        <Button
+          variant="contained"
+          sx={{
+            background: theme.palette.text.primary,
+            color: "black",
+            "&:hover": {
+              background: theme.palette.text.primary,
+              color: "black",
+            },
+          }}
+          disabled={!editsHaveBeenMade || loading}
+          onClick={makeUpdate}
+        >
+          {loading ? "loading..." : "save"}
+        </Button>
+      </div>
       <Typography sx={{ marginTop: "2rem" }} align="center">
         Set Your Top Artists
       </Typography>
-      {/* {topArtists && <Typography>{topArtists.join(", ")}</Typography>} */}
       {ranges.map((range, index) => {
         return (
           <div key={range.key} style={{ width: "96%", margin: "auto" }}>
@@ -114,6 +176,7 @@ function EditArtists({ user }) {
                   checked={artistsPreference[range.key] === "auto"}
                   value="auto"
                   onChange={() => {
+                    setEditsHaveBeenMade(true);
                     setArtistsPreference({
                       ...artistsPreference,
                       [range.key]: "auto",
@@ -129,6 +192,7 @@ function EditArtists({ user }) {
                   checked={artistsPreference[range.key] === "manual"}
                   value="manual"
                   onChange={() => {
+                    setEditsHaveBeenMade(true);
                     setArtistsPreference({
                       ...artistsPreference,
                       [range.key]: "manual",
@@ -172,6 +236,7 @@ function EditArtists({ user }) {
                         <IconButton
                           onClick={() => {
                             if (index !== 0) {
+                              setEditsHaveBeenMade(true);
                               const adjustedArray = arrayMoveImmutable(
                                 topArtists[range.key],
                                 index,
@@ -191,6 +256,7 @@ function EditArtists({ user }) {
                         <IconButton
                           onClick={() => {
                             if (index !== topArtists.length - 1) {
+                              setEditsHaveBeenMade(true);
                               const adjustedArray = arrayMoveImmutable(
                                 topArtists[range.key],
                                 index,
@@ -209,10 +275,10 @@ function EditArtists({ user }) {
                         </IconButton>
                         <IconButton
                           onClick={() => {
-                            const adjustedArray = arrayMoveImmutable(
-                              topArtists[range.key],
+                            setEditsHaveBeenMade(true);
+                            const adjustedArray = topArtists[range.key].splice(
                               index,
-                              index + 1
+                              1
                             );
                             setTopArtists({
                               ...topArtists,
@@ -221,15 +287,6 @@ function EditArtists({ user }) {
                           }}
                         >
                           <DeleteIcon
-                            onClick={() => {
-                              const adjustedArray = topArtists[
-                                range.key
-                              ].splice(index, 1);
-                              setTopArtists({
-                                ...topArtists,
-                                [range.key]: adjustedArray,
-                              });
-                            }}
                             style={{ color: theme.palette.text.primary }}
                           />
                         </IconButton>
@@ -321,17 +378,15 @@ function EditArtists({ user }) {
                         </Typography>
                         <IconButton
                           onClick={() => {
-                            if (topArtists[range.key].length < 10) {
-                              const updatedArray = topArtists[range.key].push(
-                                artist
-                              );
+                            if (topArtists[range.key].length < 9) {
+                              setEditsHaveBeenMade(true);
                               setTopArtists({
                                 ...topArtists,
-                                [range.key]: updatedArray,
+                                [range.key]: [...topArtists[range.key], artist],
                               });
                             } else {
                               alert(
-                                "Maximum of 9 top artists :(. Just go right ahead and make the easy decision of deleting one"
+                                "Maximum of 9 top artists :(. Just go on then and make the easy decision of deleting one"
                               );
                             }
                           }}
