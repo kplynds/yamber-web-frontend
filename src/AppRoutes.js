@@ -23,6 +23,7 @@ import { Provider } from "react-redux";
 import axios from "axios";
 import Explore from "./components/Explore/Explore";
 import EditArtists from "./components/pages/EditArtists";
+import CreateProfileFromSpotify from "./components/pages/CreateProfileFromSpotify";
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -74,6 +75,9 @@ const AppRoutes = () => {
             </Route>
             <Route path="/signup2">
               <LandingStreaming />
+            </Route>
+            <Route path="/createprofile_fromspotify">
+              <CreateProfileFromSpotify />
             </Route>
             <Route path="/createprofile">
               <CreateProfile />

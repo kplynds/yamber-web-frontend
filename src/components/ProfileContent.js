@@ -118,7 +118,7 @@ const ProfileContent = ({ user, ui, playButtonClick }) => {
         >
           <Tab
             disableRipple
-            label="recent"
+            label="songs"
             component={Link}
             to={`${match.url}`}
             value={`${match.url}`}

@@ -23,33 +23,24 @@ function EditArtists({ user }) {
     medium_term: null,
     long_term: null,
   });
+  const [changeToAuto, setChangeToAuto] = useState(false);
   const [editsHaveBeenMade, setEditsHaveBeenMade] = useState(false);
   const [loading, setLoading] = useState(false);
   const makeUpdate = async () => {
     setLoading(true);
-    // try {
-    // const update = await axios.post("/updateartists", {
-    //   artistsPreference: [
-    //     artistsPreference.short_term,
-    //     topArtists.medium_term,
-    //     topArtists.long_term,
-    //   ],
-    //   topArtists: topArtists,
-    // });
-    // setLoading(false);
-    // document.location.reload();
     axios
       .post("/updateartists", {
         artistsPreference: [
           artistsPreference.short_term,
-          topArtists.medium_term,
-          topArtists.long_term,
+          artistsPreference.medium_term,
+          artistsPreference.long_term,
         ],
         topArtists: topArtists,
+        changeToAuto,
       })
       .then((res) => {
-        console.log(res);
         setLoading(false);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -177,6 +168,7 @@ function EditArtists({ user }) {
                   value="auto"
                   onChange={() => {
                     setEditsHaveBeenMade(true);
+                    setChangeToAuto(true);
                     setArtistsPreference({
                       ...artistsPreference,
                       [range.key]: "auto",
@@ -276,13 +268,11 @@ function EditArtists({ user }) {
                         <IconButton
                           onClick={() => {
                             setEditsHaveBeenMade(true);
-                            const adjustedArray = topArtists[range.key].splice(
-                              index,
-                              1
-                            );
                             setTopArtists({
                               ...topArtists,
-                              [range.key]: adjustedArray,
+                              [range.key]: topArtists[range.key].filter(
+                                (item, ind) => ind !== index
+                              ),
                             });
                           }}
                         >

@@ -245,7 +245,7 @@ const UserProfile = ({ profile, user }) => {
         >
           <Tab
             disableRipple
-            label="recent"
+            label="songs"
             component={Link}
             to={`${match.url}`}
             value={`${match.url}`}

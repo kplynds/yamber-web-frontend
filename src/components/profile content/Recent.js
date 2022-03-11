@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
     height: "3.75rem",
     width: "3.75rem",
     margin: "0 1rem",
+    borderRadius: "4px"
   },
   link: {
     textDecoration: "none",

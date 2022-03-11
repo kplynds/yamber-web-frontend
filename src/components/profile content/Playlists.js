@@ -57,7 +57,7 @@ const Playlists = ({ handle, user }) => {
                 flexDirection: "column",
               }}
             >
-              <a href={`/${playlist.user}/playlist/${playlist.id}`}>
+              <a href={`/${playlist.data.user}/playlist/${playlist.id}`}>
                 {getPlaylistCover(playlist.data, 5)}
               </a>
               <Typography
@@ -66,6 +66,7 @@ const Playlists = ({ handle, user }) => {
               >
                 {playlist.data.title}
               </Typography>
+              <div>{playlist.data.user}</div>
             </Grid>
           );
         })}
