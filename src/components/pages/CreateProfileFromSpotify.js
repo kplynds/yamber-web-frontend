@@ -22,8 +22,22 @@ function CreateProfileFromSpotify() {
         code,
       })
       .then((res) => {
-        setLoading(false);
-        console.log("LETS MAKE A USER");
+        axios.post("/signup", {
+          imageUrl: urlParams.get("photo"),
+          handle: urlParams.get("username"),
+          spotifyAuthenticated: true,
+          spotifyRefresh: urlParams.get("rid"),
+          spotifyAccess: urlParams.get("aid"),
+          streamingProvider: "spotify",
+          phoneNumber: urlParams.get("phoneNumber")
+        })
+          .then(res => {
+            const token = res.data.token;
+            localStorage.setItem("token", token)
+            axios.defaults.headers.common["Authorization"] = token;
+            window.location.pathname = `/${res.data.handle}`
+            setLoading(false)
+          })
       })
       .catch((err) => {
         setLoading(false);
@@ -37,7 +51,6 @@ function CreateProfileFromSpotify() {
       phone = phone.replace(/[()]/g, "");
       phone = phone.replace(/-/g, "");
       axios.get(`/stytchphone/${phone}`).then((res) => {
-        console.log(res);
         if (res.data.user_created) {
           setMethod_id(res.data.phone_id);
         } else {
