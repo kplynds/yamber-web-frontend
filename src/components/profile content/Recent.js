@@ -10,6 +10,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
+import Skeleton from "@mui/material/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     height: "3.75rem",
     width: "3.75rem",
     margin: "0 1rem",
-    borderRadius: "4px"
+    borderRadius: "4px",
   },
   link: {
     textDecoration: "none",
@@ -140,7 +141,9 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
   },
 }));
-const Recent = ({ user, ui, playButtonClick, data }) => {
+const n = 8;
+
+const Recent = ({ user, ui, playButtonClick, data, songs_loading }) => {
   const [timeRange, setTimeRange] = useState("short_term");
   let a;
   let own;
@@ -151,8 +154,17 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
     a = user.data;
     own = true;
   }
+  const keys = {
+    short_term: 0,
+    medium_term: 1,
+    long_term: 2,
+  };
+  // console.log("user should be right below this")
+  if (a.songsPreference[keys[timeRange]] !== "auto") {
+    a[timeRange] = a.linkedPlaylists[timeRange].songs;
+  }
   const classes = useStyles(theme);
-  if (a !== undefined)
+  if (a !== undefined && songs_loading)
     return (
       <div className={classes.root}>
         <div className={classes.songs}>
@@ -226,49 +238,9 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
             >
               <Typography variant="body2">all time</Typography>
             </div>
-            {/* <Tabs value={timeRange} onChange={handleChange} centered>
-              <Tab label="last month" value="short_term" />
-              <Tab label="last 6 months" value="medium_term" />
-              <Tab label="all time" value="long_term" />
-            </Tabs> */}
           </div>
-          {/* {own && (
-            <div className={classes.editIcon}> */}
-          {/* <div style={{ display: "flex", alignItems: "center" }}>
-                <Typography color="textPrimary" style={{ marginRight: ".4rem" }}>
-                  most listened to songs&nbsp;
-                </Typography>
-                <Select
-                  native
-                  onChange={handleChange}
-                  value={timeRange}
-                  className={classes.select}
-                  inputProps={{
-                    classes: {
-                      icon: classes.icon,
-                    },
-                  }}
-                  name="time_range"
-                >
-                  <option value={"short_term"}>last 30 days</option>
-                  <option value={"medium_term"}>last 6 months</option>
-                  <option value={"long_term"}>all time</option>
-                </Select>
-              </div> */}
-          {/* <Button size="small" endIcon={<EditIcon />}>
-                edit
-              </Button>
-            </div>
-          )} */}
+
           <div className={classes.centerText}>
-            {/* <Typography
-              variant="body1"
-              mx="auto"
-              align="center"
-              style={{ margin: "0 1rem" }}
-            >
-              {getTopArtists(a.recentListening.data).join(", ")} &amp; more...
-            </Typography> */}
             <Link
               to={`/${a.handle}/playlist/recentlistening?timeRange=${timeRange}`}
               className={classes.link}
@@ -282,52 +254,74 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
               </Typography>
             </Link>
           </div>
-          {a.recentListening.data[timeRange].map((song, index) => {
-            if (index < 8) {
+          {[...Array(n)].map((e, i) => {
+            if (songs_loading[timeRange]) {
               return (
-                <div className={classes.recentsSong} key={index}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
+                <div key={i} style={{ display: "flex", padding: ".15rem 1rem" }}>
+                  <Skeleton
+                    sx={{
+                      margin: "0 1rem",
+                      height: "3.75rem",
+                      width: "3.75rem",
                     }}
-                  >
-                    <Typography variant="body2" color="textSecondary">
-                      {index + 1}
-                    </Typography>
-                    <img
-                      src={song.images[0].url}
-                      alt={song.name}
-                      className={classes.albumImages}
-                    />
+                    variant="rectangular"
+                  />
+                  <Skeleton
+                    sx={{ flexGrow: 1, marginRight: "1rem" }}
+                    variant="text"
+                  />
+                </div>
+              );
+            } else return null;
+          })}
+          {a[timeRange].map((song, index) => {
+            if (index < 8) {
+              if (!songs_loading[timeRange]) {
+                return (
+                  <div className={classes.recentsSong} key={index}>
                     <div
                       style={{
                         display: "flex",
-                        flexDirection: "column",
+                        alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2">{song.name}</Typography>
                       <Typography variant="body2" color="textSecondary">
-                        {song.artists.join(", ")}
+                        {index + 1}
                       </Typography>
+                      <img
+                        src={song.images[0].url}
+                        alt={song.name}
+                        className={classes.albumImages}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <Typography variant="body2">{song.name}</Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          {song.artists.join(", ")}
+                        </Typography>
+                      </div>
                     </div>
-                  </div>
 
-                  {ui.audio.active && ui.audio.src === song.preview ? (
-                    <StopIcon
-                      onClick={() => {
-                        playButtonClick(song.preview, ui.audio);
-                      }}
-                    />
-                  ) : (
-                    <PlayArrowIcon
-                      onClick={() => {
-                        playButtonClick(song.preview, ui.audio);
-                      }}
-                    />
-                  )}
-                </div>
-              );
+                    {ui.audio.active && ui.audio.src === song.preview ? (
+                      <StopIcon
+                        onClick={() => {
+                          playButtonClick(song.preview, ui.audio);
+                        }}
+                      />
+                    ) : (
+                      <PlayArrowIcon
+                        onClick={() => {
+                          playButtonClick(song.preview, ui.audio);
+                        }}
+                      />
+                    )}
+                  </div>
+                );
+              } else return null;
             } else {
               return null;
             }
@@ -366,12 +360,15 @@ const Recent = ({ user, ui, playButtonClick, data }) => {
               last updated&nbsp;
             </Typography>
             <Typography color="textSecondary" variant="body2">
-              {a.recentListening.lastUpdated} PST
+              {a.songsUpdateTime_english} PST
             </Typography>
           </div>
         </div>
       </div>
     );
+  else {
+    return null;
+  }
 };
 
 const mapState = (state) => {

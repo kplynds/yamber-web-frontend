@@ -155,36 +155,6 @@ const AutoArtists = ({ ownProf, data }) => {
           <Typography variant="body2">all time</Typography>
         </div>
       </div>
-      {/* {data[timeRange].map((artist, index) => {
-        return (
-          <div className={classes.recentsSong} key={index}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="body2" color="textSecondary">
-                {index + 1}
-              </Typography>
-              <img
-                src={artist.images[0].url}
-                alt={artist.name}
-                className={classes.albumImages}
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Typography variant="body2">{artist.name}</Typography>
-              </div>
-            </div>
-          </div>
-        );
-      })} */}
-      {/* <div className={classes.sectionContainer}> */}
       <Grid container spacing={0}>
         {data[timeRange].map((artist, index) => {
           return (
@@ -215,22 +185,9 @@ const AutoArtists = ({ ownProf, data }) => {
                 {index + 1}. {artist.name}
               </Typography>
             </Grid>
-            // <div className={classes.artistContainer} key={index}>
-            // <Typography variant="body2" color="textSecondary">
-            //   {index + 1}
-            // </Typography>
-            // <img
-            //   src={artist.images[0].url}
-            //   alt={artist.name}
-            //   className={classes.albumImages}
-            // />
-
-            // <Typography variant="body2">{artist.name}</Typography>
-            // </div>
           );
         })}
       </Grid>
-      {/* </div> */}
     </div>
   );
 };

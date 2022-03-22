@@ -179,7 +179,7 @@ const EditSongs = ({ user }) => {
     let body = {
       prefArray: arrayToBePosted,
     };
-    user.data.songsDataPreference.forEach((item, index) => {
+    user.data.songsPreference.forEach((item, index) => {
       if (item !== "auto" && item !== "manual") {
         const ref = arrayToBePosted[index];
         if (ref === "auto" || ref === "manual") {
@@ -205,22 +205,23 @@ const EditSongs = ({ user }) => {
   useEffect(() => {
     if (Object.keys(user.data).length > 0) {
       setLinkPlaylist(user.data.linkedPlaylists);
+      console.log(user.data)
       setFormValue({
         short_term:
-          user.data.songsDataPreference[0] !== "auto" &&
-          user.data.songsDataPreference[0] !== "manual"
+          user.data.songsPreference[0] !== "auto" &&
+          user.data.songsPreference[0] !== "manual"
             ? "link"
-            : user.data.songsDataPreference[0],
+            : user.data.songsPreference[0],
         medium_term:
-          user.data.songsDataPreference[1] !== "auto" &&
-          user.data.songsDataPreference[1] !== "manual"
+          user.data.songsPreference[1] !== "auto" &&
+          user.data.songsPreference[1] !== "manual"
             ? "link"
-            : user.data.songsDataPreference[1],
+            : user.data.songsPreference[1],
         long_term:
-          user.data.songsDataPreference[2] !== "auto" &&
-          user.data.songsDataPreference[2] !== "manual"
+          user.data.songsPreference[2] !== "auto" &&
+          user.data.songsPreference[2] !== "manual"
             ? "link"
-            : user.data.songsDataPreference[2],
+            : user.data.songsPreference[2],
       });
     }
   }, [user.data]);
@@ -517,7 +518,7 @@ const EditSongs = ({ user }) => {
                       </DialogContent>
                     )}
                   </Dialog>
-                  <FormControlLabel
+                  {/* <FormControlLabel
                     disabled={editState !== "songsDataPreference"}
                     value="manual"
                     control={
@@ -531,7 +532,7 @@ const EditSongs = ({ user }) => {
                       />
                     }
                     label="Set manually"
-                  />
+                  /> */}
                 </RadioGroup>
               </div>
             );

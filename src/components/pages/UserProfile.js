@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserProfile = ({ profile, user }) => {
+const UserProfile = ({ profile, user, songsLoading, artistsLoading }) => {
   const classes = useStyles(theme);
   const [following, setFollowing] = useState(null);
   const followUser = () => {
@@ -160,6 +160,9 @@ const UserProfile = ({ profile, user }) => {
                   textTransform: "capitalize",
                   marginRight: "1rem",
                   color: theme.palette.text.primary,
+                  "&:hover": {
+                    borderColor: theme.palette.text.primary
+                  }
                 }}
                 fullWidth
                 onClick={followUser}
@@ -174,10 +177,16 @@ const UserProfile = ({ profile, user }) => {
                   textTransform: "capitalize",
                   marginRight: "1rem",
                   color: theme.palette.text.primary,
+                  "&:hover": {
+                    borderColor: theme.palette.text.primary
+                  }
                 }}
                 fullWidth
+                onClick={() => {
+                  window.location.href = `/${user.data.handle}/playlist/commonplaylist?otheruser=${profile.handle}`;
+                }}
               >
-                make a common playlist
+                find common songs
               </Button>
             </div>
           </div>
@@ -269,13 +278,17 @@ const UserProfile = ({ profile, user }) => {
       <div className={classes.stuff}>
         <Switch>
           <Route path={`${match.path}/artists`}>
-            <Artists data={profile.topArtists} auto={profile.artistsAuto} />
+            <Artists
+              artists_loading={artistsLoading}
+              data={profile.topArtists}
+              auto={profile.artistsAuto}
+            />
           </Route>
           <Route path={`${match.path}/playlists`}>
             <Playlists handle={profile.handle} />
           </Route>
           <Route path={match.path}>
-            <Recent data={profile} />
+            <Recent songs_loading={songsLoading} data={profile} />
           </Route>
         </Switch>
 

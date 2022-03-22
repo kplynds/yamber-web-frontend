@@ -2,17 +2,34 @@ import Spotify from "spotify-web-api-js";
 import axios from "axios";
 const spotify = new Spotify();
 
-export const getAuthenticatedUserDataAndPushUtil = (handle) => async (
-  dispatch
-) => {
+export const getAuthenticatedUserDataAndPushUtil = () => async (dispatch) => {
   // eslint-disable-next-line no-unused-vars
-  const setRecentData = await axios.get(`/spotifyrecentdata/${handle}`);
+
   const userFetch = await axios.get("/user");
   dispatch({
     type: "SET_USER",
     payload: userFetch.data,
   });
-  window.location.href = `/${handle}`;
+  
+  window.location.href = `/${userFetch.data.handle}`;
+};
+
+export const justSignedUpUtil = (user, setLoading) =>  async (dispatch) => {
+  // eslint-disable-next-line no-unused-vars
+  const setRecents1 = await axios.get(`/refreshspotifysongs/${user}/short_term/0`)
+    // eslint-disable-next-line no-unused-vars
+  const setRecents2 = await axios.get(`/refreshspotifysongs/${user}/short_term/1`)
+    // eslint-disable-next-line no-unused-vars
+  const setRecents3 = await axios.get(`/refreshspotifysongs/${user}/short_term/2`)
+    // eslint-disable-next-line no-unused-vars
+  const setArtists = await axios.get(`/refreshspotifyartists/${user}`)
+  const userFetch = await axios.get("/user");
+  dispatch({
+    type: "SET_USER",
+    payload: userFetch.data,
+  });
+  setLoading(false)
+  window.location.href = `/${userFetch.data.handle}`;
 };
 
 export const loginUser = (userData, history) => (dispatch) => {

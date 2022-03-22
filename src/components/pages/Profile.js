@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   profileContainer: {},
 }));
 
-const Profile = () => {
+const Profile = ({ songsLoading, artistsLoading }) => {
   const classes = useStyles(theme);
   return (
     <div className={classes.root}>
@@ -24,7 +24,7 @@ const Profile = () => {
         <MobileNav />
         <MobileUserProfile />
       </Hidden>
-      <ProfileContent />
+      <ProfileContent loadingArtists={artistsLoading} loadingSongs={songsLoading} />
     </div>
   );
 };

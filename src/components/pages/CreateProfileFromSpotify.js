@@ -5,8 +5,16 @@ import Button from "@mui/material/Button";
 import theme from "../../theme";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
+import {
+  getAuthenticatedUserDataAndPushUtil,
+  justSignedUpUtil,
+} from "../../redux/actions/userActions";
+import { connect } from "react-redux";
 
-function CreateProfileFromSpotify() {
+function CreateProfileFromSpotify({
+  getAuthenticatedUserDataAndPushUtil,
+  justSignedUpUtil,
+}) {
   const urlParams = new URLSearchParams(window.location.search);
   const [code, setCode] = useState("");
   const [method_id, setMethod_id] = useState("");
@@ -17,27 +25,27 @@ function CreateProfileFromSpotify() {
   const postCodeToStytch = () => {
     setLoading(true);
     axios
-      .post("/stytchvalidate", {
+      .post("/stytchvalidate/signup", {
         method_id,
         code,
       })
       .then((res) => {
-        axios.post("/signup", {
-          imageUrl: urlParams.get("photo"),
-          handle: urlParams.get("username"),
-          spotifyAuthenticated: true,
-          spotifyRefresh: urlParams.get("rid"),
-          spotifyAccess: urlParams.get("aid"),
-          streamingProvider: "spotify",
-          phoneNumber: urlParams.get("phoneNumber")
-        })
-          .then(res => {
-            const token = res.data.token;
-            localStorage.setItem("token", token)
-            axios.defaults.headers.common["Authorization"] = token;
-            window.location.pathname = `/${res.data.handle}`
-            setLoading(false)
+        axios
+          .post("/signup", {
+            imageUrl: urlParams.get("photo"),
+            handle: urlParams.get("username"),
+            spotifyAuthenticated: true,
+            spotifyRefresh: urlParams.get("rid"),
+            spotifyAccess: urlParams.get("aid"),
+            streamingProvider: "spotify",
+            phoneNumber: urlParams.get("phoneNumber"),
           })
+          .then((res) => {
+            const token = res.data.token;
+            localStorage.setItem("token", token);
+            axios.defaults.headers.common["Authorization"] = token;
+            justSignedUpUtil(urlParams.get("username"), setLoading);
+          });
       })
       .catch((err) => {
         setLoading(false);
@@ -50,7 +58,7 @@ function CreateProfileFromSpotify() {
       phone = phone.replace(/\s/g, "");
       phone = phone.replace(/[()]/g, "");
       phone = phone.replace(/-/g, "");
-      axios.get(`/stytchphone/${phone}`).then((res) => {
+      axios.get(`/stytchphone/${phone}/signup`).then((res) => {
         if (res.data.user_created) {
           setMethod_id(res.data.phone_id);
         } else {
@@ -97,14 +105,30 @@ function CreateProfileFromSpotify() {
           backgroundColor: theme.palette.text.primary,
           color: theme.palette.primary.main,
           marginTop: "1.2rem",
+          "&:hover": {
+            backgroundColor: theme.palette.primary.dark,
+            color: theme.palette.text.primary,
+          },
         }}
         onClick={postCodeToStytch}
         disabled={code.length !== 6 || loading}
       >
-        create my account
+        {loading ? "loading m8..." : "create my account"}
       </Button>
     </Container>
   );
 }
 
-export default CreateProfileFromSpotify;
+const mapState = (state) => {
+  return {
+    user: state.user,
+    ui: state.ui,
+  };
+};
+
+const mapDispatch = {
+  getAuthenticatedUserDataAndPushUtil,
+  justSignedUpUtil,
+};
+
+export default connect(mapState, mapDispatch)(CreateProfileFromSpotify);

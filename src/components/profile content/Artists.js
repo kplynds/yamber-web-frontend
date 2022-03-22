@@ -3,20 +3,19 @@ import { makeStyles } from "@mui/styles";
 import { connect } from "react-redux";
 import Typography from "@mui/material/Typography";
 import theme from "../../theme";
-import { FaSpotify } from "react-icons/fa";
-import Popover from "@mui/material/Popover";
+
 import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
-import AutoArtists from "./components/AutoArtists";
+import Grid from "@mui/material/Grid";
+import Avatar from "@mui/material/Avatar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.primary.main,
-    borderRadius: "12px",
-    paddingTop: "1rem",
-    paddingBottom: "1rem",
     width: "70%",
-    margin: "0rem auto",
+    borderRadius: "12px",
+    margin: "0 auto",
+    padding: "1rem 0",
     [theme.breakpoints.down("lg")]: {
       width: "80%",
     },
@@ -26,17 +25,62 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       width: "95%",
     },
+    marginTop: ".5rem",
   },
-  artist: {
+  selected: {
+    borderTop: `1px solid ${theme.palette.text.secondary}`,
+    borderRight: `1px solid ${theme.palette.text.secondary}`,
+    borderLeft: `1px solid ${theme.palette.text.secondary}`,
+    color: theme.palette.text.primary,
+    borderBottom: "0px solid red",
+  },
+  notSelected: {
+    borderBottom: `1px solid ${theme.palette.text.secondary}`,
+    color: theme.palette.text.secondary,
+    borderTop: `1px solid transparent`,
+    borderRight: `1px solid transparent`,
+    borderLeft: `1px solid transparent`,
+  },
+  tabDiv: {
+    borderRadius: "2px",
+    display: "flex",
+    justifyContent: "center",
+    width: "33%",
+    padding: ".6rem 0",
+    alignItems: "center",
+    "&:hover": {
+      cursor: "pointer",
+      borderRight: "1px solid #D3D3D3",
+      borderLeft: "1px solid #D3D3D3",
+      borderTop: "1px solid #D3D3D3",
+    },
+  },
+  tabs: {
+    display: "flex",
+    margin: ".6rem auto",
+    justifyContent: "center",
+  },
+  albumImages: {
+    height: "3.75rem",
+    width: "3.75rem",
+    // margin: "0 1rem",
+  },
+  recentsSong: {
     display: "flex",
     alignItems: "center",
-    textOverflow: "ellipsis",
-    padding: ".3rem 0",
+    justifyContent: "space-between",
+    padding: ".15rem 1rem",
+    "&:hover": {
+      background: theme.palette.primary.light,
+      cursor: "pointer",
+    },
   },
-  editIcon: {
+  artistContainer: {
+    background: "blue",
+  },
+  sectionContainer: {
     display: "flex",
-    justifyContent: "flex-end",
-    padding: ".2rem 1rem",
+    justifyContent: "center",
   },
   nothing: {
     display: "flex",
@@ -45,9 +89,10 @@ const useStyles = makeStyles((theme) => ({
     margin: "0 2rem",
   },
 }));
-const Artists = ({ user, data, auto }) => {
+const Artists = ({ user, data, auto, artists_loading }) => {
   let a;
   let own;
+  const [timeRange, setTimeRange] = useState("short_term");
   if (data) {
     a = data;
     own = false;
@@ -56,20 +101,130 @@ const Artists = ({ user, data, auto }) => {
     own = true;
   }
   const classes = useStyles(theme);
-  const [popoverState, setPopoverState] = useState({
-    open: false,
-    anchorEl: null,
-  });
-  const handlhandlePopoverOpen = (e, name) => {
-    setPopoverState({
-      openedPopoverId: name,
-      anchorEl: e.target,
-    });
-  };
-  const openInSpotify = (artist) => {
-    window.location.href = artist.spotifyHref;
-  };
-  if (!auto) {
+  if (a.length < 0) {
+    return (
+      <div className={classes.nothing}>
+        <Typography color="textPrimary">
+          this user has no top artists set. they probably like country music
+          hahahah
+        </Typography>
+      </div>
+    );
+  } else if (artists_loading) {
+    return (
+      <div
+        style={{ display: "flex", marginTop: "2rem", justifyContent: "center" }}
+      >
+        <Typography color="textPrimary">
+          Loading Artists right now chill out...
+        </Typography>
+      </div>
+    );
+  } else {
+    return (
+      <div className={classes.root}>
+        {own && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              padding: ".2rem 1rem",
+            }}
+          >
+            <a href="/editartists" style={{ textDecoration: "none" }}>
+              <Button
+                size="small"
+                endIcon={<EditIcon />}
+                sx={{
+                  color: theme.palette.text.primary,
+                  borderColor: theme.palette.text.primary,
+                  "&:hover": {
+                    background: theme.palette.primary.light,
+                  },
+                }}
+              >
+                edit
+              </Button>
+            </a>
+          </div>
+        )}
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Typography variant="h6" color="textPrimary">
+            Most Streamed Artists
+          </Typography>
+        </div>
+        <div className={classes.tabs}>
+          <div
+            onClick={() => setTimeRange("short_term")}
+            className={`${classes.tabDiv}
+                ${
+                  timeRange === "short_term"
+                    ? classes.selected
+                    : classes.notSelected
+                }`}
+          >
+            <Typography variant="body2">last month</Typography>
+          </div>
+          <div
+            onClick={() => setTimeRange("medium_term")}
+            className={`${classes.tabDiv}
+                ${
+                  timeRange === "medium_term"
+                    ? classes.selected
+                    : classes.notSelected
+                }`}
+          >
+            <Typography variant="body2">last 6 months</Typography>
+          </div>
+          <div
+            onClick={() => setTimeRange("long_term")}
+            className={`${classes.tabDiv}
+                ${
+                  timeRange === "long_term"
+                    ? classes.selected
+                    : classes.notSelected
+                }`}
+          >
+            <Typography variant="body2">all time</Typography>
+          </div>
+        </div>
+        <Grid container spacing={0}>
+          {a[timeRange].map((artist, index) => {
+            return (
+              <Grid
+                item
+                xs={4}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  margin: ".5rem 0",
+                }}
+                key={index}
+              >
+                <Avatar
+                  src={artist.images[0].url}
+                  alt={artist.name}
+                  sx={{
+                    width: 180,
+                    height: 180,
+                    [theme.breakpoints.down("md")]: {
+                      width: 100,
+                      height: 100,
+                    },
+                  }}
+                />
+                <Typography variant="body2">
+                  {index + 1}. {artist.name}
+                </Typography>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </div>
+    );
+  }
+  /* if (!auto) {
     if (a.length < 0) {
       return (
         <div className={classes.nothing}>
@@ -184,10 +339,10 @@ const Artists = ({ user, data, auto }) => {
           })}
         </div>
       );
-    }
+    } 
   } else {
     return <AutoArtists ownProf={own} data={a} />;
-  }
+  } */
 };
 
 const mapState = (state) => {

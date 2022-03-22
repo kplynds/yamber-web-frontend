@@ -139,64 +139,6 @@ const DesktopProfile = ({ user }) => {
             />
           </div>
         </div>
-        {/* <div className={classes.stats}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: "3rem",
-            }}
-          >
-            <Typography
-              variant="body1"
-              color="textPrimary"
-              style={{ marginRight: ".3rem" }}
-            >
-              {user.playlists.length}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              playlists
-            </Typography>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: "3rem",
-            }}
-          >
-            <Typography
-              variant="body1"
-              color="textPrimary"
-              style={{ marginRight: ".3rem" }}
-            >
-              {user.data.following.length}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              following
-            </Typography>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography
-              variant="body1"
-              color="textPrimary"
-              style={{ marginRight: ".3rem" }}
-            >
-              {user.data.followers.length}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              followers
-            </Typography>
-          </div>
-        </div> */}
         <div className={classes.displayNameAndSocials}>
           <Typography
             variant="body1"

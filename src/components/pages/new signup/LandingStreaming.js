@@ -36,7 +36,9 @@ const useStyles = makeStyles((theme) => ({
       borderColor: `${theme.palette.text.primary} !important`,
     },
   },
-  cssFocused: {},
+  cssFocused: {
+    borderColor: "red !important",
+  },
 }));
 
 const LandingStreaming = () => {
@@ -52,7 +54,7 @@ const LandingStreaming = () => {
   const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
   const handleChange = (e, v) => {
-    setUsername(e.target.value);
+    setUsername(e.target.value.trim());
   };
   useEffect(() => {
     setCheckingUsername(true);
@@ -91,9 +93,23 @@ const LandingStreaming = () => {
               focused: classes.cssFocused,
             },
           }}
+          InputLabelProps={{ style: {
+            color: "white"
+          }}}
           sx={{
             marginTop: "1rem",
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderRadius: "8px",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: theme.palette.text.primary,
+                borderWidth: "2px",
+                color: "red"
+              },
+            },
           }}
+          autoFocus
           label="Phone Number"
         />
         <InputBase

@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
 import PersonIcon from "@mui/icons-material/Person";
 import Typography from "@mui/material/Typography";
-import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import CssBaseline from "@mui/material/CssBaseline";
 import { connect } from "react-redux";
@@ -84,16 +83,6 @@ function DeskTopNav({ user, logout, seedWithSpotify }) {
           <PersonIcon fontSize="large" />
           <Typography variant="h6" className={classes.iconText}>
             Profile
-          </Typography>
-        </NavLink>
-        <NavLink
-          to="/newplaylist"
-          className={classes.item}
-          activeClassName={classes.active}
-        >
-          <AddIcon fontSize="large" />
-          <Typography variant="h6" className={classes.iconText}>
-            new playlist
           </Typography>
         </NavLink>
         <NavLink

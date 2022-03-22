@@ -24,6 +24,10 @@ import NotesIcon from "@mui/icons-material/Notes";
 import IconButton from "@mui/material/IconButton";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import TextField from "@mui/material/TextField";
+import LoadingCommonPlaylist from "../LoadingCommonPlaylist";
+import { FaSpotify } from "react-icons/fa";
+import Snackbar from "@mui/material/Snackbar";
+import CloseIcon from '@mui/icons-material/Close';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -114,12 +118,33 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
   const [addingNotes, setAddingNotes] = useState([]);
   const [newNotes, setNewNotes] = useState({});
   const [addNotesLoading, setAddNotesLoading] = useState(false);
+  const [commonPlaylist, setCommonPlaylist] = useState(false);
+  const [successSnack, setSuccessSnack] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const noteChange = (e, v) => {
     setNewNotes({
       ...newNotes,
       [e.target.name]: e.target.value,
     });
   };
+  const exportCommon = () => {
+    setExporting(true);
+    const querystring = new URLSearchParams(window.location.search);
+    const otheruser = querystring.get("otheruser");
+    axios
+      .post(`/exportplaylist/spotify/${otheruser}`, {
+        songs: playlist.songs,
+      })
+      .then((res) => {
+        setExporting(false);
+        setSuccessSnack(true);
+      })
+      .catch((err) => {
+        setExporting(false);
+        alert("could not add :( sorry");
+      });
+  };
+  const [loadingCommon, setLoadingCommon] = useState(false);
   const [existingNotes, setExistingNotes] = useState({});
   const addNote = () => {
     setAddNotesLoading(true);
@@ -210,33 +235,27 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
         .get(`/userbase/${handle}`)
         .then((res) => {
           if (
-            res.data.user.songsDataPreference[key] !== "manual" &&
-            res.data.user.songsDataPreference[key] !== "auto"
+            res.data.user.songsPreference[key] !== "manual" &&
+            res.data.user.songsPreference[key] !== "auto"
           ) {
             // setOwn(user.data.handle === res.data.user.handle)
             setPlaylist(res.data.user.linkedPlaylists[timeRange]);
-            // res.data.user.linkedPlaylists[timeRange].songs.forEach((song, index) => {
-
-            //   if (res.data.user[findNotesUtil[util]])
-            // })
           } else {
             const indexesWithNotes = Object.keys(
               res.data.user[findNotesUtil[util[timeRange]]]
             );
             const recentNotes = [];
-            res.data.user.recentListening.data[timeRange].forEach(
-              (song, ind) => {
-                if (indexesWithNotes.includes(ind.toString())) {
-                  recentNotes.push(
-                    res.data.user[findNotesUtil[util[timeRange]]][ind]
-                  );
-                } else {
-                  recentNotes.push(null);
-                }
+            res.data.user[timeRange].forEach((song, ind) => {
+              if (indexesWithNotes.includes(ind.toString())) {
+                recentNotes.push(
+                  res.data.user[findNotesUtil[util[timeRange]]][ind]
+                );
+              } else {
+                recentNotes.push(null);
               }
-            );
+            });
             setPlaylist({
-              songs: res.data.user.recentListening.data[timeRange],
+              songs: res.data.user[timeRange],
               title: "Recent Listening",
               user: res.data.user.handle,
               images: [],
@@ -260,6 +279,86 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
             error: true,
             recentPlaylist: false,
           });
+        });
+    } else if (id === "commonplaylist") {
+      setLoadingCommon(true);
+      setState({
+        loading: false,
+        error: false,
+        recentPlaylist: false,
+      });
+      const querystring = new URLSearchParams(window.location.search);
+      const otheruser = querystring.get("otheruser");
+      axios
+        .get(`/commonplaylistcheck/${otheruser}`, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          if (res.status === 200 && res.data.expireTime > Date.now()) {
+            setPlaylist({
+              songs: res.data.data,
+              title: `Common Playlist with @${otheruser}`,
+              user: handle,
+              images: [],
+              notes: [],
+              description:
+                "This playlist was made from both of your liked songs and most listened to songs",
+              status: "spotifyExportable",
+            });
+            setCommonPlaylist(true);
+            setLoadingCommon(false);
+          } else {
+            axios
+              .get(`/commonsongsspotify/${otheruser}`, {
+                headers: {
+                  Authorization: localStorage.getItem("token"),
+                },
+              })
+              .then((res) => {
+                setPlaylist({
+                  songs: res.data,
+                  title: `Common Playlist with @${otheruser}`,
+                  user: handle,
+                  images: [],
+                  notes: [],
+                  description:
+                    "This playlist was made from both of your liked songs and most listened to songs",
+                });
+                setLoadingCommon(false);
+              })
+              .catch((err) => {
+                console.log(err.response);
+                setLoadingCommon(false);
+                alert("error sorry!");
+              });
+          }
+        })
+        .catch((err) => {
+          axios
+            .get(`/commonsongsspotify/${otheruser}`, {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+              },
+            })
+            .then((res) => {
+              setPlaylist({
+                songs: res.data,
+                title: `Common Playlist with @${otheruser}`,
+                user: handle,
+                images: [],
+                notes: [],
+                description:
+                  "This playlist was made from both of your liked songs and most listened to songs",
+              });
+              setLoadingCommon(false);
+            })
+            .catch((err) => {
+              console.log(err.response);
+              setLoadingCommon(false);
+              alert("error sorry!");
+            });
         });
     } else {
       axios
@@ -304,8 +403,36 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
   };
   // let match = useRouteMatch();
   // let location = useLocation();
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSuccessSnack(false);
+  };
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        onClick={handleClose}
+      >
+        <CloseIcon
+          sx={{ color: theme.palette.text.primary }}
+          fontSize="small"
+        />
+      </IconButton>
+    </React.Fragment>
+  );
   return (
     <div className={classes.root}>
+      <Snackbar
+        open={successSnack}
+        autoHideDuration={1200}
+        onClose={handleClose}
+        message="Playlist Added to Spotify"
+        action={action}
+      />
       <Hidden mdDown>
         <DesktopNav />
       </Hidden>
@@ -313,7 +440,9 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
         <MobileNav />
       </Hidden>
       <div>
-        {state.loading ? (
+        {loadingCommon ? (
+          <LoadingCommonPlaylist />
+        ) : state.loading ? (
           <Loading />
         ) : (
           <Switch>
@@ -369,19 +498,71 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
                     </Typography>
                   </div>
                   {/* <div>{note}</div> */}
-                  {own && (
+                  {commonPlaylist && (
+                    <div className={classes.editButtons}>
+                      <Button
+                        sx={{
+                          borderColor: theme.palette.primary.light,
+                          textTransform: "capitalize",
+                          marginRight: "1rem",
+                          color: theme.palette.text.primary,
+                          "&:hover": {
+                            borderColor: theme.palette.text.primary,
+                          },
+                          ":disabled": {
+                            borderColor: theme.palette.text.secondary,
+                          },
+                        }}
+                        startIcon={<FaSpotify />}
+                        variant="outlined"
+                        onClick={exportCommon}
+                        disabled={exporting}
+                      >
+                        {exporting ? "loading..." : "Save in Spotify"}
+                      </Button>
+                    </div>
+                  )}
+                  {own && !commonPlaylist && (
                     <div className={classes.editButtons}>
                       <Link
                         to={`${window.location.pathname}/add`}
                         className={classes.noLinkStyles}
                       >
-                        <Button startIcon={<AddIcon />}>add songs</Button>
+                        <Button
+                          sx={{
+                            borderColor: theme.palette.primary.light,
+                            textTransform: "capitalize",
+                            marginRight: "1rem",
+                            color: theme.palette.text.primary,
+                            "&:hover": {
+                              borderColor: theme.palette.text.primary,
+                            },
+                          }}
+                          startIcon={<AddIcon />}
+                          variant="outlined"
+                        >
+                          add songs
+                        </Button>
                       </Link>
                       <Link
                         to={`${window.location.pathname}/edit`}
                         className={classes.noLinkStyles}
                       >
-                        <Button startIcon={<EditIcon />}>edit details</Button>
+                        <Button
+                          sx={{
+                            borderColor: theme.palette.primary.light,
+                            textTransform: "capitalize",
+                            marginRight: "1rem",
+                            color: theme.palette.text.primary,
+                            "&:hover": {
+                              borderColor: theme.palette.text.primary,
+                            },
+                          }}
+                          startIcon={<EditIcon />}
+                          variant="outlined"
+                        >
+                          edit details
+                        </Button>
                       </Link>
                     </div>
                   )}

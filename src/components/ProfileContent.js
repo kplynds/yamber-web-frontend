@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 //1615322891210
-const ProfileContent = ({ user, ui, playButtonClick }) => {
+const ProfileContent = ({ user, loadingSongs, loadingArtists }) => {
   const classes = useStyles(theme);
   let match = useRouteMatch();
   let location = useLocation();
@@ -149,13 +149,13 @@ const ProfileContent = ({ user, ui, playButtonClick }) => {
       <div className={classes.content}>
         <Switch>
           <Route path={`${match.path}/artists`}>
-            <Artists auto={user.data.artistsAuto}/>
+            <Artists artists_loading={loadingArtists} auto={user.data.artistsAuto}/>
           </Route>
           <Route path={`${match.path}/playlists`}>
             <Playlists handle={user.data.handle} />
           </Route>
           <Route path={match.path}>
-            <Recent />
+            <Recent songs_loading={loadingSongs} />
           </Route>
         </Switch>
       </div>

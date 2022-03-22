@@ -67,8 +67,7 @@ const MobileProfile = ({ profile_p, user }) => {
         setFollowing("following");
         axios
           .get(`/follow/${profile_p.handle}`)
-          .then((res) => {
-          })
+          .then((res) => {})
           .catch((err) => {
             alert(`error trying to follow ${profile_p.handle}`);
             setFollowing("follow");
@@ -77,8 +76,7 @@ const MobileProfile = ({ profile_p, user }) => {
         setFollowing("follow");
         axios
           .get(`/unfollow/${profile_p.handle}`)
-          .then((res) => {
-          })
+          .then((res) => {})
           .catch((err) => {
             alert(`error trying to unfollow ${profile_p.handle}`);
             setFollowing("following");
@@ -116,6 +114,7 @@ const MobileProfile = ({ profile_p, user }) => {
             style={{
               display: "flex",
               width: "100%",
+              flexDirection: "column"
             }}
           >
             <Button
@@ -127,6 +126,10 @@ const MobileProfile = ({ profile_p, user }) => {
                 textTransform: "capitalize",
                 marginRight: "1rem",
                 color: theme.palette.text.primary,
+                "&:hover": {
+                  borderColor: theme.palette.text.primary
+                },
+                marginBottom: "1rem"
               }}
               fullWidth
               onClick={followUser}
@@ -142,9 +145,15 @@ const MobileProfile = ({ profile_p, user }) => {
                 textTransform: "capitalize",
                 marginRight: "1rem",
                 color: theme.palette.text.primary,
+                "&:hover": {
+                  borderColor: theme.palette.text.primary
+                }
+              }}
+              onClick={() => {
+                window.location.href = `/${user.data.handle}/playlist/commonplaylist?otheruser=${profile_p.handle}`;
               }}
             >
-              playlist
+              find shared songs
             </Button>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from "@mui/styles";
 import PersonIcon from "@mui/icons-material/Person";
 import SearchIcon from "@mui/icons-material/Search";
 import { NavLink, useHistory } from "react-router-dom";
@@ -7,7 +7,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { connect } from "react-redux";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import theme from "../../theme";
-import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0 5%",
     marginTop: "2%",
     borderBottom: `1px solid ${theme.palette.primary.light}`,
+    display: "flex",
   },
   item: {
     fontSize: "large",
@@ -57,29 +57,20 @@ function MobileNav({ user }) {
       <div className={classes.root}>
         <div className={classes.back}>
           <ArrowBackIcon onClick={() => history.goBack()} />
+          <Typography sx={{ flexGrow: 1, marginBottom: ".2rem", marginLeft: "1.2rem" }} align="left" >
+            yamber !
+          </Typography>
         </div>
         <div className={classes.nav}>
-          <div className={classes.linkContainer}>
-            <NavLink
-              to={`/${user.data.handle}`}
-              className={classes.item}
-              activeClassName={classes.active}
-            >
-              <PersonIcon fontSize="large" />
-              <Typography className={classes.text}>profile</Typography>
-            </NavLink>
-            {/* <Typography >Profile</Typography> */}
-          </div>
           <NavLink
-            to="/newplaylist"
+            to={`/${user.data.handle}`}
             className={classes.item}
             activeClassName={classes.active}
           >
-            <AddIcon fontSize="large" />
-            <Typography align="center" className={classes.text}>
-              new playlist
-            </Typography>
+            <PersonIcon fontSize="large" />
+            <Typography className={classes.text}>profile</Typography>
           </NavLink>
+          {/* <Typography >Profile</Typography> */}
           <NavLink
             to="/explore"
             className={classes.item}

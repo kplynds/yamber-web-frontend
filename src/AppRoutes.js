@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import theme from "./theme";
 import Home from "./components/Home";
-import Login from "./components/Login";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Featured from "./components/pages/Featured";
 import SpotifyUtil from "./components/SpotifyUtil";
@@ -24,6 +23,7 @@ import axios from "axios";
 import Explore from "./components/Explore/Explore";
 import EditArtists from "./components/pages/EditArtists";
 import CreateProfileFromSpotify from "./components/pages/CreateProfileFromSpotify";
+import LoginStytch from "./components/LoginStytch";
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -65,7 +65,7 @@ const AppRoutes = () => {
         <Router>
           <Switch>
             <Route path="/login">
-              <Login />
+              <LoginStytch />
             </Route>
             <Route path="/signup">
               <LandingStreaming />
