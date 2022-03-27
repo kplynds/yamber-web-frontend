@@ -60,6 +60,8 @@ export const getPlaylistCover = (playlist, width) => {
         style={{
           width: `${width * 2}rem`,
           height: `${width * 2}rem`,
+          objectFit: "cover",
+          objectPosition: "center center"
         }}
       />
     );

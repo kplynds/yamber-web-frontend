@@ -18,9 +18,9 @@ export const justSignedUpUtil = (user, setLoading) =>  async (dispatch) => {
   // eslint-disable-next-line no-unused-vars
   const setRecents1 = await axios.get(`/refreshspotifysongs/${user}/short_term/0`)
     // eslint-disable-next-line no-unused-vars
-  const setRecents2 = await axios.get(`/refreshspotifysongs/${user}/short_term/1`)
+  const setRecents2 = await axios.get(`/refreshspotifysongs/${user}/medium_term/1`)
     // eslint-disable-next-line no-unused-vars
-  const setRecents3 = await axios.get(`/refreshspotifysongs/${user}/short_term/2`)
+  const setRecents3 = await axios.get(`/refreshspotifysongs/${user}/long_term/2`)
     // eslint-disable-next-line no-unused-vars
   const setArtists = await axios.get(`/refreshspotifyartists/${user}`)
   const userFetch = await axios.get("/user");
@@ -29,7 +29,7 @@ export const justSignedUpUtil = (user, setLoading) =>  async (dispatch) => {
     payload: userFetch.data,
   });
   setLoading(false)
-  window.location.href = `/${userFetch.data.handle}`;
+  window.location.href = `/${user}`;
 };
 
 export const loginUser = (userData, history) => (dispatch) => {

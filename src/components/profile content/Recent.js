@@ -11,6 +11,12 @@ import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
+import IconButton from "@mui/material/IconButton";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import axios from "axios";
+import Snackbar from "@mui/material/Snackbar";
+import CloseIcon from "@mui/icons-material/Close";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -159,14 +165,50 @@ const Recent = ({ user, ui, playButtonClick, data, songs_loading }) => {
     medium_term: 1,
     long_term: 2,
   };
-  // console.log("user should be right below this")
   if (a.songsPreference[keys[timeRange]] !== "auto") {
     a[timeRange] = a.linkedPlaylists[timeRange].songs;
   }
+  const [snack, setSnack] = useState(false);
   const classes = useStyles(theme);
+  const [likedSongs, setLikedSongs] = useState([]);
+  const favoriteSong = (id) => {
+    setLikedSongs([...likedSongs, id]);
+    axios
+      .post("/likesong/spotify", { ids: [id] })
+      .then((res) => {
+        setSnack(true);
+      })
+      .catch((err) => {
+        alert("could not add this song to your likes srry bruv");
+      });
+  };
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnack(false);
+  };
+  const action = (
+    <React.Fragment>
+      <IconButton size="small" aria-label="close" onClick={handleClose}>
+        <CloseIcon
+          sx={{ color: theme.palette.text.primary }}
+          fontSize="small"
+        />
+      </IconButton>
+    </React.Fragment>
+  );
   if (a !== undefined && songs_loading)
     return (
       <div className={classes.root}>
+        <Snackbar
+          open={snack}
+          autoHideDuration={1400}
+          onClose={handleClose}
+          message="Song Added to Spotify Likes"
+          action={action}
+        />
         <div className={classes.songs}>
           {own && (
             <div
@@ -257,7 +299,10 @@ const Recent = ({ user, ui, playButtonClick, data, songs_loading }) => {
           {[...Array(n)].map((e, i) => {
             if (songs_loading[timeRange]) {
               return (
-                <div key={i} style={{ display: "flex", padding: ".15rem 1rem" }}>
+                <div
+                  key={i}
+                  style={{ display: "flex", padding: ".15rem 1rem" }}
+                >
                   <Skeleton
                     sx={{
                       margin: "0 1rem",
@@ -285,7 +330,15 @@ const Recent = ({ user, ui, playButtonClick, data, songs_loading }) => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="body2" color="textSecondary">
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        sx={{
+                          [theme.breakpoints.down("sm")]: {
+                            fontSize: ".8rem",
+                          },
+                        }}
+                      >
                         {index + 1}
                       </Typography>
                       <img
@@ -299,26 +352,76 @@ const Recent = ({ user, ui, playButtonClick, data, songs_loading }) => {
                           flexDirection: "column",
                         }}
                       >
-                        <Typography variant="body2">{song.name}</Typography>
-                        <Typography variant="body2" color="textSecondary">
+                        <Typography
+                          sx={{
+                            [theme.breakpoints.down("sm")]: {
+                              fontSize: ".8rem",
+                            },
+                          }}
+                          variant="body2"
+                        >
+                          {song.name}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            [theme.breakpoints.down("sm")]: {
+                              fontSize: ".8rem",
+                            },
+                          }}
+                          variant="body2"
+                          color="textSecondary"
+                        >
                           {song.artists.join(", ")}
                         </Typography>
                       </div>
                     </div>
-
-                    {ui.audio.active && ui.audio.src === song.preview ? (
-                      <StopIcon
-                        onClick={() => {
-                          playButtonClick(song.preview, ui.audio);
-                        }}
-                      />
-                    ) : (
-                      <PlayArrowIcon
-                        onClick={() => {
-                          playButtonClick(song.preview, ui.audio);
-                        }}
-                      />
-                    )}
+                    <div style={{ display: "flex" }}>
+                      {!own && (
+                        <IconButton
+                          sx={{
+                            color: theme.palette.text.primary,
+                          }}
+                          size="small"
+                          onClick={() => {
+                            favoriteSong(song.spotifyId);
+                          }}
+                          name={song.spotifyId}
+                        >
+                          {(user.data.likedSongs &&
+                            user.data.likedSongs.includes(song.spotifyId)) ||
+                          likedSongs.includes(song.spotifyId) ? (
+                            <FavoriteIcon style={{ color: "white" }} />
+                          ) : (
+                            <FavoriteBorderIcon style={{ color: "white" }} />
+                          )}
+                        </IconButton>
+                      )}
+                      {ui.audio.active && ui.audio.src === song.preview ? (
+                        <IconButton
+                          onClick={() => {
+                            playButtonClick(song.preview, ui.audio);
+                          }}
+                          size="small"
+                          sx={{
+                            color: theme.palette.text.primary,
+                          }}
+                        >
+                          <StopIcon />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          onClick={() => {
+                            playButtonClick(song.preview, ui.audio);
+                          }}
+                          size="small"
+                          sx={{
+                            color: theme.palette.text.primary,
+                          }}
+                        >
+                          <PlayArrowIcon />
+                        </IconButton>
+                      )}
+                    </div>
                   </div>
                 );
               } else return null;

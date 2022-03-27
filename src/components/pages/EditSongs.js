@@ -205,7 +205,6 @@ const EditSongs = ({ user }) => {
   useEffect(() => {
     if (Object.keys(user.data).length > 0) {
       setLinkPlaylist(user.data.linkedPlaylists);
-      console.log(user.data)
       setFormValue({
         short_term:
           user.data.songsPreference[0] !== "auto" &&
@@ -385,7 +384,7 @@ const EditSongs = ({ user }) => {
                           <Typography>Link to&nbsp;</Typography>
                           <Avatar
                             alt={linkPlaylist[range.key].title}
-                            src={linkPlaylist[range.key].images[0].url}
+                            src={linkPlaylist[range.key].images[0] ? linkPlaylist[range.key].images[0].url : "https://firebasestorage.googleapis.com/v0/b/flumes-company.appspot.com/o/907e87639091f8805c48681d9e7f144dedf53741.jpg?alt=media&token=614a343b-997a-49e2-973f-31bae278f6fc"}
                             variant="square"
                             sx={{ height: "2rem", width: "2rem", m: "0 .2rem" }}
                           />
@@ -499,7 +498,7 @@ const EditSongs = ({ user }) => {
                                 >
                                   <Avatar
                                     alt={playlist.title}
-                                    src={playlist.images[0].url}
+                                    src={playlist.images[0] ? playlist.images[0].url : "https://firebasestorage.googleapis.com/v0/b/flumes-company.appspot.com/o/907e87639091f8805c48681d9e7f144dedf53741.jpg?alt=media&token=614a343b-997a-49e2-973f-31bae278f6fc"}
                                     variant="square"
                                     className={classes.playlistImage}
                                   />

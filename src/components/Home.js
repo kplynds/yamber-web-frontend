@@ -4,8 +4,8 @@ import { makeStyles } from "@mui/styles";
 import Grid from "@mui/material/Grid";
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
-import MusicNoteIcon from "@mui/icons-material/MusicNote";
-import Avatar from "@mui/material/Avatar";
+// import MusicNoteIcon from "@mui/icons-material/MusicNote";
+// import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Phone from "@mui/icons-material/Phone";
@@ -73,31 +73,73 @@ function Home({ user, ui, dispatch }) {
         <Grid item xs={false} sm={4} md={7} className={classes.image} />
         <Grid item xs={12} sm={8} md={5} component={Paper}>
           <div className={classes.paper}>
-            <div className={classes.logo_and_name}>
-              <Avatar className={classes.avatar}>
+              <div className={classes.logo_and_name}>
+                {/* <Avatar className={classes.avatar}>
                 <MusicNoteIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5" color="textPrimary">
-                Yamber
+              </Avatar> */}
+                <Typography
+                  sx={{
+                    marginBottom: "2rem",
+                  }}
+                  component="h1"
+                  variant="h5"
+                  color="textPrimary"
+                >
+                  Yamber !!!!!
+                </Typography>
+              </div>
+              <Typography component="h1" variant="h6" color="textPrimary">
+                Share your Music Taste
               </Typography>
+              <Link
+                style={{
+                  textDecoration: "none",
+                }}
+                to="/login"
+              >
+                <Button
+                  variant="contained"
+                  sx={{
+                    borderColor: theme.palette.text.primary,
+                    background: theme.palette.text.primary,
+                    "&:hover": {
+                      background: theme.palette.primary.dark,
+                      color: theme.palette.text.primary,
+                    },
+                    color: theme.palette.primary.dark,
+                    textDecoration: "none",
+                    margin: ".6rem 0",
+                  }}
+                >
+                  login
+                </Button>
+              </Link>
+              <Typography component="p" className={classes.divider}>
+                --------------- or ---------------
+              </Typography>
+              <Link
+                to="/signup"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  sx={{
+                    borderColor: theme.palette.text.primary,
+                    background: theme.palette.primary.dark,
+                    "&:hover": {
+                      background: theme.palette.primary.main,
+                    },
+                    color: theme.palette.text.primary,
+                    textDecoration: "none",
+                  }}
+                  startIcon={<Phone />}
+                >
+                  signup
+                </Button>
+              </Link>
             </div>
-            <Typography component="h1" variant="h6" color="textPrimary">
-              The Social Network for Music!
-            </Typography>
-            <Link to="/login">
-              <Button variant="contained" className={classes.login}>
-                login
-              </Button>
-            </Link>
-            <Typography component="p" className={classes.divider}>
-              --------------- or ---------------
-            </Typography>
-            <Link to="/signup">
-              <Button variant="outlined" startIcon={<Phone />}>
-                signup
-              </Button>
-            </Link>
-          </div>
         </Grid>
       </Grid>
     );

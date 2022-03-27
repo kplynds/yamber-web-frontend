@@ -1,6 +1,6 @@
-import { adaptV4Theme, createTheme } from '@mui/material/styles';
+import { adaptV4Theme, createTheme, responsiveFontSizes } from '@mui/material/styles';
 
-const theme = createTheme(adaptV4Theme({
+let theme = createTheme(adaptV4Theme({
   palette: {
     primary: {
       dark: "#181818",
@@ -23,5 +23,6 @@ const theme = createTheme(adaptV4Theme({
     fontFamily: ['"Ubuntu"', "sans-serif"].join(","),
   },
 }));
+theme = responsiveFontSizes(theme);
 
 export default theme;

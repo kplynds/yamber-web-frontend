@@ -67,7 +67,11 @@ function CreateProfileFromSpotify({
           );
           // build something here that lets them enter in a new component.
         }
-      });
+      })
+      .catch(err => {
+        console.log(err.response)
+        alert(err.response);
+      })
     }
   }, []);
   return (

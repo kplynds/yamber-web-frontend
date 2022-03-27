@@ -172,6 +172,7 @@ function LoginStytch({ getAuthenticatedUserDataAndPushUtil }) {
               border: "1px solid white",
             },
             marginTop: "1rem",
+            marginBottom: "1rem"
           }}
           onClick={phoneNumberEntered ? login : buttonClick}
         >
@@ -195,7 +196,7 @@ function LoginStytch({ getAuthenticatedUserDataAndPushUtil }) {
           loading...
         </Button>
       )}
-      <a style={{ textDecoration: "underline" }} href="/signup">
+      <a style={{ textDecoration: "none" }} href="/signup">
         <Typography variant="body2" color="textSecondary">
           or signup
         </Typography>

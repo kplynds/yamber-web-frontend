@@ -12,7 +12,6 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { playButtonClick } from "../../redux/actions/dataActions";
 import StopIcon from "@mui/icons-material/Stop";
 import NotFound from "../NotFound";
-import { getPlaylistCover } from "../../utils/cheekyAlgos";
 import EmptyPlaylist from "../EmptyPlaylist";
 import CircularProgress from "@mui/material/CircularProgress";
 import EditIcon from "@mui/icons-material/Edit";
@@ -27,7 +26,10 @@ import TextField from "@mui/material/TextField";
 import LoadingCommonPlaylist from "../LoadingCommonPlaylist";
 import { FaSpotify } from "react-icons/fa";
 import Snackbar from "@mui/material/Snackbar";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import Box from "@mui/material/Box";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -102,6 +104,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const descriptionUtil = {
+  short_term: "the last month",
+  medium_term: "the last 6 months",
+  long_term: "all time",
+};
+
 const Playlist = ({ user, match, ui, playButtonClick }) => {
   const classes = useStyles(theme);
   const history = useHistory();
@@ -137,7 +145,7 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
       })
       .then((res) => {
         setExporting(false);
-        setSuccessSnack(true);
+        setSuccessSnack("Added to your Spotify Library");
       })
       .catch((err) => {
         setExporting(false);
@@ -256,10 +264,11 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
             });
             setPlaylist({
               songs: res.data.user[timeRange],
-              title: "Recent Listening",
+              title: `Listening Data`,
               user: res.data.user.handle,
               images: [],
               notes: recentNotes,
+              description: `@${res.data.user.handle}'s most streamed songs ${descriptionUtil[timeRange]}. Updates every 24 hours.`,
             });
             // setPlaylist({
             //   ...pl
@@ -306,6 +315,7 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
               description:
                 "This playlist was made from both of your liked songs and most listened to songs",
               status: "spotifyExportable",
+              artists: res.data.artists,
             });
             setCommonPlaylist(true);
             setLoadingCommon(false);
@@ -318,14 +328,16 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
               })
               .then((res) => {
                 setPlaylist({
-                  songs: res.data,
+                  songs: res.data.songs,
                   title: `Common Playlist with @${otheruser}`,
                   user: handle,
                   images: [],
                   notes: [],
                   description:
                     "This playlist was made from both of your liked songs and most listened to songs",
+                  artists: res.data.artists,
                 });
+                setCommonPlaylist(true);
                 setLoadingCommon(false);
               })
               .catch((err) => {
@@ -401,10 +413,22 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
       </div>
     );
   };
+  const [likedSongs, setLikedSongs] = useState([]);
   // let match = useRouteMatch();
   // let location = useLocation();
+  const favoriteSong = (id) => {
+    setLikedSongs([...likedSongs, id]);
+    axios
+      .post("/likesong/spotify", { ids: [id] })
+      .then((res) => {
+        setSuccessSnack("Song Added to Spotify Likes");
+      })
+      .catch((err) => {
+        alert("could not add this song to your likes srry bruv");
+      });
+  };
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -412,11 +436,7 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
   };
   const action = (
     <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        onClick={handleClose}
-      >
+      <IconButton size="small" aria-label="close" onClick={handleClose}>
         <CloseIcon
           sx={{ color: theme.palette.text.primary }}
           fontSize="small"
@@ -430,7 +450,7 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
         open={successSnack}
         autoHideDuration={1200}
         onClose={handleClose}
-        message="Playlist Added to Spotify"
+        message={successSnack}
         action={action}
       />
       <Hidden mdDown>
@@ -458,7 +478,21 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
                 <div>
                   <div className={classes.playlistTop}>
                     <div style={{ margin: "0 .1rem" }}>
-                      {getPlaylistCover(playlist, 6)}
+                      {/* {getPlaylistCover(playlist, 6)} */}
+                      <Box
+                        component="img"
+                        src={
+                          playlist.images.length > 0
+                            ? playlist.images[0].url
+                            : "https://firebasestorage.googleapis.com/v0/b/flumes-company.appspot.com/o/907e87639091f8805c48681d9e7f144dedf53741.jpg?alt=media&token=614a343b-997a-49e2-973f-31bae278f6fc"
+                        }
+                        sx={{
+                          objectFit: "cover",
+                          objectPosition: "center center",
+                          height: "12rem",
+                          width: "12rem",
+                        }}
+                      />
                     </div>
                     <div style={{ marginLeft: "1rem" }}>
                       <Typography
@@ -468,7 +502,13 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
                       >
                         {playlist.title}
                       </Typography>
-                      <Typography variant="body1" color="textSecondary">
+                      <Typography
+                        sx={{
+                          marginTop: ".4rem",
+                        }}
+                        variant="body1"
+                        color="textSecondary"
+                      >
                         {playlist.description}
                       </Typography>
                     </div>
@@ -520,6 +560,47 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
                       >
                         {exporting ? "loading..." : "Save in Spotify"}
                       </Button>
+                    </div>
+                  )}
+                  {playlist.status === "spotify" && (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "1rem",
+                      }}
+                    >
+                      <Button
+                        sx={{
+                          borderColor: theme.palette.primary.light,
+                          textTransform: "capitalize",
+                          marginRight: "1rem",
+                          color: theme.palette.text.primary,
+                          "&:hover": {
+                            borderColor: theme.palette.text.primary,
+                          },
+                        }}
+                        startIcon={<FaSpotify />}
+                        variant="outlined"
+                        onClick={() => {
+                          window.open(
+                            `https://open.spotify.com/playlist/${playlist.spotifyId}`
+                          );
+                        }}
+                      >
+                        Open in Spotify
+                      </Button>
+                    </div>
+                  )}
+                  {playlist.artists && (
+                    <div style={{ margin: "1rem 0" }}>
+                      <Typography
+                        sx={{ width: "80%", margin: "auto" }}
+                        color="textPrimary"
+                        align="center"
+                      >
+                        You both love: {playlist.artists.join(", ")}
+                      </Typography>
                     </div>
                   )}
                   {own && !commonPlaylist && (
@@ -648,28 +729,56 @@ const Playlist = ({ user, match, ui, playButtonClick }) => {
                                     <NoteAddIcon />
                                   </IconButton>
                                 )}
-                                {ui.audio.active &&
-                                ui.audio.src === song.preview ? (
-                                  <IconButton
-                                    onClick={() => {
-                                      playButtonClick(song.preview, ui.audio);
-                                    }}
-                                    sx={{ color: theme.palette.text.primary }}
-                                    size="small"
-                                  >
-                                    <StopIcon />
-                                  </IconButton>
-                                ) : (
-                                  <IconButton
-                                    onClick={() => {
-                                      playButtonClick(song.preview, ui.audio);
-                                    }}
-                                    sx={{ color: theme.palette.text.primary }}
-                                    size="small"
-                                  >
-                                    <PlayArrowIcon />
-                                  </IconButton>
-                                )}
+                                <div style={{ display: "flex" }}>
+                                  {!own && (
+                                    <IconButton
+                                      sx={{
+                                        color: theme.palette.text.primary,
+                                      }}
+                                      size="small"
+                                      onClick={() => {
+                                        favoriteSong(song.spotifyId);
+                                      }}
+                                      name={song.spotifyId}
+                                    >
+                                      {(user.data.likedSongs &&
+                                        user.data.likedSongs.includes(
+                                          song.spotifyId
+                                        )) ||
+                                      likedSongs.includes(song.spotifyId) ? (
+                                        <FavoriteIcon
+                                          style={{ color: "white" }}
+                                        />
+                                      ) : (
+                                        <FavoriteBorderIcon
+                                          style={{ color: "white" }}
+                                        />
+                                      )}
+                                    </IconButton>
+                                  )}
+                                  {ui.audio.active &&
+                                  ui.audio.src === song.preview ? (
+                                    <IconButton
+                                      onClick={() => {
+                                        playButtonClick(song.preview, ui.audio);
+                                      }}
+                                      sx={{ color: theme.palette.text.primary }}
+                                      size="small"
+                                    >
+                                      <StopIcon />
+                                    </IconButton>
+                                  ) : (
+                                    <IconButton
+                                      onClick={() => {
+                                        playButtonClick(song.preview, ui.audio);
+                                      }}
+                                      sx={{ color: theme.palette.text.primary }}
+                                      size="small"
+                                    >
+                                      <PlayArrowIcon />
+                                    </IconButton>
+                                  )}
+                                </div>
                               </div>
                             </div>
                             {openNotes.includes(index) && !own && (

@@ -54,7 +54,7 @@ const LandingStreaming = () => {
   const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
   const handleChange = (e, v) => {
-    setUsername(e.target.value.trim());
+    setUsername(e.target.value.trim().toLowerCase());
   };
   useEffect(() => {
     setCheckingUsername(true);
